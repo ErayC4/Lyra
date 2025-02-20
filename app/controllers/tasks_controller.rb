@@ -25,6 +25,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
+        @task.update(time: @task.time.merge(task_id: @task.id))
         format.html { redirect_to @task, notice: "Task was successfully created." }
         format.json { render :show, status: :created, location: @task }
       else
@@ -63,8 +64,8 @@ class TasksController < ApplicationController
       @task = Task.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
-    def task_params
-      params.expect(task: [ :title, :user_id, :time ])
-    end
+
+  def task_params
+    params.require(:task).permit(:title, time: [ :repeat_on_day, :ending_time, :starting_time, :task_id ])
+  end
 end
