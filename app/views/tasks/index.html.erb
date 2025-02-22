@@ -60,7 +60,7 @@
     justify-content: center;
     margin-top: 8px;
   }
-
+  
   .task {
     position: absolute;
     background-color: #a4bdfc;
@@ -124,49 +124,46 @@
       <% end %>
     <% end %>
 
-    <% @tasks.each do |task| %>
-      <%= task.title %>
-      <%= task.time['starting_time'] %>
-      <%= task.time['ending_time'] %>
-      <%= task.time['repeat_on_day'] %>
+  <% @tasks.each do |task| %>
+  <% 
+    repeat_on_days = Array(task.time['repeat_on_day']) # Sicherstellen, dass es ein Array ist
+    starting_times = Array(task.time['starting_time']) # Sicherstellen, dass es ein Array ist
+    ending_times = Array(task.time['ending_time'])    # Sicherstellen, dass es ein Array ist
+
+    column_width = (100.0 / 7) - 1.5
+  %>
+
+    <% repeat_on_days.each_with_index do |day_offset, index| %>
+      <% 
+        # Verarbeite nur, wenn alle Arrays den gleichen Index haben
+        starting_time = starting_times[index] || starting_times.first # Fallback auf ersten Wert, falls kein Array
+        ending_time = ending_times[index] || ending_times.first       # Fallback auf ersten Wert, falls kein Array
+
+        if starting_time && ending_time
+          starting_time_parts = starting_time.split(':')
+          starting_time_in_minutes = starting_time_parts[0].to_i * 60 + starting_time_parts[1].to_i
+
+          ending_time_parts = ending_time.split(':')
+          ending_time_in_minutes = ending_time_parts[0].to_i * 60 + ending_time_parts[1].to_i
+
+          height = (ending_time_in_minutes - starting_time_in_minutes)
+          left = day_offset.to_i * column_width
+        %>
+            <div 
+              class="task"
+              style="left: <%= left %>%; 
+                    width: <%= column_width %>%;
+                    top: <%= starting_time_in_minutes %>px;
+                    height: <%= height %>px;
+                    margin-left: 16px;
+                    margin-right: 16px;
+                    ">
+                    
+              <p class="task-title"><%= task.title %></p>
+            </div>
+        <% end %>
     <% end %>
-    <%# Tasks mit absoluter Positionierung und festen Werten %>
-    <% 
-      # Beispielwerte für die Variablen
-      start_h = 10.5 # Beispiel: 10:30 Uhr
-      end_h = 12.0   # Beispiel: 12:00 Uhr
-      day_offset = 2 # Beispiel: Tag 3 (Mittwoch)
-      column_width = 100.0 / 7
-      top = start_h * 60
-      height = (end_h - start_h) * 60
-      left = day_offset * column_width
-    %>
-    <div class="task" 
-         style="left: <%= left %>%; 
-                width: <%= column_width %>%;
-                top: <%= top %>px;
-                height: <%= height %>px;">
-      <p class="task-title">Meeting</p>
-      <p>Konferenzraum 1</p>
-    </div>
+  <% end %>
 
-    <% 
-      # Zweiter Task mit anderen Werten
-      start_h = 14.0 # Beispiel: 14:00 Uhr
-      end_h = 15.5   # Beispiel: 15:30 Uhr
-      day_offset = 4 # Beispiel: Tag 5 (Freitag)
-      top = start_h * 60
-      height = (end_h - start_h) * 60
-      left = day_offset * column_width
-    %>
-
-    <div class="task" 
-         style="left: <%= left %>%; 
-                width: <%= column_width %>%;
-                top: <%= top %>px;
-                height: <%= height %>px;">
-      <p class="task-title">Projektbesprechung</p>
-      <p>Zoom</p>
-    </div>
   </div>
 </div>

@@ -13,5 +13,8 @@
     <strong>Time:</strong>
     <%= task.time %>
   </p>
-
+  <% @task.time[:starting_time].each_with_index do |time, index| %>
+    <%= time %>
+    <%= link_to 'Entfernen', remove_time_entry_task_path(@task, entry_index: index), method: :patch %>
+  <% end %>
 </div>
