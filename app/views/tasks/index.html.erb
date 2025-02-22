@@ -4,9 +4,43 @@
     padding: 0;
     margin: 0;
   }
+  .calender-container{
+    padding: 0 10%;
+    display: flex;
+  }
+   .timeline {
+      display: flex;
+      gap: 4px;
+      margin-top: 93px;
+    }
+
+    .timeline-hours-container {
+      display: inline;
+    }
+    .timeline-hours {
+      display: grid;
+      grid-template-rows: repeat(24, 1fr);
+      width: 48px;
+    }
+
+    .timeline-item {
+      width: 100%;
+      text-align: center;
+      height: 60px;
+    }
+    .small-line {
+      height: 1px; 
+      background-color: #DBDBDB; 
+      margin-bottom: 29px;
+    }
+    .lines-container {
+      width: 16px;
+      margin-top: 10px;
+    }
   .grid-container {
     position: relative;
     display: grid;
+    
     grid-template-columns: repeat(7, 1fr); /* 7 Tage */
     grid-template-rows: repeat(24, 60px); /* 24 Stunden each 60px  für 1minute*/
     border-left: 1px solid #DBDBDB;
@@ -62,7 +96,7 @@
   }
   
   .task {
-    position: absolute;
+    position: relative;
     background-color: #a4bdfc;
     border-left: 4px solid #1e66d4;
     border-radius: 4px;
@@ -94,9 +128,31 @@
 <% # Startdatum (Anfang der Woche) festlegen %>
 <% current_date = Date.today %>
 <% current_weekday = (current_date.wday  - 1) % 7 %>
-<!-- Container für den gesamten Kalender -->
-<div class="container">
+
+<div class="upper-container">
+
+</div>
+<div class="calender-container">
   <!-- Wochentage oben -->
+  <div class="timeline">
+    <div class="timeline-hours-container">
+      <div class="timeline-hours">
+    <% (0..23).each do |hour| %>
+      <div class="timeline-item">
+        <%= hour %>:00
+      </div>
+    <% end %>
+    </div>
+    </div>
+    
+
+    <div class="lines-container">
+      <% (0..47).each do |halfhour|%>
+        <div class="small-line" style="width:<%= halfhour % 2 == 0 ? 100: 50 %>%; margin-left:<%= halfhour % 2 == 0 ? 0: 8 %>px"></div>
+      <% end%>
+    </div>
+  </div>
+  <div style="flex-grow: 1">
   <div class="weekdays-navbar-container">
     <% (0..6).each do |day| %>
       <div class="weekday-item">
@@ -130,7 +186,7 @@
     starting_times = Array(task.time['starting_time']) # Sicherstellen, dass es ein Array ist
     ending_times = Array(task.time['ending_time'])    # Sicherstellen, dass es ein Array ist
 
-    column_width = (100.0 / 7) - 1.5
+    column_width = (100.0 / 7)
   %>
 
     <% repeat_on_days.each_with_index do |day_offset, index| %>
@@ -149,21 +205,21 @@
           height = (ending_time_in_minutes - starting_time_in_minutes)
           left = day_offset.to_i * column_width
         %>
+        <div class="task-container" style="width: <%= column_width %>%;left: <%= left %>%; top: <%= starting_time_in_minutes %>px; position: absolute;display: flex; justify-content: center;">
             <div 
               class="task"
-              style="left: <%= left %>%; 
-                    width: <%= column_width %>%;
-                    top: <%= starting_time_in_minutes %>px;
+              style="
+                    width: 90%; 
                     height: <%= height %>px;
-                    margin-left: 16px;
-                    margin-right: 16px;
                     ">
                     
               <p class="task-title"><%= task.title %></p>
             </div>
+        </div>
+            
         <% end %>
     <% end %>
   <% end %>
-
+  </div>
   </div>
 </div>
