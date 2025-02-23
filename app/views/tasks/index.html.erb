@@ -1,16 +1,237 @@
-<p style="color: green"><%= notice %></p>
+<style>
+  /* Behalte die vorhandenen Stiele bei und füge folgende hinzu: */
+  p{
+    padding: 0;
+    margin: 0;
+  }
+  .upper-container{
+    height: 128px;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+  }
+  .new-btn {
+      margin-top: 12px;
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s ease;
+      padding: 8px 16px;
+  }
+  .new-btn:hover {
+      transform: translateY(-1px);
+  }
+  .calender-container{
+    padding: 0 10%;
+    display: flex;
+  }
+   .timeline {
+      display: flex;
+      gap: 4px;
+      margin-top: 93px;
+    }
 
-<% content_for :title, "Tasks" %>
+    .timeline-hours-container {
+      display: inline;
+    }
+    .timeline-hours {
+      display: grid;
+      grid-template-rows: repeat(24, 1fr);
+      width: 48px;
+    }
 
-<h1>Tasks</h1>
+    .timeline-item {
+      width: 100%;
+      text-align: center;
+      height: 60px;
+    }
+    .small-line {
+      height: 1px; 
+      background-color: #DBDBDB; 
+      margin-bottom: 29px;
+    }
+    .lines-container {
+      width: 16px;
+      margin-top: 10px;
+    }
+  .grid-container {
+    position: relative;
+    display: grid;
+    
+    grid-template-columns: repeat(7, 1fr); /* 7 Tage */
+    grid-template-rows: repeat(24, 60px); /* 24 Stunden each 60px  für 1minute*/
+    border-left: 1px solid #DBDBDB;
+    border-top: 1px solid #DBDBDB;
+  }
 
-<div id="tasks">
-  <% @tasks.each do |task| %>
-    <%= render task %>
-    <p>
-      <%= link_to "Show this task", task %>
-    </p>
-  <% end %>
+  .grid-item {
+    border-right: 1px solid #DBDBDB;
+    border-bottom: 1px solid #DBDBDB;
+    box-sizing: border-box;
+  }
+
+  .weekdays-navbar-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-right: 1px solid #DBDBDB;
+    border-bottom: 1px solid #DBDBDB;
+
+  }
+
+  .weekday-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Zentriert die Elemente vertikal */
+    align-items: center; /* Zentriert die Elemente horizontal */
+    border-left: 1px solid #DBDBDB;
+    padding: 16px 0;
+  }
+  .weekday-active{
+    font-weight: bold;
+  }
+  .day{
+    font-size: 1.75rem;
+    border-radius: 999px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .day-active{
+    font-size: 1.75rem;
+    background-color: black;
+    color: white;
+    border-radius: 999px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  .task {
+    position: relative;
+    background-color: #a4bdfc;
+    border-left: 4px solid #1e66d4;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: black;
+    overflow: hidden;
+    z-index: 1;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: filter 0.2s;
+  }
+
+  .task:hover {
+    filter: brightness(95%);
+  }
+
+  .task-title {
+    font-weight: 500;
+    margin: 0;
+  }
+</style>
+
+
+<% def days_in_month(year, month) %>
+  <%= Date.new(year, month, -1).day %>
+<% end %>
+
+<% # Startdatum (Anfang der Woche) festlegen %>
+<% current_date = Date.today %>
+<% current_weekday = (current_date.wday  - 1) % 7 %>
+
+<div class="upper-container">
+    <%= link_to '+ New Task', new_task_path, class: 'new-btn' %>
 </div>
+<div class="calender-container">
+  <!-- Wochentage oben -->
+  <div class="timeline">
+    <div class="timeline-hours-container">
+      <div class="timeline-hours">
+    <% (0..23).each do |hour| %>
+      <div class="timeline-item">
+        <%= hour %>:00
+      </div>
+    <% end %>
+    </div>
+    </div>
+    
 
-<%= link_to "New task", new_task_path %>
+    <div class="lines-container">
+      <% (0..47).each do |halfhour|%>
+        <div class="small-line" style="width:<%= halfhour % 2 == 0 ? 100: 50 %>%; margin-left:<%= halfhour % 2 == 0 ? 0: 8 %>px"></div>
+      <% end%>
+    </div>
+  </div>
+  <div style="flex-grow: 1">
+  <div class="weekdays-navbar-container">
+    <% (0..6).each do |day| %>
+      <div class="weekday-item">
+        <% target_date = current_date + (day - current_weekday) %>
+        <p style="font-weight: <%= current_weekday == day ? "bold" : "normal" %>"><%= (target_date).strftime("%a") %><p>
+        <% if current_weekday == day %>
+        <div class="day-active">
+          <%= target_date.day %>
+        </div>
+        <% else %>
+          <div class="day">
+            <%= target_date.day %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Grid-Container für Stunden und Tage -->
+  <div class="grid-container">
+    <%# Grid Items für das Hintergrundgitter %>
+    <% (0..6).each do |day| %>
+      <% (0..23).each do |hour| %>
+        <div class="grid-item"></div>
+      <% end %>
+    <% end %>
+
+  <% @tasks.each do |task| %>
+    <% 
+      repeat_on_day = task.repeat_on_day # Sicherstellen, dass es ein Array ist
+      starting_time =  task.starting_time # Sicherstellen, dass es ein Array ist
+      ending_time = task.ending_time    # Sicherstellen, dass es ein Array ist
+      day_offset = task.repeat_on_day
+      column_width = (100.0 / 7)
+    
+      starting_time_parts = starting_time.split(':')
+      starting_time_in_minutes = starting_time_parts[0].to_i * 60 + starting_time_parts[1].to_i
+
+      ending_time_parts = ending_time.split(':')
+      ending_time_in_minutes = ending_time_parts[0].to_i * 60 + ending_time_parts[1].to_i
+
+      height = (ending_time_in_minutes - starting_time_in_minutes)
+      left = day_offset.to_i * column_width
+    %>
+        <a href="/tasks/<%= task.id %>" style="text-decoration: none; color: inherit;">
+          <div class="task-container" style="width: <%= column_width %>%; left: <%= left %>%; top: <%= starting_time_in_minutes %>px; position: absolute; display: flex; justify-content: center;">
+            <div 
+              class="task"
+              style="
+                    width: 90%; 
+                    height: <%= height %>px;
+                    ">
+                    
+              <p class="task-title"><%= task.title %></p>
+            </div>
+          </div>
+        </a>
+
+            
+        
+  <% end %>
+  </div>
+  </div>
+</div>
