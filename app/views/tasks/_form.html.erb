@@ -15,16 +15,24 @@
     <%= form.label :title, style: "display: block" %>
     <%= form.text_field :title %>
   </div>
-
+  <div>
+    <%= form.label :starting_time, style: "display: block" %>
+    <%= form.text_field :starting_time %>
+  </div>
+  
+  <div>
+    <%= form.label :ending_timee, style: "display: block" %>
+    <%= form.text_field :ending_time %>
+  </div>
+  <div>
+    <%= form.label :repeat_on_day, style: "display: block" %>
+    <%= form.text_field :repeat_on_day %>
+  </div>
   <div>
     <%= form.label :user_id, style: "display: block" %>
     <%= form.number_field :user_id %>
   </div>
 
-  <div>
-    <%= form.label :time, style: "display: block" %>
-    <%= form.text_field :time %>
-  </div>
 
   <div>
     <%= form.submit %>
