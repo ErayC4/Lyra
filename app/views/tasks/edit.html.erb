@@ -1,12 +1,43 @@
-<% content_for :title, "Editing task" %>
+<%= form_with(model: @task) do |form| %>
+  <!-- Titel Feld -->
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
 
-<h1>Editing task</h1>
+  <!-- Time Einträge -->
+  <h3>Zeit-Einträge:</h3>
+  
+  <% @task.time['repeat_on_day'].each_with_index do |day, index| %>
+    <div class="time-entry">
+      <%= hidden_field_tag "task[time][task_id][]", @task.time['task_id'][index] %>
 
-<%= render "form", task: @task %>
+      <div class="field">
+        <%= label_tag "task_time_repeat_on_day_#{index}", "Wochentag" %>
+        <%= select_tag "task[time][repeat_on_day][]", 
+          options_for_select((1..7).map { |d| [t('date.day_names')[d % 7], d.to_s] }, day),
+          id: "task_time_repeat_on_day_#{index}" %>
+      </div>
 
-<br>
+      <div class="field">
+        <%= label_tag "task_time_starting_time_#{index}", "Startzeit" %>
+        <%= time_field_tag "task[time][starting_time][]", @task.time['starting_time'][index], 
+          id: "task_time_starting_time_#{index}" %>
+      </div>
 
-<div>
-  <%= link_to "Show this task", @task %> |
-  <%= link_to "Back to tasks", tasks_path %>
-</div>
+      <div class="field">
+        <%= label_tag "task_time_ending_time_#{index}", "Endzeit" %>
+        <%= time_field_tag "task[time][ending_time][]", @task.time['ending_time'][index], 
+          id: "task_time_ending_time_#{index}" %>
+      </div>
+
+      <%= link_to 'Eintrag entfernen', remove_time_entry_task_path(@task, index: index), 
+          method: :delete, 
+          data: { confirm: 'Sind Sie sicher?' } %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

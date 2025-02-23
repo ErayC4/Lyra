@@ -223,7 +223,8 @@
           height = (ending_time_in_minutes - starting_time_in_minutes)
           left = day_offset.to_i * column_width
         %>
-        <div class="task-container" style="width: <%= column_width %>%;left: <%= left %>%; top: <%= starting_time_in_minutes %>px; position: absolute;display: flex; justify-content: center;">
+        <a href="/tasks/<%= task.id %>" style="text-decoration: none; color: inherit;">
+          <div class="task-container" style="width: <%= column_width %>%; left: <%= left %>%; top: <%= starting_time_in_minutes %>px; position: absolute; display: flex; justify-content: center;">
             <div 
               class="task"
               style="
@@ -233,7 +234,9 @@
                     
               <p class="task-title"><%= task.title %></p>
             </div>
-        </div>
+          </div>
+        </a>
+
             
         <% end %>
     <% end %>

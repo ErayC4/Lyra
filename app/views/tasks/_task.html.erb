@@ -13,12 +13,13 @@
     <strong>Time:</strong>
     <%= task.time %>
   </p>
-  <% if task.time["starting_time"].present? && task.time["starting_time"].any? %>
-    <% task.time["starting_time"].each_with_index do |time, index| %>
-      <%= time %>
-      <%= link_to 'Entfernen', remove_time_entry_task_path(task, index: index), method: :patch, data: { turbo_method: :patch } %>
-    <% end %>
+  <% if task.time["starting_time"].is_a?(Array) && task.time["starting_time"].any? %>
+  <% task.time["starting_time"].each_with_index do |time, index| %>
+    <%= time %>
+    <%= link_to 'Entfernen', remove_time_entry_task_path(task, index: index), method: :patch, data: { turbo_method: :patch } %>
   <% end %>
+<% end %>
+
 
 
 </div>
