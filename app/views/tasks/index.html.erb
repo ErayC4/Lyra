@@ -149,6 +149,9 @@
 
 <div class="upper-container">
     <%= link_to '+ New Task', new_task_path, class: 'new-btn' %>
+
+    <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+    <p>Angemeldet als: <%= current_user.email %></p>
 </div>
 <div class="calender-container">
   <!-- Wochentage oben -->
