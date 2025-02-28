@@ -1,9 +1,12 @@
 let editor; // Macht die Editor-Instanz global verfügbar
 
 document.addEventListener("DOMContentLoaded", function () {
+  const editorElement = document.querySelector(".editorjs");
+  const divId = editorElement.id;
+  
   // Editor-Initialisierung
   editor = new EditorJS({
-    holder: "editorjs",
+    holder: divId,
     tools: {
       header: Header,
       list: List,
@@ -12,4 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     autofocus: true
   });
+
+  setupAutoSave(editorElement, editor);
 });

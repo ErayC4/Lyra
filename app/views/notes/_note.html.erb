@@ -47,6 +47,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
 <%= javascript_include_tag "editorjs" %>
 <%= javascript_include_tag "autosave" %>
+<%= javascript_include_tag "main" %>
 <div id="<%= dom_id note %>">
     <div class="toolbar-container">
       <div class="toolbar-type">
@@ -101,7 +102,8 @@
     </div>
 
   <div id="editorjs" class="editorjs" 
-    data-object-id="<%= @note.id %>" 
+    data-instance-of-table-id="<%= @note.id %>" 
     data-table-name="note"
-    data-autosave-interval="30000"></div>    
+    data-autosave-interval="3000">
+  </div>    
 </div>  
