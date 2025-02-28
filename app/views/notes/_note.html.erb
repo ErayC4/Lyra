@@ -47,7 +47,32 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
 <%= javascript_include_tag "editorjs" %>
 <%= javascript_include_tag "autosave" %>
-<%= javascript_include_tag "main" %>
+<script>
+  let editor; // Macht die Editor-Instanz global verfügbar
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const editorElement = document.querySelector(".editorjs");
+    const divId = editorElement.id;
+    
+    // Hole den gespeicherten Inhalt
+    const savedContent = <%= raw @note.content.to_json %>;
+    
+    // Editor-Initialisierung mit vorhandenen Daten
+    editor = new EditorJS({
+      holder: divId,
+      tools: {
+        header: Header,
+        list: List,
+        code: CodeTool,
+        paragraph: Paragraph
+      },
+      data: savedContent, // Übergabe des vorhandenen Inhalts
+      autofocus: true
+    });
+    
+    setupAutoSave(editorElement, editor);
+  });
+  </script>
 <div id="<%= dom_id note %>">
     <div class="toolbar-container">
       <div class="toolbar-type">
@@ -102,8 +127,9 @@
     </div>
 
   <div id="editorjs" class="editorjs" 
-    data-instance-of-table-id="<%= @note.id %>" 
-    data-table-name="note"
-    data-autosave-interval="3000">
-  </div>    
+       data-instance-of-table-id="<%= @note.id %>" 
+       data-table-name="note"
+       data-autosave-interval="3000"
+       data-saved-content="<%= @note.content.to_json %>">
+  </div>   
 </div>  
