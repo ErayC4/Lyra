@@ -28,7 +28,6 @@
     position: relative;
     padding: 0 42px;
     margin-top: 64px;
-    min-height: 512px;
     border-radius: 8px;
     border: 1px solid #DBDBDB;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
@@ -46,69 +45,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@2.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
-<script>
-  let editor; // Macht die Editor-Instanz global verfügbar
-
-  document.addEventListener("DOMContentLoaded", function () {
-    // Editor-Initialisierung
-    editor = new EditorJS({
-      holder: "editorjs",
-      tools: {
-        header: Header,
-        list: List,
-        code: CodeTool,
-        paragraph: Paragraph
-      },
-      autofocus: true
-    });
-
-    setupAutoSave();
-  });
-
-  function setupAutoSave() {
-    const noteElement = document.getElementById('editorjs');
-    const noteId = noteElement.dataset.noteId;
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Autosave alle 30 Sekunden
-    setInterval(() => {
-      editor.save()
-        .then((output) => {
-          fetch(`/notes/${noteId}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': csrfToken
-            },
-            body: JSON.stringify({
-              note: {
-                content: output // EditorJS-Daten direkt als JSON
-              }
-            })
-          })
-          .then(response => {
-            if (!response.ok) throw new Error('Autosave failed');
-            console.log('Autosave erfolgreich');
-          })
-          .catch(error => console.error('Fehler beim Autosave:', error));
-        })
-        .catch(error => console.error('Editor Save Error:', error));
-    }, 30000); // 30 Sekunden Intervall
-
-    // Speichern beim Verlassen der Seite
-    window.addEventListener('beforeunload', (e) => {
-      editor.save().then((output) => {
-        navigator.sendBeacon(`/notes/${noteId}`, JSON.stringify({
-          _method: 'patch',
-          note: {
-            content: output
-          },
-          authenticity_token: csrfToken
-        }));
-      });
-    });
-  }
-</script>
+<%= javascript_include_tag "editorjs" %>
+<%= javascript_include_tag "autosave" %>
 <div id="<%= dom_id note %>">
     <div class="toolbar-container">
       <div class="toolbar-type">
@@ -162,5 +100,8 @@
       </div>
     </div>
 
-  <div id="editorjs" class="editorjs" data-note-id="<%= @note.id %>"></div>    
+  <div id="editorjs" class="editorjs" 
+    data-object-id="<%= @note.id %>" 
+    data-table-name="note"
+    data-autosave-interval="30000"></div>    
 </div>  
