@@ -36,14 +36,11 @@ class NotesController < ApplicationController
 
   # PATCH/PUT /notes/1 or /notes/1.json
   def update
-    respond_to do |format|
-      if @note.update(note_params)
-        format.html { redirect_to @note, notice: "Note was successfully updated." }
-        format.json { render :show, status: :ok, location: @note }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @note.errors, status: :unprocessable_entity }
-      end
+    @note = Note.find(params[:id])
+    if @note.update(note_params)
+      head :ok
+    else
+      head :unprocessable_entity
     end
   end
 
@@ -65,6 +62,6 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.expect(note: [ :title, :content ])
+      params.require(:note).permit(content: {}) # Erlaubt JSON-Parameter
     end
 end
