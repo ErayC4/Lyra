@@ -1,3 +1,4 @@
+
 import { SimpleImage } from './simple-image.js';
 let editor; // Macht die Editor-Instanz global verfügbar
 
