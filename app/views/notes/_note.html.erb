@@ -45,34 +45,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@2.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
-<%= javascript_include_tag "editorjs" %>
-<%= javascript_include_tag "autosave" %>
-<script>
-  let editor; // Macht die Editor-Instanz global verfügbar
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const editorElement = document.querySelector(".editorjs");
-    const divId = editorElement.id;
-    
-    // Hole den gespeicherten Inhalt
-    const savedContent = <%= raw @note.content.to_json %>;
-    
-    // Editor-Initialisierung mit vorhandenen Daten
-    editor = new EditorJS({
-      holder: divId,
-      tools: {
-        header: Header,
-        list: List,
-        code: CodeTool,
-        paragraph: Paragraph
-      },
-      data: savedContent, // Übergabe des vorhandenen Inhalts
-      autofocus: true
-    });
-    
-    setupAutoSave(editorElement, editor);
-  });
-  </script>
+<%= javascript_include_tag "editorjs", type: "module"  %>
+<%= javascript_include_tag "autosave" %>
 <div id="<%= dom_id note %>">
     <div class="toolbar-container">
       <div class="toolbar-type">

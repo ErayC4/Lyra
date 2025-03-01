@@ -1,3 +1,4 @@
+import { SimpleImage } from './simple-image.js';
 let editor; // Macht die Editor-Instanz global verfügbar
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -14,7 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
       header: Header,
       list: List,
       code: CodeTool,
-      paragraph: Paragraph
+      paragraph: Paragraph,
+      image: SimpleImage,
     },
     data: savedContent, // Übergabe des vorhandenen Inhalts
     autofocus: true
@@ -22,3 +24,4 @@ document.addEventListener("DOMContentLoaded", function () {
   
   setupAutoSave(editorElement, editor);
 });
+
