@@ -68,7 +68,8 @@
         code: CodeTool,
         paragraph: Paragraph,
         text: Explanation,
-        nestedEditor: NestedEditor,
+        //nestedEditor: NestedEditor,
+        singleChoise: SingeChoise,
       },
       data: savedContent, // Übergabe des vorhandenen Inhalts
       autofocus: true
@@ -140,54 +141,145 @@
   }
 }
 
+// ########### --- Single Choise Block --- ###########
 
- // ########## --- NESTEDEDITOR BLOCK --- ###########
-
- class NestedEditor {
+class SingeChoise {
   static get toolbox() {
     return {
-      title: 'Nested Editor',
-      icon: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 7h12v2H3v-2zm0 7h18v2H3v-2z"/></svg>'
+      title: "Single Choice Question",
+      icon: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 7h12v2H3v-2zm0 7h18v2H3v-2z"/></svg>',
     };
   }
 
-  constructor({ data, api, config }) {
-    this.api = api;
-    this.data = data || {};
-    this.config = config || {};
-    this.wrapper = null;
+  constructor({ data }) {
+    this.data = data || { question: "" };
+    this.container = null;
+    this.inputField = null; // Hier initialisieren
   }
 
   render() {
-    this.wrapper = document.createElement('div');
-    this.wrapper.classList.add('nested-editor-wrapper');
+    
 
-    this.editorContainer = document.createElement('div');
-    this.wrapper.appendChild(this.editorContainer);
-    this.wrapper.style.backgroundColor = '#DFF8F9';
-    this.wrapper.style.padding = '16px';
-    this.wrapper.style.margin= '16px';
-    //here you can add custom blocks etc
-    this.nestedEditor = new EditorJS({
-      holder: this.editorContainer,
-      data: this.data.nestedEditorData || {},
-      tools: {
-        explanation: Explanation,
-        ...this.config.tools
-      },
-    });
+    const container = document.createElement("div");
 
-    return this.wrapper;
+    const addButton = document.createElement('button');
+    addButton.style.padding = '8px 16px';
+    addButton.style.fontSize = '14px';
+    addButton.style.background = '#ffffff';
+    addButton.style.color = '#333';
+    addButton.style.border = '1px solid #DBDBDB';
+    addButton.style.borderRadius = '8px';
+    addButton.style.cursor = 'pointer';
+    addButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
+    addButton.style.alignItems = 'center';
+    addButton.textContent = '+ Option';
+
+    const removeButton = document.createElement('button');
+    removeButton.style.padding = '8px 16px';
+    removeButton.style.fontSize = '14px';
+    removeButton.style.background = '#ffffff';
+    removeButton.style.color = '#333';
+    removeButton.style.border = '1px solid #DBDBDB';
+    removeButton.style.borderRadius = '8px';
+    removeButton.style.cursor = 'pointer';
+    removeButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
+    removeButton.style.alignItems = 'center';
+    removeButton.textContent = '- Option';
+
+    const newOption = document.createElement("div");
+    newOption.style.display = "flex";
+    newOption.style.alignItems = "center";
+    newOption.style.gap = "8px";
+    newOption.style.marginBottom = "12px";
+    newOption.style.borderRadius = "8px";
+    newOption.classList.add("option-item");
+
+    const radioCircle = document.createElement("div");
+    radioCircle.style.width = "12px";
+    radioCircle.style.height = "12px";
+    radioCircle.style.backgroundColor = "transparent";
+    radioCircle.style.border = "1px solid rgb(129, 129, 129)";
+    radioCircle.style.borderRadius = "99px";
+    radioCircle.style.cursor = "pointer";
+
+    this.inputField = document.createElement("input"); // Hier setzen
+    this.inputField.style.border = "1px solid #DBDBDB";
+    this.inputField.style.borderRadius = "8px";
+    this.inputField.style.outline = "none";
+    this.inputField.style.width = "100%";
+    this.inputField.style.padding = "8px";
+    this.inputField.value = this.data.question || ""; // Jetzt funktioniert es
+
+    newOption.appendChild(radioCircle);
+    newOption.appendChild(this.inputField);
+    container.appendChild(newOption);
+    this.inputField.focus();
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.marginTop = "8px";
+    buttonsContainer.style.gap = "16px";
+
+    buttonsContainer.appendChild(addButton);
+    buttonsContainer.appendChild(removeButton);
+    container.appendChild(buttonsContainer);
+    return container; 
   }
 
   save() {
-    return new Promise((resolve) => {
-      this.nestedEditor.save().then((nestedData) => {
-        resolve({ nestedEditorData: nestedData });
-      });
-    });
+    return {
+      question: this.inputField.value,
+    };
   }
-}   
+}
+
+
+ // ########## --- NESTEDEDITOR BLOCK --- ###########
+
+//  class NestedEditor {
+//   static get toolbox() {
+//     return {
+//       title: 'Nested Editor',
+//       icon: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 7h12v2H3v-2zm0 7h18v2H3v-2z"/></svg>'
+//     };
+//   }
+
+//   constructor({ data, api, config }) {
+//     this.api = api;
+//     this.data = data || {};
+//     this.config = config || {};
+//     this.wrapper = null;
+//   }
+
+//   render() {
+//     this.wrapper = document.createElement('div');
+//     this.wrapper.classList.add('nested-editor-wrapper');
+
+//     this.editorContainer = document.createElement('div');
+//     this.wrapper.appendChild(this.editorContainer);
+//     this.wrapper.style.backgroundColor = '#DFF8F9';
+//     this.wrapper.style.padding = '16px';
+//     this.wrapper.style.margin= '16px';
+//     //here you can add custom blocks etc
+//     this.nestedEditor = new EditorJS({
+//       holder: this.editorContainer,
+//       data: this.data.nestedEditorData || {},
+//       tools: {
+//         explanation: Explanation,
+//         ...this.config.tools
+//       },
+//     });
+
+//     return this.wrapper;
+//   }
+
+//   save() {
+//     return new Promise((resolve) => {
+//       this.nestedEditor.save().then((nestedData) => {
+//         resolve({ nestedEditorData: nestedData });
+//       });
+//     });
+//   }
+// }   
   
 </script>
 
@@ -199,6 +291,8 @@
     const container = document.getElementById('optionContainer');
 
     function createOption() {
+        
+
         const newOption = document.createElement('div');
         newOption.style.display = 'flex';
         newOption.style.alignItems = 'center';
@@ -243,6 +337,8 @@
         newOption.appendChild(radioCircle);
         newOption.appendChild(inputField);
         container.appendChild(newOption);
+
+
         inputField.focus();
     }
 
