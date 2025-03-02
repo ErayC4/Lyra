@@ -88,7 +88,7 @@
   }
 
   constructor({ data }) {
-    this.data = data || { text: "" };
+    this.data = data || { question: "", solution: "" };
     this.wrapper = null;
   }
 
@@ -101,7 +101,7 @@
 
     this.questionTextarea = document.createElement("textarea");
     this.applyStyles(this.questionTextarea);
-    this.questionTextarea.value = this.data.question;
+    this.questionTextarea.value = this.data.question || "";
 
     const solutionLabel = document.createElement("p");
     solutionLabel.innerText = "Sample Solution:";
@@ -109,7 +109,7 @@
 
     this.solutionTextarea = document.createElement("textarea");
     this.applyStyles(this.solutionTextarea);
-    this.solutionTextarea.value = this.data.solution;
+    this.solutionTextarea.value = this.data.solution || "";
 
     this.wrapper.appendChild(questionLabel);
     this.wrapper.appendChild(this.questionTextarea);
@@ -131,12 +131,15 @@
     textarea.style.marginBottom = "32px";
     textarea.setAttribute("spellcheck", "false");
   }
+
   save() {
     return {
-      text: this.textarea.value,
+      question: this.questionTextarea.value,
+      solution: this.solutionTextarea.value,
     };
   }
 }
+
 
  // ########## --- NESTEDEDITOR BLOCK --- ###########
 
@@ -247,5 +250,28 @@
        data-autosave-interval="3000"
        data-saved-content="<%= @note.content.to_json %>">
   </div>   
-  
+  <div>
+    <p style="margin-bottom: 8px;">Question:</p>
+    <textarea style="width: calc(100% - 32px); box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05); border: 1px solid #DBDBDB; border-radius: 8px; resize: vertical; outline: none; padding: 16px; min-height: 64px; margin-bottom: 16px;"></textarea>
+    <p style="margin-bottom: 16px;">Add Options, Click the Correct one</p>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+       <div style="width: 12px; height: 12px; background-color: transparent; border: 1px solid rgb(129, 129, 129); border-radius: 99px;"></div>
+       <p>This is a Option</p>
+    </div>
+
+    <button style="
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #DBDBDB;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;">+ Option
+    </button>
+  </div>
 </div>  
