@@ -1,5 +1,7 @@
 <style>
-
+  p{
+    margin: 0;
+  }
   .toolbar-container{
     width: calc(50.6% - 32px);
     position: fixed;
@@ -75,7 +77,7 @@
     setupAutoSave(editorElement, editor);
   });
 
-  // ########## --- CUSTOM EDITOR BLOCKS --- ###########
+  // ########## --- EXPLANATION BLOCK --- ###########
 
   class Explanation {
   static get toolbox() {
@@ -93,26 +95,50 @@
   render() {
     this.wrapper = document.createElement("div");
 
-    const label = document.createElement("p");
-    label.innerText = "Schreib etwas:";
+    const questionLabel = document.createElement("p");
+    questionLabel.innerText = "Question:";
+    questionLabel.style.marginBottom = "8px";
 
-    this.textarea = document.createElement("textarea");
-    this.textarea.rows = 10;
-    this.textarea.cols = 50;
-    this.textarea.value = this.data.text;
+    this.questionTextarea = document.createElement("textarea");
+    this.applyStyles(this.questionTextarea);
+    this.questionTextarea.value = this.data.question;
 
-    this.wrapper.appendChild(label);
-    this.wrapper.appendChild(this.textarea);
+    const solutionLabel = document.createElement("p");
+    solutionLabel.innerText = "Sample Solution:";
+    solutionLabel.style.marginBottom = "8px";
+
+    this.solutionTextarea = document.createElement("textarea");
+    this.applyStyles(this.solutionTextarea);
+    this.solutionTextarea.value = this.data.solution;
+
+    this.wrapper.appendChild(questionLabel);
+    this.wrapper.appendChild(this.questionTextarea);
+    this.wrapper.appendChild(solutionLabel);
+    this.wrapper.appendChild(this.solutionTextarea);
 
     return this.wrapper;
   }
 
+  applyStyles(textarea) {
+    textarea.style.width = "calc(100% - 32px)";
+    textarea.style.backgroundColor = "#EDFBFD";
+    textarea.style.border = "none";
+    textarea.style.borderRadius = "8px";
+    textarea.style.resize = "vertical";
+    textarea.style.outline = "none";
+    textarea.style.padding = "16px";
+    textarea.style.minHeight = "64px";
+    textarea.style.marginBottom = "32px";
+    textarea.setAttribute("spellcheck", "false");
+  }
   save() {
     return {
       text: this.textarea.value,
     };
   }
 }
+
+ // ########## --- NESTEDEDITOR BLOCK --- ###########
 
  class NestedEditor {
   static get toolbox() {
@@ -135,13 +161,17 @@
 
     this.editorContainer = document.createElement('div');
     this.wrapper.appendChild(this.editorContainer);
-    this.wrapper.style.backgroundColor = '#f0f0f0';
+    this.wrapper.style.backgroundColor = '#DFF8F9';
     this.wrapper.style.padding = '16px';
     this.wrapper.style.margin= '16px';
+    //here you can add custom blocks etc
     this.nestedEditor = new EditorJS({
       holder: this.editorContainer,
       data: this.data.nestedEditorData || {},
-      tools: this.config.tools || {},
+      tools: {
+        explanation: Explanation,
+        ...this.config.tools
+      },
     });
 
     return this.wrapper;
@@ -217,10 +247,5 @@
        data-autosave-interval="3000"
        data-saved-content="<%= @note.content.to_json %>">
   </div>   
-  <div>
-    <p>Question:</p>
-    <textarea></textarea>
-    <p>Answer: </p>
-    <textarea></textarea>
-  </div>
+  
 </div>  
