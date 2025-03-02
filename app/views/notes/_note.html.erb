@@ -46,25 +46,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@2.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
 <script>
-  class SimpleImage {
-      static get toolbox() {
-        return {
-          title: 'Image',
-          icon: '<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>',
-        };
-      }
-    
-      render() {
-        return document.createElement('input');
-      }
-    
-      save(blockContent) {
-        return {
-          url: blockContent.value,
-        };
-      }
-  }
-    
+
+  // ############ --- MAIN EDITOR --- #############
   let editor; // Macht die Editor-Instanz global verfügbar
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -82,7 +65,8 @@
         list: List,
         code: CodeTool,
         paragraph: Paragraph,
-        image: SimpleImage,
+        text: Explanation,
+        nestedEditor: NestedEditor,
       },
       data: savedContent, // Übergabe des vorhandenen Inhalts
       autofocus: true
@@ -90,6 +74,88 @@
     
     setupAutoSave(editorElement, editor);
   });
+
+  // ########## --- CUSTOM EDITOR BLOCKS --- ###########
+
+  class Explanation {
+  static get toolbox() {
+    return {
+      title: "Textarea",
+      icon: "📝",
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { text: "" };
+    this.wrapper = null;
+  }
+
+  render() {
+    this.wrapper = document.createElement("div");
+
+    const label = document.createElement("p");
+    label.innerText = "Schreib etwas:";
+
+    this.textarea = document.createElement("textarea");
+    this.textarea.rows = 10;
+    this.textarea.cols = 50;
+    this.textarea.value = this.data.text;
+
+    this.wrapper.appendChild(label);
+    this.wrapper.appendChild(this.textarea);
+
+    return this.wrapper;
+  }
+
+  save() {
+    return {
+      text: this.textarea.value,
+    };
+  }
+}
+
+ class NestedEditor {
+  static get toolbox() {
+    return {
+      title: 'Nested Editor',
+      icon: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 7h12v2H3v-2zm0 7h18v2H3v-2z"/></svg>'
+    };
+  }
+
+  constructor({ data, api, config }) {
+    this.api = api;
+    this.data = data || {};
+    this.config = config || {};
+    this.wrapper = null;
+  }
+
+  render() {
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add('nested-editor-wrapper');
+
+    this.editorContainer = document.createElement('div');
+    this.wrapper.appendChild(this.editorContainer);
+    this.wrapper.style.backgroundColor = '#f0f0f0';
+    this.wrapper.style.padding = '16px';
+    this.wrapper.style.margin= '16px';
+    this.nestedEditor = new EditorJS({
+      holder: this.editorContainer,
+      data: this.data.nestedEditorData || {},
+      tools: this.config.tools || {},
+    });
+
+    return this.wrapper;
+  }
+
+  save() {
+    return new Promise((resolve) => {
+      this.nestedEditor.save().then((nestedData) => {
+        resolve({ nestedEditorData: nestedData });
+      });
+    });
+  }
+}   
+  
 </script>
 <%= javascript_include_tag "autosave" %>
 <div id="<%= dom_id note %>">
@@ -151,4 +217,10 @@
        data-autosave-interval="3000"
        data-saved-content="<%= @note.content.to_json %>">
   </div>   
+  <div>
+    <p>Question:</p>
+    <textarea></textarea>
+    <p>Answer: </p>
+    <textarea></textarea>
+  </div>
 </div>  
