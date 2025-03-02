@@ -69,7 +69,7 @@
         paragraph: Paragraph,
         text: Explanation,
         //nestedEditor: NestedEditor,
-        singleChoise: SingeChoise,
+        singleChoise: SingleChoice,
       },
       data: savedContent, // Übergabe des vorhandenen Inhalts
       autofocus: true
@@ -143,7 +143,7 @@
 
 // ########### --- Single Choise Block --- ###########
 
-class SingeChoise {
+class SingleChoice {
   static get toolbox() {
     return {
       title: "Single Choice Question",
@@ -152,16 +152,60 @@ class SingeChoise {
   }
 
   constructor({ data }) {
-    this.data = data || { question: "" };
+    this.data = data || { 
+      question: "",
+      options: []
+    };
     this.container = null;
-    this.inputField = null; // Hier initialisieren
+    this.questionInput = null;
+    this.optionsContainer = null;
   }
 
   render() {
+    // Create main container
+    this.container = document.createElement("div");
     
-
-    const container = document.createElement("div");
-
+    // Create question input
+    const questionWrapper = document.createElement("div");
+    questionWrapper.style.marginBottom = "16px";
+    
+    const questionLabel = document.createElement("label");
+    questionLabel.textContent = "Question:";
+    questionLabel.style.display = "block";
+    questionLabel.style.marginBottom = "8px";
+    questionLabel.style.fontWeight = "bold";
+    
+    this.questionInput = document.createElement("input");
+    this.questionInput.style.border = "1px solid #DBDBDB";
+    this.questionInput.style.borderRadius = "8px";
+    this.questionInput.style.outline = "none";
+    this.questionInput.style.width = "100%";
+    this.questionInput.style.padding = "8px";
+    this.questionInput.value = this.data.question || "";
+    
+    questionWrapper.appendChild(questionLabel);
+    questionWrapper.appendChild(this.questionInput);
+    this.container.appendChild(questionWrapper);
+    
+    // Create options container
+    const optionsLabel = document.createElement("label");
+    optionsLabel.textContent = "Options:";
+    optionsLabel.style.display = "block";
+    optionsLabel.style.marginBottom = "8px";
+    optionsLabel.style.fontWeight = "bold";
+    this.container.appendChild(optionsLabel);
+    
+    this.optionsContainer = document.createElement("div");
+    this.optionsContainer.id = "optionContainer";
+    this.container.appendChild(this.optionsContainer);
+    
+    // Create buttons container
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.marginTop = "16px";
+    buttonsContainer.style.gap = "16px";
+    
+    // Add option button
     const addButton = document.createElement('button');
     addButton.style.padding = '8px 16px';
     addButton.style.fontSize = '14px';
@@ -173,7 +217,9 @@ class SingeChoise {
     addButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
     addButton.style.alignItems = 'center';
     addButton.textContent = '+ Option';
-
+    addButton.addEventListener('click', () => this.createOption());
+    
+    // Remove option button
     const removeButton = document.createElement('button');
     removeButton.style.padding = '8px 16px';
     removeButton.style.fontSize = '14px';
@@ -185,53 +231,108 @@ class SingeChoise {
     removeButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
     removeButton.style.alignItems = 'center';
     removeButton.textContent = '- Option';
-
-    const newOption = document.createElement("div");
-    newOption.style.display = "flex";
-    newOption.style.alignItems = "center";
-    newOption.style.gap = "8px";
-    newOption.style.marginBottom = "12px";
-    newOption.style.borderRadius = "8px";
-    newOption.classList.add("option-item");
-
-    const radioCircle = document.createElement("div");
-    radioCircle.style.width = "12px";
-    radioCircle.style.height = "12px";
-    radioCircle.style.backgroundColor = "transparent";
-    radioCircle.style.border = "1px solid rgb(129, 129, 129)";
-    radioCircle.style.borderRadius = "99px";
-    radioCircle.style.cursor = "pointer";
-
-    this.inputField = document.createElement("input"); // Hier setzen
-    this.inputField.style.border = "1px solid #DBDBDB";
-    this.inputField.style.borderRadius = "8px";
-    this.inputField.style.outline = "none";
-    this.inputField.style.width = "100%";
-    this.inputField.style.padding = "8px";
-    this.inputField.value = this.data.question || ""; // Jetzt funktioniert es
-
-    newOption.appendChild(radioCircle);
-    newOption.appendChild(this.inputField);
-    container.appendChild(newOption);
-    this.inputField.focus();
-    const buttonsContainer = document.createElement("div");
-    buttonsContainer.style.display = "flex";
-    buttonsContainer.style.marginTop = "8px";
-    buttonsContainer.style.gap = "16px";
-
+    removeButton.addEventListener('click', () => this.removeOption());
+    
     buttonsContainer.appendChild(addButton);
     buttonsContainer.appendChild(removeButton);
-    container.appendChild(buttonsContainer);
-    return container; 
+    this.container.appendChild(buttonsContainer);
+    
+    // Create initial options if present in data
+    if (this.data.options && this.data.options.length > 0) {
+      this.data.options.forEach(option => {
+        this.createOption(option.text, option.selected);
+      });
+    } else {
+      // Create at least one option by default
+      this.createOption();
+    }
+    
+    return this.container;
   }
+  
+  createOption(text = "", selected = false) {
+    const newOption = document.createElement('div');
+    newOption.style.display = 'flex';
+    newOption.style.alignItems = 'center';
+    newOption.style.gap = '8px';
+    newOption.style.marginBottom = '12px';
+    newOption.style.padding = '10px';
+    newOption.style.borderRadius = '8px';
+    newOption.classList.add('option-item');
 
+    const radioCircle = document.createElement('div');
+    radioCircle.style.width = '12px';
+    radioCircle.style.height = '12px';
+    radioCircle.style.backgroundColor = selected ? 'black' : 'transparent';
+    radioCircle.style.border = '1px solid rgb(129, 129, 129)';
+    radioCircle.style.borderRadius = '99px';
+    radioCircle.style.cursor = 'pointer';
+    
+    const inputField = document.createElement('input');
+    inputField.style.border = '1px solid #DBDBDB';
+    inputField.style.borderRadius = '8px';
+    inputField.style.outline = 'none';
+    inputField.style.width = '100%';
+    inputField.style.padding = '8px';
+    inputField.value = text;
+    
+    // Apply highlight if this option is selected
+    if (selected) {
+      newOption.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.6)';
+    }
+    
+    // Klick-Event für radioCircle (Toggle-Mechanismus)
+    radioCircle.addEventListener('click', () => {
+      const isActive = radioCircle.style.backgroundColor === 'black';
+      
+      // Entferne den Stil von allen radioCircles und ihren Containern
+      this.optionsContainer.querySelectorAll('.option-item').forEach(option => {
+        option.style.boxShadow = 'none';
+        option.querySelector('div').style.backgroundColor = 'transparent';
+      });
+      
+      if (!isActive) {
+        // Diesen Kreis schwarz füllen und Container hervorheben
+        radioCircle.style.backgroundColor = 'black';
+        newOption.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.6)';
+      }
+    });
+    
+    newOption.appendChild(radioCircle);
+    newOption.appendChild(inputField);
+    this.optionsContainer.appendChild(newOption);
+    
+    // Focus on new input field
+    inputField.focus();
+  }
+  
+  removeOption() {
+    const options = this.optionsContainer.querySelectorAll('.option-item');
+    if (options.length > 0) {
+      this.optionsContainer.removeChild(options[options.length - 1]);
+    }
+  }
+  
   save() {
+    const options = [];
+    const optionElements = this.optionsContainer.querySelectorAll('.option-item');
+    
+    optionElements.forEach(optionElement => {
+      const radioCircle = optionElement.querySelector('div');
+      const inputField = optionElement.querySelector('input');
+      
+      options.push({
+        text: inputField.value,
+        selected: radioCircle.style.backgroundColor === 'black'
+      });
+    });
+    
     return {
-      question: this.inputField.value,
+      question: this.questionInput.value,
+      options: options
     };
   }
 }
-
 
  // ########## --- NESTEDEDITOR BLOCK --- ###########
 
