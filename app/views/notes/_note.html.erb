@@ -39,25 +39,17 @@
   }
 
 .single-choice-container {
-  margin-bottom: 32px;
+  margin-bottom: 64px;
 }
 
 .question-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 
 .label {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-}
-
-.textarea {
-  border: 1px solid #DBDBDB;
-  border-radius: 8px;
-  outline: none;
-  width: 100%;
-  padding: 8px;
 }
 
 .buttons-container {
@@ -90,8 +82,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
-  padding: 10px;
+  margin-bottom: 16px;
   border-radius: 8px;
 }
 
@@ -107,6 +98,7 @@
   border: 1px solid #DBDBDB;
   border-radius: 8px;
   outline: none;
+  background-color: #EDFBFD;
   width: 100%;
   padding: 8px;
 }
@@ -125,21 +117,17 @@
 .textarea {
   width: calc(100% - 32px);
   background-color: #EDFBFD;
-  border: none;
+  border: 1px solid #DBDBDB;
   border-radius: 8px;
   resize: vertical;
   outline: none;
   padding: 16px;
   min-height: 64px;
-  margin-bottom: 32px;
   font-family: inherit;
   font-size: 14px;
   color: #333;
 }
 
-.textarea:focus {
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
 
 .question-textarea {
   /* Zusätzliche spezifische Stile für die Frage-Textarea */
@@ -395,7 +383,6 @@ class SingleChoice {
 
     if (!isActive) {
       radioCircle.style.backgroundColor = "black";
-      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
     }
   }
 
@@ -566,7 +553,6 @@ class MultipleChoice {
 
   toggleOptionSelection(checkbox, inputField) {
     if (checkbox.checked) {
-      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
     } else {
       inputField.style.boxShadow = "none";
     }
