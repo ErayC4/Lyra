@@ -175,7 +175,7 @@ class SingleChoice {
     questionLabel.style.marginBottom = "8px";
     questionLabel.style.fontWeight = "bold";
     
-    this.questionInput = document.createElement("input");
+    this.questionInput = document.createElement("textarea");
     this.questionInput.style.border = "1px solid #DBDBDB";
     this.questionInput.style.borderRadius = "8px";
     this.questionInput.style.outline = "none";
@@ -189,7 +189,7 @@ class SingleChoice {
     
     // Create options container
     const optionsLabel = document.createElement("label");
-    optionsLabel.textContent = "Options:";
+    optionsLabel.textContent = "Add Options, Click the Correct one";
     optionsLabel.style.display = "block";
     optionsLabel.style.marginBottom = "8px";
     optionsLabel.style.fontWeight = "bold";
@@ -217,8 +217,17 @@ class SingleChoice {
     addButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
     addButton.style.alignItems = 'center';
     addButton.textContent = '+ Option';
+    addButton.style.transition = "box-shadow 0.3s ease";
+
+    addButton.addEventListener("mouseenter", function() {
+        addButton.style.boxShadow = "0px 2px 10px rgba(0, 255, 0, 0.25)"; // Blauer Schatten
+    });
+
+    addButton.addEventListener("mouseleave", function() {
+        addButton.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.05)"; // Original-Schatten
+    });
     addButton.addEventListener('click', () => this.createOption());
-    
+
     // Remove option button
     const removeButton = document.createElement('button');
     removeButton.style.padding = '8px 16px';
@@ -231,6 +240,13 @@ class SingleChoice {
     removeButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
     removeButton.style.alignItems = 'center';
     removeButton.textContent = '- Option';
+    removeButton.style.transition = "box-shadow 0.3s ease";
+    removeButton.addEventListener("mouseenter", function() {
+        removeButton.style.boxShadow = "0px 2px 10px rgba(255, 0, 0, 0.25)"; // Blauer Schatten
+    });
+    removeButton.addEventListener("mouseleave", function() {
+        removeButton.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.05)"; // Original-Schatten
+    });
     removeButton.addEventListener('click', () => this.removeOption());
     
     buttonsContainer.appendChild(addButton);
@@ -385,88 +401,9 @@ class SingleChoice {
 </script>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const addOptionButton = document.getElementById('addOption');
-    const removeOptionButton = document.getElementById('removeOption');
-    const container = document.getElementById('optionContainer');
-
-    function createOption() {
-        
-
-        const newOption = document.createElement('div');
-        newOption.style.display = 'flex';
-        newOption.style.alignItems = 'center';
-        newOption.style.gap = '8px';
-        newOption.style.marginBottom = '12px';
-        newOption.style.padding = '10px';
-        newOption.style.borderRadius = '8px';
-        newOption.classList.add('option-item');
-
-        const radioCircle = document.createElement('div');
-        radioCircle.style.width = '12px';
-        radioCircle.style.height = '12px';
-        radioCircle.style.backgroundColor = 'transparent';
-        radioCircle.style.border = '1px solid rgb(129, 129, 129)';
-        radioCircle.style.borderRadius = '99px';
-        radioCircle.style.cursor = 'pointer';
-
-        const inputField = document.createElement('input');
-        inputField.style.border = '1px solid #DBDBDB';
-        inputField.style.borderRadius = '8px';
-        inputField.style.outline = 'none';
-        inputField.style.width = '100%';
-        inputField.style.padding = '8px';
-
-        // Klick-Event für radioCircle (Toggle-Mechanismus)
-        radioCircle.addEventListener('click', function () {
-            const isActive = radioCircle.style.backgroundColor === 'black';
-
-            // Entferne den Stil von allen radioCircles und ihren Containern
-            document.querySelectorAll('.option-item').forEach(option => {
-                option.style.boxShadow = 'none';
-                option.querySelector('div').style.backgroundColor = 'transparent';
-            });
-
-            if (!isActive) {
-                // Diesen Kreis schwarz füllen und Container hervorheben
-                radioCircle.style.backgroundColor = 'black';
-                newOption.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.6)';
-            }
-        });
-
-        newOption.appendChild(radioCircle);
-        newOption.appendChild(inputField);
-        container.appendChild(newOption);
-
-
-        inputField.focus();
-    }
-
-    addOptionButton.addEventListener('click', createOption);
-
-    removeOptionButton.addEventListener('click', function () {
-        const options = container.querySelectorAll('.option-item');
-        if (options.length > 0) {
-            container.removeChild(options[options.length - 1]);
-        }
-
-        // Wenn alle entfernt sind, den Schatten zurücksetzen
-        if (container.children.length === 0) {
-            container.style.boxShadow = 'none';
-        }
-    });
-
-    // Direkt beim Laden eine Option hinzufügen
-    createOption();
-});
-
-</script>
-
-
-
 
 <%= javascript_include_tag "autosave" %>
+
 <div id="<%= dom_id note %>">
     <div class="toolbar-container">
       <div class="toolbar-type">
@@ -526,39 +463,5 @@ class SingleChoice {
        data-autosave-interval="3000"
        data-saved-content="<%= @note.content.to_json %>">
   </div>   
-  <div>
-    <p style="margin-bottom: 8px;">Question:</p>
-    <textarea style="width: calc(100% - 32px); box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05); border: 1px solid #DBDBDB; border-radius: 8px; resize: vertical; outline: none; padding: 16px; min-height: 64px; margin-bottom: 16px;"></textarea>
-    <p style="margin-bottom: 16px;">Add Options, Click the Correct one</p>
-    <div id="optionContainer"></div>
-    <button id="addOption" style="
-          padding: 8px 16px;
-          font-size: 14px;
-          background: #ffffff;
-          color: #333;
-          border: 1px solid #DBDBDB;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;">+ Option
-    </button>
-    <button id="removeOption" style="
-          padding: 8px 16px;
-          font-size: 14px;
-          background: #ffffff;
-          color: #333;
-          border: 1px solid #DBDBDB;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          margin-left: 8px;">- Option
-    </button>
-  </div>
+ 
 </div>  
