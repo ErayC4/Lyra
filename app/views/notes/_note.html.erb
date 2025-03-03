@@ -178,6 +178,7 @@
         text: Explanation,
         //nestedEditor: NestedEditor,
         singleChoise: SingleChoice,
+        multipleChoise: MultipleChoice,
       },
       data: savedContent, // Übergabe des vorhandenen Inhalts
       autofocus: true
@@ -426,7 +427,180 @@ class SingleChoice {
   }
 }
 
- // ########## --- NESTEDEDITOR BLOCK --- ###########
+// ########## --- MultipleChoise BLOCK --- ###########
+
+class MultipleChoice {
+  static get toolbox() {
+    return {
+      title: "Multiple Choice Question",
+      icon: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 7h12v2H3v-2zm0 7h18v2H3v-2z"/></svg>',
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { 
+      question: "",
+      options: []
+    };
+    this.container = null;
+    this.questionInput = null;
+    this.optionsContainer = null;
+  }
+
+  render() {
+    this.container = document.createElement("div");
+    this.container.classList.add("multiple-choice-container");
+
+    this.renderQuestionInput();
+    this.renderOptionsLabel();
+    this.renderOptionsContainer();
+    this.renderButtons();
+
+    this.initializeOptions();
+
+    return this.container;
+  }
+
+  renderQuestionInput() {
+    const questionWrapper = document.createElement("div");
+    questionWrapper.classList.add("question-wrapper");
+
+    const questionLabel = this.createLabel("Question:");
+    this.questionInput = this.createTextarea(this.data.question);
+
+    questionWrapper.appendChild(questionLabel);
+    questionWrapper.appendChild(this.questionInput);
+    this.container.appendChild(questionWrapper);
+  }
+
+  renderOptionsLabel() {
+    const optionsLabel = this.createLabel("Add Options, Select the Correct ones");
+    this.container.appendChild(optionsLabel);
+  }
+
+  renderOptionsContainer() {
+    this.optionsContainer = document.createElement("div");
+    this.optionsContainer.id = "optionContainer";
+    this.container.appendChild(this.optionsContainer);
+  }
+
+  renderButtons() {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+
+    const addButton = this.createButton("+ Option", () => this.createOption(), "add-button");
+    const removeButton = this.createButton("- Option", () => this.removeOption(), "remove-button");
+
+    buttonsContainer.appendChild(addButton);
+    buttonsContainer.appendChild(removeButton);
+    this.container.appendChild(buttonsContainer);
+  }
+
+  initializeOptions() {
+    if (this.data.options && this.data.options.length > 0) {
+      this.data.options.forEach(option => {
+        this.createOption(option.text, option.selected);
+      });
+    } else {
+      this.createOption();
+    }
+  }
+
+  createLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value = "") {
+    const textarea = document.createElement("textarea");
+    textarea.classList.add("textarea");
+    textarea.value = value;
+    return textarea;
+  }
+
+  createButton(text, onClick, className) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.classList.add("button", className);
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  createOption(text = "", selected = false) {
+    const newOption = document.createElement("div");
+    newOption.classList.add("option-item");
+
+    const checkbox = this.createCheckbox(selected);
+    const inputField = this.createInputField(text);
+
+    checkbox.addEventListener("change", () => this.toggleOptionSelection(checkbox, inputField));
+
+    newOption.appendChild(checkbox);
+    newOption.appendChild(inputField);
+    this.optionsContainer.appendChild(newOption);
+
+    inputField.focus();
+
+    // Set initial shadow if selected
+    if (selected) {
+      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
+    }
+  }
+
+  createCheckbox(selected) {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("checkbox");
+    checkbox.checked = selected;
+    return checkbox;
+  }
+
+  createInputField(value) {
+    const inputField = document.createElement("input");
+    inputField.classList.add("input-field");
+    inputField.value = value;
+    return inputField;
+  }
+
+  toggleOptionSelection(checkbox, inputField) {
+    if (checkbox.checked) {
+      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
+    } else {
+      inputField.style.boxShadow = "none";
+    }
+  }
+
+  removeOption() {
+    const options = this.optionsContainer.querySelectorAll(".option-item");
+    if (options.length > 0) {
+      this.optionsContainer.removeChild(options[options.length - 1]);
+    }
+  }
+
+  save() {
+    const options = [];
+    const optionElements = this.optionsContainer.querySelectorAll(".option-item");
+
+    optionElements.forEach(optionElement => {
+      const checkbox = optionElement.querySelector(".checkbox");
+      const inputField = optionElement.querySelector(".input-field");
+
+      options.push({
+        text: inputField.value,
+        selected: checkbox.checked
+      });
+    });
+
+    return {
+      question: this.questionInput.value,
+      options: options
+    };
+  }
+}
+
+// ########## --- NESTEDEDITOR BLOCK --- ###########
 
 //  class NestedEditor {
 //   static get toolbox() {
