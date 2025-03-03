@@ -5,6 +5,7 @@
   .toolbar-container{
     width: calc(50.6% - 32px);
     position: fixed;
+    margin-top: 32px;
     z-index: 1000; 
     background-color: white;
     display: flex;
@@ -28,8 +29,9 @@
 
   .editorjs{
     position: relative;
+    background-color: white;
     padding: 32px 42px;
-    margin-top: 64px;
+    margin-top: 96px;
     border-radius: 8px;
     border: 1px solid #DBDBDB;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
@@ -38,12 +40,14 @@
     line-height: 1.5;
   }
 
-.single-choice-container {
-  margin-bottom: 64px;
-}
 
-.question-wrapper {
-  margin-bottom: 32px;
+.question-container {
+  margin-bottom: 64px;
+  padding: 16px;
+  background-color: #CDFAD2;
+  border-radius: 8px;
+  border: 1px solid #DBDBDB;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .label {
@@ -61,7 +65,7 @@
 .button {
   padding: 8px 16px;
   font-size: 14px;
-  background: #ffffff;
+  background: white;
   color: #333;
   border: 1px solid #DBDBDB;
   border-radius: 8px;
@@ -82,7 +86,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   border-radius: 8px;
 }
 
@@ -98,14 +102,9 @@
   border: 1px solid #DBDBDB;
   border-radius: 8px;
   outline: none;
-  background-color: #EDFBFD;
+  background-color: #E5FDE5;
   width: 100%;
   padding: 8px;
-}
-.explanation-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .label {
@@ -116,9 +115,10 @@
 
 .textarea {
   width: calc(100% - 32px);
-  background-color: #EDFBFD;
+  background-color: #E5FDE5;
   border: 1px solid #DBDBDB;
   border-radius: 8px;
+  margin-bottom: 16px;
   resize: vertical;
   outline: none;
   padding: 16px;
@@ -128,14 +128,6 @@
   color: #333;
 }
 
-
-.question-textarea {
-  /* Zusätzliche spezifische Stile für die Frage-Textarea */
-}
-
-.solution-textarea {
-  /* Zusätzliche spezifische Stile für die Lösungs-Textarea */
-}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
@@ -192,7 +184,7 @@ class Explanation {
 
   render() {
     this.wrapper = document.createElement("div");
-    this.wrapper.classList.add("explanation-container");
+    this.wrapper.classList.add("question-container");
 
     this.renderQuestionSection();
     this.renderSolutionSection();
@@ -202,7 +194,7 @@ class Explanation {
 
   renderQuestionSection() {
     const questionLabel = this.createLabel("Question:");
-    this.questionTextarea = this.createTextarea(this.data.question, "question-textarea");
+    this.questionTextarea = this.createTextarea(this.data.question, "textarea");
 
     this.wrapper.appendChild(questionLabel);
     this.wrapper.appendChild(this.questionTextarea);
@@ -210,7 +202,7 @@ class Explanation {
 
   renderSolutionSection() {
     const solutionLabel = this.createLabel("Sample Solution:");
-    this.solutionTextarea = this.createTextarea(this.data.solution, "solution-textarea");
+    this.solutionTextarea = this.createTextarea(this.data.solution, "textarea");
 
     this.wrapper.appendChild(solutionLabel);
     this.wrapper.appendChild(this.solutionTextarea);
@@ -261,7 +253,7 @@ class SingleChoice {
 
   render() {
     this.container = document.createElement("div");
-    this.container.classList.add("single-choice-container");
+    this.container.classList.add("question-container");
 
     this.renderQuestionInput();
     this.renderOptionsLabel();
@@ -359,7 +351,7 @@ class SingleChoice {
   createRadioCircle(selected) {
     const radioCircle = document.createElement("div");
     radioCircle.classList.add("radio-circle");
-    radioCircle.style.backgroundColor = selected ? "black" : "transparent";
+    radioCircle.style.backgroundColor = selected ? "black" : "#FFFFFF";
     return radioCircle;
   }
 
@@ -374,11 +366,7 @@ class SingleChoice {
     const isActive = radioCircle.style.backgroundColor === "black";
 
     this.optionsContainer.querySelectorAll(".option-item .radio-circle").forEach(circle => {
-      circle.style.backgroundColor = "transparent";
-    });
-
-    this.optionsContainer.querySelectorAll(".option-item .input-field").forEach(input => {
-      input.style.boxShadow = "none";
+      circle.style.backgroundColor = "#FFFFFF";
     });
 
     if (!isActive) {
@@ -436,7 +424,7 @@ class MultipleChoice {
 
   render() {
     this.container = document.createElement("div");
-    this.container.classList.add("multiple-choice-container");
+    this.container.classList.add("question-container");
 
     this.renderQuestionInput();
     this.renderOptionsLabel();
@@ -530,10 +518,6 @@ class MultipleChoice {
 
     inputField.focus();
 
-    // Set initial shadow if selected
-    if (selected) {
-      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
-    }
   }
 
   createCheckbox(selected) {
