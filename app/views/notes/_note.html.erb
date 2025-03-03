@@ -28,7 +28,7 @@
 
   .editorjs{
     position: relative;
-    padding: 0 42px;
+    padding: 32px 42px;
     margin-top: 64px;
     border-radius: 8px;
     border: 1px solid #DBDBDB;
@@ -38,8 +38,116 @@
     line-height: 1.5;
   }
 
+.single-choice-container {
+  margin-bottom: 32px;
+}
 
+.question-wrapper {
+  margin-bottom: 16px;
+}
 
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.textarea {
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  padding: 8px;
+}
+
+.buttons-container {
+  display: flex;
+  margin-top: 16px;
+  gap: 16px;
+}
+
+.button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.add-button:hover {
+  box-shadow: 0px 2px 10px rgba(0, 255, 0, 0.25);
+}
+
+.remove-button:hover {
+  box-shadow: 0px 2px 10px rgba(255, 0, 0, 0.25);
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.radio-circle {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(129, 129, 129);
+  border-radius: 99px;
+  cursor: pointer;
+}
+
+.input-field {
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  padding: 8px;
+}
+.explanation-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.textarea {
+  width: calc(100% - 32px);
+  background-color: #EDFBFD;
+  border: none;
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+  padding: 16px;
+  min-height: 64px;
+  margin-bottom: 32px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333;
+}
+
+.textarea:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.question-textarea {
+  /* Zusätzliche spezifische Stile für die Frage-Textarea */
+}
+
+.solution-textarea {
+  /* Zusätzliche spezifische Stile für die Lösungs-Textarea */
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
@@ -80,7 +188,7 @@
 
   // ########## --- EXPLANATION BLOCK --- ###########
 
-  class Explanation {
+class Explanation {
   static get toolbox() {
     return {
       title: "Textarea",
@@ -95,42 +203,43 @@
 
   render() {
     this.wrapper = document.createElement("div");
+    this.wrapper.classList.add("explanation-container");
 
-    const questionLabel = document.createElement("p");
-    questionLabel.innerText = "Question:";
-    questionLabel.style.marginBottom = "8px";
-
-    this.questionTextarea = document.createElement("textarea");
-    this.applyStyles(this.questionTextarea);
-    this.questionTextarea.value = this.data.question || "";
-
-    const solutionLabel = document.createElement("p");
-    solutionLabel.innerText = "Sample Solution:";
-    solutionLabel.style.marginBottom = "8px";
-
-    this.solutionTextarea = document.createElement("textarea");
-    this.applyStyles(this.solutionTextarea);
-    this.solutionTextarea.value = this.data.solution || "";
-
-    this.wrapper.appendChild(questionLabel);
-    this.wrapper.appendChild(this.questionTextarea);
-    this.wrapper.appendChild(solutionLabel);
-    this.wrapper.appendChild(this.solutionTextarea);
+    this.renderQuestionSection();
+    this.renderSolutionSection();
 
     return this.wrapper;
   }
 
-  applyStyles(textarea) {
-    textarea.style.width = "calc(100% - 32px)";
-    textarea.style.backgroundColor = "#EDFBFD";
-    textarea.style.border = "none";
-    textarea.style.borderRadius = "8px";
-    textarea.style.resize = "vertical";
-    textarea.style.outline = "none";
-    textarea.style.padding = "16px";
-    textarea.style.minHeight = "64px";
-    textarea.style.marginBottom = "32px";
+  renderQuestionSection() {
+    const questionLabel = this.createLabel("Question:");
+    this.questionTextarea = this.createTextarea(this.data.question, "question-textarea");
+
+    this.wrapper.appendChild(questionLabel);
+    this.wrapper.appendChild(this.questionTextarea);
+  }
+
+  renderSolutionSection() {
+    const solutionLabel = this.createLabel("Sample Solution:");
+    this.solutionTextarea = this.createTextarea(this.data.solution, "solution-textarea");
+
+    this.wrapper.appendChild(solutionLabel);
+    this.wrapper.appendChild(this.solutionTextarea);
+  }
+
+  createLabel(text) {
+    const label = document.createElement("p");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value, className) {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.classList.add("textarea", className);
     textarea.setAttribute("spellcheck", "false");
+    return textarea;
   }
 
   save() {
@@ -162,187 +271,154 @@ class SingleChoice {
   }
 
   render() {
-    // Create main container
     this.container = document.createElement("div");
-    
-    // Create question input
+    this.container.classList.add("single-choice-container");
+
+    this.renderQuestionInput();
+    this.renderOptionsLabel();
+    this.renderOptionsContainer();
+    this.renderButtons();
+
+    this.initializeOptions();
+
+    return this.container;
+  }
+
+  renderQuestionInput() {
     const questionWrapper = document.createElement("div");
-    questionWrapper.style.marginBottom = "16px";
-    
-    const questionLabel = document.createElement("label");
-    questionLabel.textContent = "Question:";
-    questionLabel.style.display = "block";
-    questionLabel.style.marginBottom = "8px";
-    questionLabel.style.fontWeight = "bold";
-    
-    this.questionInput = document.createElement("textarea");
-    this.questionInput.style.border = "1px solid #DBDBDB";
-    this.questionInput.style.borderRadius = "8px";
-    this.questionInput.style.outline = "none";
-    this.questionInput.style.width = "100%";
-    this.questionInput.style.padding = "8px";
-    this.questionInput.value = this.data.question || "";
-    
+    questionWrapper.classList.add("question-wrapper");
+
+    const questionLabel = this.createLabel("Question:");
+    this.questionInput = this.createTextarea(this.data.question);
+
     questionWrapper.appendChild(questionLabel);
     questionWrapper.appendChild(this.questionInput);
     this.container.appendChild(questionWrapper);
-    
-    // Create options container
-    const optionsLabel = document.createElement("label");
-    optionsLabel.textContent = "Add Options, Click the Correct one";
-    optionsLabel.style.display = "block";
-    optionsLabel.style.marginBottom = "8px";
-    optionsLabel.style.fontWeight = "bold";
+  }
+
+  renderOptionsLabel() {
+    const optionsLabel = this.createLabel("Add Options, Click the Correct one");
     this.container.appendChild(optionsLabel);
-    
+  }
+
+  renderOptionsContainer() {
     this.optionsContainer = document.createElement("div");
     this.optionsContainer.id = "optionContainer";
     this.container.appendChild(this.optionsContainer);
-    
-    // Create buttons container
+  }
+
+  renderButtons() {
     const buttonsContainer = document.createElement("div");
-    buttonsContainer.style.display = "flex";
-    buttonsContainer.style.marginTop = "16px";
-    buttonsContainer.style.gap = "16px";
-    
-    // Add option button
-    const addButton = document.createElement('button');
-    addButton.style.padding = '8px 16px';
-    addButton.style.fontSize = '14px';
-    addButton.style.background = '#ffffff';
-    addButton.style.color = '#333';
-    addButton.style.border = '1px solid #DBDBDB';
-    addButton.style.borderRadius = '8px';
-    addButton.style.cursor = 'pointer';
-    addButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
-    addButton.style.alignItems = 'center';
-    addButton.textContent = '+ Option';
-    addButton.style.transition = "box-shadow 0.3s ease";
+    buttonsContainer.classList.add("buttons-container");
 
-    addButton.addEventListener("mouseenter", function() {
-        addButton.style.boxShadow = "0px 2px 10px rgba(0, 255, 0, 0.25)"; // Blauer Schatten
-    });
+    const addButton = this.createButton("+ Option", () => this.createOption(), "add-button");
+    const removeButton = this.createButton("- Option", () => this.removeOption(), "remove-button");
 
-    addButton.addEventListener("mouseleave", function() {
-        addButton.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.05)"; // Original-Schatten
-    });
-    addButton.addEventListener('click', () => this.createOption());
-
-    // Remove option button
-    const removeButton = document.createElement('button');
-    removeButton.style.padding = '8px 16px';
-    removeButton.style.fontSize = '14px';
-    removeButton.style.background = '#ffffff';
-    removeButton.style.color = '#333';
-    removeButton.style.border = '1px solid #DBDBDB';
-    removeButton.style.borderRadius = '8px';
-    removeButton.style.cursor = 'pointer';
-    removeButton.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.05)';
-    removeButton.style.alignItems = 'center';
-    removeButton.textContent = '- Option';
-    removeButton.style.transition = "box-shadow 0.3s ease";
-    removeButton.addEventListener("mouseenter", function() {
-        removeButton.style.boxShadow = "0px 2px 10px rgba(255, 0, 0, 0.25)"; // Blauer Schatten
-    });
-    removeButton.addEventListener("mouseleave", function() {
-        removeButton.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.05)"; // Original-Schatten
-    });
-    removeButton.addEventListener('click', () => this.removeOption());
-    
     buttonsContainer.appendChild(addButton);
     buttonsContainer.appendChild(removeButton);
     this.container.appendChild(buttonsContainer);
-    
-    // Create initial options if present in data
+  }
+
+  initializeOptions() {
     if (this.data.options && this.data.options.length > 0) {
       this.data.options.forEach(option => {
         this.createOption(option.text, option.selected);
       });
     } else {
-      // Create at least one option by default
       this.createOption();
     }
-    
-    return this.container;
   }
-  
-  createOption(text = "", selected = false) {
-    const newOption = document.createElement('div');
-    newOption.style.display = 'flex';
-    newOption.style.alignItems = 'center';
-    newOption.style.gap = '8px';
-    newOption.style.marginBottom = '12px';
-    newOption.style.padding = '10px';
-    newOption.style.borderRadius = '8px';
-    newOption.classList.add('option-item');
 
-    const radioCircle = document.createElement('div');
-    radioCircle.style.width = '12px';
-    radioCircle.style.height = '12px';
-    radioCircle.style.backgroundColor = selected ? 'black' : 'transparent';
-    radioCircle.style.border = '1px solid rgb(129, 129, 129)';
-    radioCircle.style.borderRadius = '99px';
-    radioCircle.style.cursor = 'pointer';
-    
-    const inputField = document.createElement('input');
-    inputField.style.border = '1px solid #DBDBDB';
-    inputField.style.borderRadius = '8px';
-    inputField.style.outline = 'none';
-    inputField.style.width = '100%';
-    inputField.style.padding = '8px';
-    inputField.value = text;
-    
-    // Apply highlight if this option is selected
-    if (selected) {
-      newOption.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.6)';
-    }
-    
-    // Klick-Event für radioCircle (Toggle-Mechanismus)
-    radioCircle.addEventListener('click', () => {
-      const isActive = radioCircle.style.backgroundColor === 'black';
-      
-      // Entferne den Stil von allen radioCircles und ihren Containern
-      this.optionsContainer.querySelectorAll('.option-item').forEach(option => {
-        option.style.boxShadow = 'none';
-        option.querySelector('div').style.backgroundColor = 'transparent';
-      });
-      
-      if (!isActive) {
-        // Diesen Kreis schwarz füllen und Container hervorheben
-        radioCircle.style.backgroundColor = 'black';
-        newOption.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.6)';
-      }
-    });
-    
+  createLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value = "") {
+    const textarea = document.createElement("textarea");
+    textarea.classList.add("textarea");
+    textarea.value = value;
+    return textarea;
+  }
+
+  createButton(text, onClick, className) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.classList.add("button", className);
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  createOption(text = "", selected = false) {
+    const newOption = document.createElement("div");
+    newOption.classList.add("option-item");
+
+    const radioCircle = this.createRadioCircle(selected);
+    const inputField = this.createInputField(text);
+
+    radioCircle.addEventListener("click", () => this.toggleOptionSelection(radioCircle, inputField));
+
     newOption.appendChild(radioCircle);
     newOption.appendChild(inputField);
     this.optionsContainer.appendChild(newOption);
-    
-    // Focus on new input field
+
     inputField.focus();
   }
-  
+
+  createRadioCircle(selected) {
+    const radioCircle = document.createElement("div");
+    radioCircle.classList.add("radio-circle");
+    radioCircle.style.backgroundColor = selected ? "black" : "transparent";
+    return radioCircle;
+  }
+
+  createInputField(value) {
+    const inputField = document.createElement("input");
+    inputField.classList.add("input-field");
+    inputField.value = value;
+    return inputField;
+  }
+
+  toggleOptionSelection(radioCircle, inputField) {
+    const isActive = radioCircle.style.backgroundColor === "black";
+
+    this.optionsContainer.querySelectorAll(".option-item .radio-circle").forEach(circle => {
+      circle.style.backgroundColor = "transparent";
+    });
+
+    this.optionsContainer.querySelectorAll(".option-item .input-field").forEach(input => {
+      input.style.boxShadow = "none";
+    });
+
+    if (!isActive) {
+      radioCircle.style.backgroundColor = "black";
+      inputField.style.boxShadow = "0 0 10px rgba(0, 255, 0, 0.6)";
+    }
+  }
+
   removeOption() {
-    const options = this.optionsContainer.querySelectorAll('.option-item');
+    const options = this.optionsContainer.querySelectorAll(".option-item");
     if (options.length > 0) {
       this.optionsContainer.removeChild(options[options.length - 1]);
     }
   }
-  
+
   save() {
     const options = [];
-    const optionElements = this.optionsContainer.querySelectorAll('.option-item');
-    
+    const optionElements = this.optionsContainer.querySelectorAll(".option-item");
+
     optionElements.forEach(optionElement => {
-      const radioCircle = optionElement.querySelector('div');
-      const inputField = optionElement.querySelector('input');
-      
+      const radioCircle = optionElement.querySelector(".radio-circle");
+      const inputField = optionElement.querySelector(".input-field");
+
       options.push({
         text: inputField.value,
-        selected: radioCircle.style.backgroundColor === 'black'
+        selected: radioCircle.style.backgroundColor === "black"
       });
     });
-    
+
     return {
       question: this.questionInput.value,
       options: options
