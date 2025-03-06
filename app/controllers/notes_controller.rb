@@ -92,9 +92,9 @@ class NotesController < ApplicationController
     begin
       uri = URI.parse(params[:url])
       response = Net::HTTP.get_response(uri)
-      
-      if response.code == "200" && response.content_type.start_with?('image/')
-        tempfile = Tempfile.new(['download', File.extname(uri.path)])
+
+      if response.code == "200" && response.content_type.start_with?("image/")
+        tempfile = Tempfile.new([ "download", File.extname(uri.path) ])
         tempfile.binmode
         tempfile.write(response.body)
         tempfile.rewind
@@ -105,7 +105,7 @@ class NotesController < ApplicationController
           content_type: response.content_type,
           identify: true
         )
-        
+
         render json: {
           success: 1,
           file: {
@@ -124,14 +124,14 @@ class NotesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def valid_image?(image)
       # Erlaubte MIME-Typen definieren
-      allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+      allowed_types = [ "image/jpeg", "image/png", "image/gif", "image/webp" ]
       # Maximale Dateigröße (5MB)
       max_size = 5.megabytes
-      
+
       # Typprüfung und Größenprüfung
       allowed_types.include?(image.content_type) && image.size <= max_size
     end
-    
+
     # Validierung der URL für fetch_image
     def valid_url?(url)
       uri = URI.parse(url)
