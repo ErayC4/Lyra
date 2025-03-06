@@ -4,7 +4,7 @@ class NotesController < ApplicationController
 
   # GET /notes or /notes.json
   def index
-    @notes = Note.all
+    @notes = current_user.notes
   end
 
   # GET /notes/1 or /notes/1.json
@@ -22,7 +22,7 @@ class NotesController < ApplicationController
 
   # POST /notes or /notes.json
   def create
-    @note = Note.new(note_params)
+    @note = current_user.notes.build(note_params)
 
     respond_to do |format|
       if @note.save
@@ -136,11 +136,12 @@ class NotesController < ApplicationController
     def valid_url?(url)
       uri = URI.parse(url)
       uri.is_a?(URI::HTTP) && !uri.host.nil?
-    rescue URI::InvalidURIError
+      rescue URI::InvalidURIError
       false
     end
     def set_note
-      @note = Note.find(params.expect(:id))
+      @note = current_user.notes.find_by(id: params[:id])
+      redirect_to notes_path, alert: "Nicht autorisiert!" if @note.nil?
     end
 
     # Only allow a list of trusted parameters through.
