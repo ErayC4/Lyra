@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :notes do
+    collection do
+      post 'upload_image'
+      post 'fetch_image'
+    end
+  end
   devise_for :users
   resources :tasks
   devise_scope :user do

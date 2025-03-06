@@ -1,0 +1,20 @@
+<p style="color: green"><%= notice %></p>
+<style>
+  .drittel{
+    
+  }
+  .container{
+    display: grid;
+    gap: 5%;
+    grid-template-columns: 2fr 1fr;
+    padding: 0 10%;
+  }
+</style>
+
+<div class="container">
+  <%= render @note %>
+  <p class="drittel">drittel</p>
+</div>
+<%# <%= link_to "Edit this note", edit_note_path(@note) %>
+<%# <%= link_to "Back to notes", notes_path %>
+<%# <%= button_to "Destroy this note", @note, method: :delete %>

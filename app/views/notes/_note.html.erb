@@ -1,0 +1,628 @@
+<style>
+  p{
+    margin: 0;
+  }
+  .toolbar-container{
+    width: calc(50.6% - 32px);
+    position: fixed;
+    margin-top: 32px;
+    z-index: 1000; 
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    border: 1px solid #DBDBDB;
+    padding: 8px 16px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .toolbar-type{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bi{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .editorjs{
+    position: relative;
+    background-color: white;
+    padding: 32px 42px;
+    margin-top: 32px;
+    border-radius: 8px;
+    border: 1px solid #DBDBDB;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .ce-paragraph { /*paragraph block line height*/
+    line-height: 1.5;
+  }
+
+
+.question-container {
+  margin-bottom: 64px;
+  padding: 16px;
+  background-color: #CDFAD2;
+  border-radius: 8px;
+  border: 1px solid #DBDBDB;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.buttons-container {
+  display: flex;
+  margin-top: 16px;
+  gap: 16px;
+}
+
+.button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: white;
+  color: #333;
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.add-button:hover {
+  box-shadow: 0px 2px 10px rgba(0, 255, 0, 0.25);
+}
+
+.remove-button:hover {
+  box-shadow: 0px 2px 10px rgba(255, 0, 0, 0.25);
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.radio-circle {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(129, 129, 129);
+  border-radius: 99px;
+  cursor: pointer;
+}
+
+.input-field {
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  outline: none;
+  background-color: #E5FDE5;
+  width: 100%;
+  padding: 8px;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.textarea {
+  width: calc(100% - 32px);
+  background-color: #E5FDE5;
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  resize: vertical;
+  outline: none;
+  padding: 16px;
+  min-height: 64px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/editorjs-alert@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+
+<script>
+
+  // ############ --- MAIN EDITOR --- #############
+  let editor; // Macht die Editor-Instanz global verfügbar
+
+  document.addEventListener("turbo:load", function () {
+    const editorElement = document.querySelector(".editorjs");
+    const divId = editorElement.id;
+
+    //damit das inputfeld sich mit dem gesavetem content füllt
+    const savedContent = JSON.parse(document.getElementById('editorjs').dataset.savedContent);
+    
+    // Editor-Initialisierung mit vorhandenen Daten
+    editor = new EditorJS({
+      holder: divId,
+      tools: {
+        header: {
+          class: Header,
+          config: {
+            levels: [1, 2], // Nur H1 und H2 erlauben
+            defaultLevel: 1, // Standardmäßig H1 setzen
+          }
+        },
+        alert: {
+          class: Alert,
+          config: {
+            alertTypes: ['primary', 'danger'],
+            defaultType: 'primary',
+            messagePlaceholder: 'Enter something',
+          },
+        },
+
+        list: {
+          class: EditorjsList,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          },
+        },
+
+        image: {
+          class: ImageTool,
+          config: {
+            endpoints: {
+              byFile: '/notes/upload_image', // Endpoint to upload the file
+              byUrl: '/notes/fetch_image'    // If you paste a URL directly
+            },
+            additionalRequestHeaders: {
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+          }
+        },
+        embed: Embed,
+        table: Table,
+        explanation: Explanation,
+        singleChoise: SingleChoice,
+        multipleChoise: MultipleChoice,
+      },
+      data: savedContent, // Übergabe des vorhandenen Inhalts
+      autofocus: true
+    });
+    
+    setupAutoSave(editorElement, editor);
+  });
+
+  // ########## --- EXPLANATION BLOCK --- ###########
+
+class Explanation {
+  static get toolbox() {
+    return {
+      title: "Explaination Question",
+      icon: "📝",
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { question: "", solution: "" };
+    this.wrapper = null;
+  }
+
+  render() {
+    this.wrapper = document.createElement("div");
+    this.wrapper.classList.add("question-container");
+
+    this.renderQuestionSection();
+    this.renderSolutionSection();
+
+    return this.wrapper;
+  }
+
+  renderQuestionSection() {
+    const questionLabel = this.createLabel("Question:");
+    this.questionTextarea = this.createTextarea(this.data.question, "textarea");
+
+    this.wrapper.appendChild(questionLabel);
+    this.wrapper.appendChild(this.questionTextarea);
+  }
+
+  renderSolutionSection() {
+    const solutionLabel = this.createLabel("Sample Solution:");
+    this.solutionTextarea = this.createTextarea(this.data.solution, "textarea");
+
+    this.wrapper.appendChild(solutionLabel);
+    this.wrapper.appendChild(this.solutionTextarea);
+  }
+
+  createLabel(text) {
+    const label = document.createElement("p");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value, className) {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.classList.add("textarea", className);
+    textarea.setAttribute("spellcheck", "false");
+    return textarea;
+  }
+
+  save() {
+    return {
+      question: this.questionTextarea.value,
+      solution: this.solutionTextarea.value,
+    };
+  }
+}
+
+// ########### --- Single Choise Block --- ###########
+
+class SingleChoice {
+  static get toolbox() {
+    return {
+      title: "Single Choice Question",
+      icon: '📝',
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { 
+      question: "",
+      options: []
+    };
+    this.container = null;
+    this.questionInput = null;
+    this.optionsContainer = null;
+  }
+
+  render() {
+    this.container = document.createElement("div");
+    this.container.classList.add("question-container");
+
+    this.renderQuestionInput();
+    this.renderOptionsLabel();
+    this.renderOptionsContainer();
+    this.renderButtons();
+
+    this.initializeOptions();
+
+    return this.container;
+  }
+
+  renderQuestionInput() {
+    const questionWrapper = document.createElement("div");
+    questionWrapper.classList.add("question-wrapper");
+
+    const questionLabel = this.createLabel("Question:");
+    this.questionInput = this.createTextarea(this.data.question);
+
+    questionWrapper.appendChild(questionLabel);
+    questionWrapper.appendChild(this.questionInput);
+    this.container.appendChild(questionWrapper);
+  }
+
+  renderOptionsLabel() {
+    const optionsLabel = this.createLabel("Add Options, Click the Correct one");
+    this.container.appendChild(optionsLabel);
+  }
+
+  renderOptionsContainer() {
+    this.optionsContainer = document.createElement("div");
+    this.optionsContainer.id = "optionContainer";
+    this.container.appendChild(this.optionsContainer);
+  }
+
+  renderButtons() {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+
+    const addButton = this.createButton("+ Option", () => this.createOption(), "add-button");
+    const removeButton = this.createButton("- Option", () => this.removeOption(), "remove-button");
+
+    buttonsContainer.appendChild(addButton);
+    buttonsContainer.appendChild(removeButton);
+    this.container.appendChild(buttonsContainer);
+  }
+
+  initializeOptions() {
+    if (this.data.options && this.data.options.length > 0) {
+      this.data.options.forEach(option => {
+        this.createOption(option.text, option.selected);
+      });
+    } else {
+      this.createOption();
+    }
+  }
+
+  createLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value = "") {
+    const textarea = document.createElement("textarea");
+    textarea.classList.add("textarea");
+    textarea.value = value;
+    return textarea;
+  }
+
+  createButton(text, onClick, className) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.classList.add("button", className);
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  createOption(text = "", selected = false) {
+    const newOption = document.createElement("div");
+    newOption.classList.add("option-item");
+
+    const radioCircle = this.createRadioCircle(selected);
+    const inputField = this.createInputField(text);
+
+    radioCircle.addEventListener("click", () => this.toggleOptionSelection(radioCircle, inputField));
+
+    newOption.appendChild(radioCircle);
+    newOption.appendChild(inputField);
+    this.optionsContainer.appendChild(newOption);
+
+    inputField.focus();
+  }
+
+  createRadioCircle(selected) {
+    const radioCircle = document.createElement("div");
+    radioCircle.classList.add("radio-circle");
+    radioCircle.style.backgroundColor = selected ? "black" : "#FFFFFF";
+    return radioCircle;
+  }
+
+  createInputField(value) {
+    const inputField = document.createElement("input");
+    inputField.classList.add("input-field");
+    inputField.value = value;
+    return inputField;
+  }
+
+  toggleOptionSelection(radioCircle, inputField) {
+    const isActive = radioCircle.style.backgroundColor === "black";
+
+    this.optionsContainer.querySelectorAll(".option-item .radio-circle").forEach(circle => {
+      circle.style.backgroundColor = "#FFFFFF";
+    });
+
+    if (!isActive) {
+      radioCircle.style.backgroundColor = "black";
+    }
+  }
+
+  removeOption() {
+    const options = this.optionsContainer.querySelectorAll(".option-item");
+    if (options.length > 0) {
+      this.optionsContainer.removeChild(options[options.length - 1]);
+    }
+  }
+
+  save() {
+    const options = [];
+    const optionElements = this.optionsContainer.querySelectorAll(".option-item");
+
+    optionElements.forEach(optionElement => {
+      const radioCircle = optionElement.querySelector(".radio-circle");
+      const inputField = optionElement.querySelector(".input-field");
+
+      options.push({
+        text: inputField.value,
+        selected: radioCircle.style.backgroundColor === "black"
+      });
+    });
+
+    return {
+      question: this.questionInput.value,
+      options: options
+    };
+  }
+}
+
+// ########## --- MultipleChoise BLOCK --- ###########
+
+class MultipleChoice {
+  static get toolbox() {
+    return {
+      title: "Multiple Choice Question",
+      icon: '📝',
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { 
+      question: "",
+      options: []
+    };
+    this.container = null;
+    this.questionInput = null;
+    this.optionsContainer = null;
+  }
+
+  render() {
+    this.container = document.createElement("div");
+    this.container.classList.add("question-container");
+
+    this.renderQuestionInput();
+    this.renderOptionsLabel();
+    this.renderOptionsContainer();
+    this.renderButtons();
+
+    this.initializeOptions();
+
+    return this.container;
+  }
+
+  renderQuestionInput() {
+    const questionWrapper = document.createElement("div");
+    questionWrapper.classList.add("question-wrapper");
+
+    const questionLabel = this.createLabel("Question:");
+    this.questionInput = this.createTextarea(this.data.question);
+
+    questionWrapper.appendChild(questionLabel);
+    questionWrapper.appendChild(this.questionInput);
+    this.container.appendChild(questionWrapper);
+  }
+
+  renderOptionsLabel() {
+    const optionsLabel = this.createLabel("Add Options, Select the Correct ones");
+    this.container.appendChild(optionsLabel);
+  }
+
+  renderOptionsContainer() {
+    this.optionsContainer = document.createElement("div");
+    this.optionsContainer.id = "optionContainer";
+    this.container.appendChild(this.optionsContainer);
+  }
+
+  renderButtons() {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+
+    const addButton = this.createButton("+ Option", () => this.createOption(), "add-button");
+    const removeButton = this.createButton("- Option", () => this.removeOption(), "remove-button");
+
+    buttonsContainer.appendChild(addButton);
+    buttonsContainer.appendChild(removeButton);
+    this.container.appendChild(buttonsContainer);
+  }
+
+  initializeOptions() {
+    if (this.data.options && this.data.options.length > 0) {
+      this.data.options.forEach(option => {
+        this.createOption(option.text, option.selected);
+      });
+    } else {
+      this.createOption();
+    }
+  }
+
+  createLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.classList.add("label");
+    return label;
+  }
+
+  createTextarea(value = "") {
+    const textarea = document.createElement("textarea");
+    textarea.classList.add("textarea");
+    textarea.value = value;
+    return textarea;
+  }
+
+  createButton(text, onClick, className) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.classList.add("button", className);
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  createOption(text = "", selected = false) {
+    const newOption = document.createElement("div");
+    newOption.classList.add("option-item");
+
+    const checkbox = this.createCheckbox(selected);
+    const inputField = this.createInputField(text);
+
+    checkbox.addEventListener("change", () => this.toggleOptionSelection(checkbox, inputField));
+
+    newOption.appendChild(checkbox);
+    newOption.appendChild(inputField);
+    this.optionsContainer.appendChild(newOption);
+
+    inputField.focus();
+
+  }
+
+  createCheckbox(selected) {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("checkbox");
+    checkbox.checked = selected;
+    return checkbox;
+  }
+
+  createInputField(value) {
+    const inputField = document.createElement("input");
+    inputField.classList.add("input-field");
+    inputField.value = value;
+    return inputField;
+  }
+
+  toggleOptionSelection(checkbox, inputField) {
+    if (checkbox.checked) {
+    } else {
+      inputField.style.boxShadow = "none";
+    }
+  }
+
+  removeOption() {
+    const options = this.optionsContainer.querySelectorAll(".option-item");
+    if (options.length > 0) {
+      this.optionsContainer.removeChild(options[options.length - 1]);
+    }
+  }
+
+  save() {
+    const options = [];
+    const optionElements = this.optionsContainer.querySelectorAll(".option-item");
+
+    optionElements.forEach(optionElement => {
+      const checkbox = optionElement.querySelector(".checkbox");
+      const inputField = optionElement.querySelector(".input-field");
+
+      options.push({
+        text: inputField.value,
+        selected: checkbox.checked
+      });
+    });
+
+    return {
+      question: this.questionInput.value,
+      options: options
+    };
+  }
+}
+
+</script>
+
+
+
+<%= javascript_include_tag "autosave" %>
+
+<div id="<%= dom_id note %>">
+      
+
+
+  <div id="editorjs" class="editorjs" 
+       data-instance-of-table-id="<%= @note.id %>" 
+       data-table-name="note"
+       data-autosave-interval="3000"
+       data-saved-content="<%= @note.content.to_json %>">
+  </div>   
+ 
+</div>  
