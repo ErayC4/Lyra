@@ -54,6 +54,66 @@ class NotesController < ApplicationController
     end
   end
 
+  def upload_image
+    # Create a unique filename
+    @filename = "#{SecureRandom.uuid}_#{params[:image].original_filename}"
+    
+    # Define upload path (create directory if doesn't exist)
+    @upload_path = Rails.root.join('public', 'uploads', 'images')
+    FileUtils.mkdir_p(@upload_path) unless File.directory?(@upload_path)
+    
+    # Save the file to the upload path
+    File.open(@upload_path.join(@filename), 'wb') do |file|
+      file.write(params[:image].read)
+    end
+    
+    # Return the JSON response expected by EditorJS
+    render json: {
+      success: 1,
+      file: {
+        url: "/uploads/images/#{@filename}",
+        # You can add more metadata if needed
+        name: @filename,
+        size: params[:image].size
+      }
+    }
+  rescue => e
+    # Handle errors
+    render json: { success: 0, message: e.message }, status: :unprocessable_entity
+  end
+  
+  def fetch_image
+    # Handle images by URL
+    image_url = params[:url]
+    
+    # Download and save the image (consider security implications)
+    require 'open-uri'
+    
+    @filename = "#{SecureRandom.uuid}_#{File.basename(image_url)}"
+    @upload_path = Rails.root.join('public', 'uploads', 'images')
+    FileUtils.mkdir_p(@upload_path) unless File.directory?(@upload_path)
+    
+    begin
+      # Download the file
+      image_data = URI.open(image_url).read
+      
+      # Save it
+      File.open(@upload_path.join(@filename), 'wb') do |file|
+        file.write(image_data)
+      end
+      
+      render json: {
+        success: 1,
+        file: {
+          url: "/uploads/images/#{@filename}",
+          name: @filename
+        }
+      }
+    rescue => e
+      render json: { success: 0, message: e.message }, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_note
@@ -62,6 +122,6 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.require(:note).permit(content: {}) # Erlaubt JSON-Parameter
+      params.require(:note).permit(content: {}, pictures: []) # Erlaubt JSON-Parameter
     end
 end

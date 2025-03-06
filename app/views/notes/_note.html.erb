@@ -156,7 +156,13 @@
     editor = new EditorJS({
       holder: divId,
       tools: {
-        header: Header,
+        header: {
+          class: Header,
+          config: {
+            levels: [1, 2], // Nur H1 und H2 erlauben
+            defaultLevel: 1, // Standardmäßig H1 setzen
+          }
+        },
         alert: {
           class: Alert,
           config: {
@@ -174,7 +180,18 @@
           },
         },
 
-        image: ImageTool, //das muss noch konfiguriert werden
+        image: {
+          class: ImageTool,
+          config: {
+            endpoints: {
+              byFile: '/notes/upload_image', // Endpoint to upload the file
+              byUrl: '/notes/fetch_image'    // If you paste a URL directly
+            },
+            additionalRequestHeaders: {
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+          }
+        },
         embed: Embed,
         table: Table,
         explanation: Explanation,
