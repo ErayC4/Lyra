@@ -1,0 +1,2 @@
+class Ai < ApplicationRecord
+end

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Ais" %>
+
+<h1>Ais</h1>
+
+<div id="ais">
+  <% @ais.each do |ai| %>
+    <%= render ai %>
+    <p>
+      <%= link_to "Show this ai", ai %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New ai", new_ai_path %>

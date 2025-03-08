@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :ais
   resources :notes do
     collection do
       post 'upload_image'
