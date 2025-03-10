@@ -23,16 +23,13 @@ class AisController < ApplicationController
   def create
     @ai = Ai.new(ai_params)
 
-    respond_to do |format|
-      if @ai.save
-        format.html { redirect_to @ai, notice: "Ai was successfully created." }
-        format.json { render :show, status: :created, location: @ai }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ai.errors, status: :unprocessable_entity }
-      end
+    if @ai.save
+      render json: { message: "Chat erfolgreich gespeichert", chat: @ai.chat }, status: :created
+    else
+      render json: { errors: @ai.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
 
   # PATCH/PUT /ais/1 or /ais/1.json
   def update
@@ -65,6 +62,6 @@ class AisController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ai_params
-      params.expect(ai: [ :generation ])
+      params.require(:ai).permit(chat: [ :role, :content ])
     end
 end

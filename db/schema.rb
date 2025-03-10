@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_08_125803) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_10_153518) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_08_125803) do
   end
 
   create_table "ais", force: :cascade do |t|
-    t.json "generation"
+    t.json "chat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
