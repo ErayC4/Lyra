@@ -248,6 +248,36 @@
 
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("create-ai-button").addEventListener("click", function () {
+    fetch("/ais", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+      },
+      body: JSON.stringify({
+        ai: { chat: [{ role: "system", content: "Neue AI gestartet" }] }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.errors) {
+        alert("Fehler: " + data.errors.join(", "));
+      } else {
+        const messagesContainer = document.getElementById("ai-messages");
+        const newMessage = document.createElement("p");
+        newMessage.textContent = "Neue AI erstellt: " + JSON.stringify(data.chat);
+        messagesContainer.appendChild(newMessage);
+      }
+    })
+    .catch(error => console.error("Fehler:", error));
+  });
+});
+
+</script>
 <div class="container">
   <div style="margin-top: 32px; ">
     <div class="note-heading">
@@ -301,7 +331,7 @@
     </div>
     <div class="ai-container">
       <div class="ai-chat-buttons">
-        <button class="small-white-button">
+        <button class="small-white-button"  id="create-ai-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
           </svg>
@@ -313,6 +343,7 @@
             <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8m0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5"/>
           </svg>
         </button>
+
         <button class="small-white-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
             <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
@@ -330,6 +361,4 @@
     </div>
   </div>
 </div>
-<%# <%= link_to "Edit this note", edit_note_path(@note) %>
-<%# <%= link_to "Back to notes", notes_path %>
-<%# <%= button_to "Destroy this note", @note, method: :delete %>
+
