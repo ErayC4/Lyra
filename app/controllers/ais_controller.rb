@@ -57,7 +57,14 @@ class AisController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ai
-      @ai = Ai.find(params.expect(:id))
+      @ai = Ai.find_by(id: params[:id])
+
+      unless @ai
+        respond_to do |format|
+          format.html { redirect_to ais_path }
+          format.json { head :no_content }
+        end
+      end
     end
 
     # Only allow a list of trusted parameters through.
