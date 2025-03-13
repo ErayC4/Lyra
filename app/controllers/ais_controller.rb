@@ -13,6 +13,7 @@ class AisController < ApplicationController
       format.json { render json: { id: @ai.id, chat: @ai.chat } }
     end
   end
+
   # GET /ais/new
   def new
     @ai = Ai.new
@@ -27,22 +28,21 @@ class AisController < ApplicationController
     @ai = Ai.new(ai_params)
 
     if @ai.save
-      render json: { message: "Chat erfolgreich gespeichert", chat: @ai.chat }, status: :created
+      render json: { id: @ai.id, chat: @ai.chat }, status: :created
     else
       render json: { errors: @ai.errors.full_messages }, status: :unprocessable_entity
     end
   end
-
 
   # PATCH/PUT /ais/1 or /ais/1.json
   def update
     respond_to do |format|
       if @ai.update(ai_params)
         format.html { redirect_to @ai, notice: "Ai was successfully updated." }
-        format.json { render :show, status: :ok, location: @ai }
+        format.json { render json: { id: @ai.id, chat: @ai.chat }, status: :ok }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ai.errors, status: :unprocessable_entity }
+        format.json { render json: { errors: @ai.errors.full_messages }, status: :unprocessable_entity }
       end
     end
   end
@@ -64,14 +64,15 @@ class AisController < ApplicationController
 
       unless @ai
         respond_to do |format|
-          format.html { redirect_to ais_path }
-          format.json { head :no_content }
+          format.html { redirect_to ais_path, notice: "Chat not found" }
+          format.json { render json: { errors: [ "Chat not found" ] }, status: :not_found }
         end
       end
     end
 
     # Only allow a list of trusted parameters through.
     def ai_params
+      # Erlaubt ein Array von Nachrichten in 'chat'
       params.require(:ai).permit(chat: [ :role, :content ])
     end
 end
