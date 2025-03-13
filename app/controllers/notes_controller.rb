@@ -5,11 +5,12 @@ class NotesController < ApplicationController
   # GET /notes or /notes.json
   def index
     @notes = current_user.notes
+    @ais = current_user.ais
   end
 
   # GET /notes/1 or /notes/1.json
   def show
-    @ais = Ai.all
+    @ais = current_user.ais
     respond_to do |format|
       format.html # normal HTML response
       format.json { render json: @ai }

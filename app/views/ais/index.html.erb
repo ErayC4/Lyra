@@ -222,7 +222,6 @@
               <div class="section-header">Heute</div>
                 <div class="chat-list-container">
                   <% @ais.each do |ai| %>
-                    <% if ai.user_id == current_user.id %>
                     <button 
                       onclick="openChat(<%= ai.id %>)" 
                       data-chat-id="<%= ai.id %>"
@@ -230,7 +229,6 @@
                     >
                       <p class="chat-title"><%= ai.id %> Lorem Ipsum bjön</p>
                     </button>
-                    <% end %>
                   <% end %>
                 </div>
               </div>

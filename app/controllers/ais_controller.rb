@@ -60,7 +60,7 @@ class AisController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ai
-      @ai = current_user.ais.find_by(id: params[:id])
+      @ai = current_user.ais.find(params[:id])
       unless @ai
         respond_to do |format|
           format.html { redirect_to ais_path, notice: "Chat not found" }
@@ -72,6 +72,6 @@ class AisController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ai_params
       # Erlaubt ein Array von Nachrichten in 'chat'
-      params.require(:ai).permit(:title, :user_id, chat: [ :role, :content ])
+      params.require(:ai).permit(:title, chat: [ :role, :content ])
     end
 end
