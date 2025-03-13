@@ -8,8 +8,11 @@ class AisController < ApplicationController
 
   # GET /ais/1 or /ais/1.json
   def show
+    respond_to do |format|
+      format.html # Renders the show.html.erb template
+      format.json { render json: { id: @ai.id, chat: @ai.chat } }
+    end
   end
-
   # GET /ais/new
   def new
     @ai = Ai.new
