@@ -3,7 +3,7 @@ class AisController < ApplicationController
 
   # GET /ais or /ais.json
   def index
-    @ais = Ai.all
+    @ais = current_user.ais
   end
 
   # GET /ais/1 or /ais/1.json
@@ -25,7 +25,7 @@ class AisController < ApplicationController
 
   # POST /ais or /ais.json
   def create
-    @ai = Ai.new(ai_params)
+    @ai = current_user.ais.build(ai_params)
 
     if @ai.save
       render json: { id: @ai.id, chat: @ai.chat }, status: :created
@@ -60,8 +60,7 @@ class AisController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ai
-      @ai = Ai.find_by(id: params[:id])
-
+      @ai = current_user.ais.find_by(id: params[:id])
       unless @ai
         respond_to do |format|
           format.html { redirect_to ais_path, notice: "Chat not found" }
@@ -73,6 +72,6 @@ class AisController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ai_params
       # Erlaubt ein Array von Nachrichten in 'chat'
-      params.require(:ai).permit(chat: [ :role, :content ])
+      params.require(:ai).permit(:title, :user_id, chat: [ :role, :content ])
     end
 end

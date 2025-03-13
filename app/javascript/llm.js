@@ -7,28 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let chatHistory = [];
     let currentChatId = null; // Track the current chat ID
   
-    // Debug element to show current chat
-    const debugDiv = document.createElement('div');
-    debugDiv.id = 'chat-debug';
-    debugDiv.style.padding = '5px';
-    debugDiv.style.backgroundColor = '#f0f0f0';
-    debugDiv.style.borderRadius = '4px';
-    debugDiv.style.marginBottom = '10px';
-    debugDiv.style.fontSize = '12px';
-    debugDiv.textContent = 'Aktueller Chat: Neu (nicht gespeichert)';
-    document.querySelector('.ai-field').parentNode.insertBefore(debugDiv, document.querySelector('.ai-field'));
-  
-    // Funktion zur Aktualisierung der Debug-Information
-    // Diese Funktion muss VOR resetChatInterface definiert werden
-    function updateDebugInfo() {
-        if (currentChatId) {
-            debugDiv.textContent = `Aktueller Chat: ID ${currentChatId}`;
-        } else {
-            debugDiv.textContent = 'Aktueller Chat: Neu (nicht gespeichert)';
-        }
-    }
-  
-    // Hilfsfunktion zum Hinzufügen von Nachrichten zur UI
+    
     function addMessage(text, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = isUser ? 'user-message' : 'ai-message';
@@ -55,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentChatId = null;
         chatHistory = [];
         aiField.innerHTML = '';
-        updateDebugInfo();
         
         // Add welcome message
         addMessage('Hallo! Wie kann ich dir helfen?', false);
@@ -149,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 currentChatId = newChatId;
-                updateDebugInfo();
             }
             
             // Jetzt können wir die Anfrage an DeepSeek senden
@@ -202,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(chatId => {
                 if (chatId) {
                     currentChatId = chatId;
-                    updateDebugInfo();
                 } else {
                     console.error("Konnte keinen neuen Chat erstellen");
                 }
@@ -220,10 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear the current chat history and messages in the UI
         chatHistory = [];
         aiField.innerHTML = '';
-        
-        // Update debug information
-        updateDebugInfo();
-        
+                
         // Fetch the selected chat data from the server
         fetch(`/ais/${chatId}`, {
             method: "GET",

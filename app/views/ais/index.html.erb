@@ -1,4 +1,190 @@
+<style>
+  .chat-list-item {
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    transition: 0.3s ease;
+    padding: 4px 16px;
+  }
+  .chat-list-item:hover{
+    background-color: #DBDBDB
+  }
+  .chat-list-container{
+    display: flex;
+    flex-direction: column;
+  }
 
+  .chat-title{
+    text-align: left;
+    font-size: 1rem;
+  }
+  .section{
+    padding: 16px 0px;
+  }
+  .small-white-button:hover{
+    background-color: #DBDBDB;
+  }
+  .toolbar{
+    border-radius: 8px;
+    padding: 2px;
+    display: flex;
+    gap: 8px;
+    justify-content: space-evenly;
+    background-color: white;
+    align-items: center;
+    border: 1px solid #DBDBDB;
+  }
+  .toolbar-button{
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease;
+
+  }
+  .toolbar-button-active{
+    background-color: black;
+    color: white;
+    width: 100%;
+    border: none;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+  }
+  .toolbar-button:hover{
+    background-color: #EFEFEF;
+  }
+
+  .ai-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .ai-chat-buttons{
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    margin-left: auto;
+  }
+
+  .small-white-button{
+    background-color: white;
+    padding: 4px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 33px;
+    height: 33px;
+    transition: 0.2s ease;
+  }
+  .small-black-button{
+    background-color: black;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 33px;
+  }
+  .ai-chat-container{
+    display:flex;
+    gap: 16px;
+    align-items: center;
+    background-color: white;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #DBDBDB;
+
+  }
+  .ai-inputfield{
+    border: none;
+    flex-grow: 1;
+    outline: none;
+    background-color: transparent
+  }
+
+  /* ai */
+  .dropdown-content {
+  position: absolute;
+  top: calc(32px + 35px + 16px);
+  width: calc(38.46% - 64px - 28px);
+  height: calc(100vh - 110px - 64px - 35px - 16px);
+  background-color: white;
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  
+  /* Transition-Eigenschaften hinzufügen */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+  
+  /* Show the dropdown menu when button is clicked */
+  .dropdown-button:focus + .dropdown-content,
+  .dropdown-content:hover {
+    display: flex;
+  }
+  
+  /* Dropdown header with search */
+  .dropdown-header {
+    padding: 10px;
+    border-bottom: 1px solid #DBDBDB;
+  }
+  
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .archived-label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .search-box {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px 8px;
+  }
+  
+  .search-box input {
+    border: none;
+    background: transparent;
+    margin-left: 5px;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .dropdown-content-body {
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  .section-header{
+    margin-left: 16px;
+  }
+</style>
+    
+<%= javascript_include_tag "llm" %>
+<%= javascript_include_tag "newchat" %>
+<%= javascript_include_tag "sidemenu" %>
     <div class="toolbar">
       <button class="toolbar-button-active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magic" viewBox="0 0 16 16">
         <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707zM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1zM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707zM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0z"/>
@@ -30,25 +216,26 @@
               </div>
             </div>
           </div>
-          
           <div class="dropdown-content-body">
             <!-- Heute section -->
             <div class="section">
               <div class="section-header">Heute</div>
-              <div class="note-item">
-  <% @ais.each do |ai| %>
-    <button 
-      onclick="openChat(<%= ai.id %>)" 
-      data-chat-id="<%= ai.id %>"
-      class="<%= 'active' if @active_chat_id == ai.id %>"
-    >
-      <%= ai.chat %>
-    </button>
-  <% end %>
-</div>
+                <div class="chat-list-container">
+                  <% @ais.each do |ai| %>
+                    <% if ai.user_id == current_user.id %>
+                    <button 
+                      onclick="openChat(<%= ai.id %>)" 
+                      data-chat-id="<%= ai.id %>"
+                      class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
+                    >
+                      <p class="chat-title"><%= ai.id %> Lorem Ipsum bjön</p>
+                    </button>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
     <div>
     <div class="ai-container">
       <div class="ai-chat-buttons">

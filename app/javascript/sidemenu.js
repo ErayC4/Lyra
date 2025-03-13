@@ -8,15 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     dropdownContent.classList.toggle('active');
   });
   
-  // Close dropdown only when clicking outside
+  // Close dropdown when clicking outside
   document.addEventListener('click', function(e) {
     if (!dropdownContent.contains(e.target) && e.target !== dropdownButton) {
       dropdownContent.classList.remove('active');
     }
   });
-  
-  // Prevent closing when clicking inside dropdown
-  dropdownContent.addEventListener('click', function(e) {
-    e.stopPropagation();
+
+  // Close dropdown when clicking on a chat-list-item
+  document.querySelectorAll('.chat-list-item').forEach(item => {
+    item.addEventListener('click', function() {
+      dropdownContent.classList.remove('active');
+    });
   });
 });
