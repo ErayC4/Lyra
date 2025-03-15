@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         messages: [
                             { 
                                 role: "system", 
-                                content: "Fasse die folgende Nachricht in maximal 5 Wörtern als prägnanten Titel zusammen. Zum beispiel: Drei Affen essen Banananen. Was du nicht machen sollst: Titel: Drei Affen essen Bananen" 
+                                content: "Fasse die folgende Nachricht in maximal 5 Wörtern als prägnanten Titel zusammen. Ich will das du nur den Titel ausgibst sonst nichts. Also informationen wie 'Titel: ' oder 'Das könnte ein möglicher Titel sein: ', lässt du unbedingt weg." 
                             },
                             { 
                                 role: "user", 
