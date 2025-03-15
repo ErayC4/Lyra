@@ -14,13 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.style.padding = '8px 12px';
         messageDiv.style.marginBottom = '8px';
         messageDiv.style.borderRadius = '4px';
-        messageDiv.style.maxWidth = '80%';
   
         if (isUser) {
-            messageDiv.style.backgroundColor = '#e9f5ff';
+            messageDiv.style.backgroundColor = '#F5D5FF';
             messageDiv.style.marginLeft = 'auto';
         } else {
-            messageDiv.style.backgroundColor = '#f5f5f5';
+            messageDiv.style.backgroundColor = 'transparent';
             text = text.replace(/<think>[\s\S]*?<\/think>/g, '');
         }
   
@@ -110,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendToDeepSeek(userInput) {
         // Füge die Benutzernachricht zur Chatgeschichte hinzu
         chatHistory.push({ role: "user", content: userInput });
-  
+        const isFirstMessage = chatHistory.filter(msg => msg.role === "user").length === 1;
+    
         // Lade-Indikator anzeigen
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'ai-message typing';
@@ -139,19 +139,70 @@ document.addEventListener('DOMContentLoaded', function() {
                     stream: false
                 })
             });
-  
+    
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-  
+    
             const data = await response.json();
             aiField.removeChild(typingIndicator);
-  
+    
             const aiResponse = data.message.content;
             addMessage(aiResponse, false);
             chatHistory.push({ role: "assistant", content: aiResponse });
-  
-            // Update the chat on the server
-            updateChatOnServer();
-  
+    
+            // Wenn es die erste Nachricht ist, generiere einen Titel
+            if (isFirstMessage) {
+                // Titelerstellung mit derselben AI
+                const titleResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: "deepseek-r1:8b",
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "Fasse die folgende Nachricht in maximal 5 Wörtern als prägnanten Titel zusammen. Zum beispiel: Drei Affen essen Banananen. Was du nicht machen sollst: Titel: Drei Affen essen Bananen" 
+                            },
+                            { 
+                                role: "user", 
+                                content: userInput 
+                            }
+                        ],
+                        stream: false
+                    })
+                });
+                
+                if (titleResponse.ok) {
+                    const titleData = await titleResponse.json();
+                    // Remove <think> tags from title
+                    let chatTitle = titleData.message.content.trim();
+                    chatTitle = chatTitle.replace(/<think>[\s\S]*?<\/think>/g, '');
+                    
+                    // Speichere den Titel im aktuellen Chat
+                    fetch(`/ais/${currentChatId}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                        },
+                        body: JSON.stringify({
+                            ai: { 
+                                title: chatTitle,
+                                chat: chatHistory 
+                            }
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) console.error("Fehler beim Speichern des Titels");
+                        return response.json();
+                    })
+                    .catch(error => console.error("Fehler beim Speichern des Titels:", error));
+                }
+            } else {
+                // Update the chat on the server without changing the title
+                updateChatOnServer();
+            }
+    
         } catch (error) {
             console.error('Fehler:', error);
             if (typingIndicator.parentNode) {
