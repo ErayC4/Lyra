@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // Funktion, die einen neuen Chat auf dem Server erstellt und die ID zurückgibt
     function createNewChatOnServer() {
+        
         return fetch("/ais", {
             method: "POST",
             headers: {
@@ -109,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendToDeepSeek(userInput) {
         // Füge die Benutzernachricht zur Chatgeschichte hinzu
         chatHistory.push({ role: "user", content: userInput });
-        const isFirstMessage = chatHistory.filter(msg => msg.role === "user").length === 1;
     
         // Lade-Indikator anzeigen
         const typingIndicator = document.createElement('div');
@@ -149,59 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage(aiResponse, false);
             chatHistory.push({ role: "assistant", content: aiResponse });
     
-            // Wenn es die erste Nachricht ist, generiere einen Titel
-            if (isFirstMessage) {
-                // Titelerstellung mit derselben AI
-                const titleResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: "deepseek-r1:8b",
-                        messages: [
-                            { 
-                                role: "system", 
-                                content: "Fasse die folgende Nachricht in maximal 5 Wörtern als prägnanten Titel zusammen. Ich will das du nur den Titel ausgibst sonst nichts. Also informationen wie 'Titel: ' oder 'Das könnte ein möglicher Titel sein: ', lässt du unbedingt weg." 
-                            },
-                            { 
-                                role: "user", 
-                                content: userInput 
-                            }
-                        ],
-                        stream: false
-                    })
-                });
-                
-                if (titleResponse.ok) {
-                    const titleData = await titleResponse.json();
-                    // Remove <think> tags from title
-                    let chatTitle = titleData.message.content.trim();
-                    chatTitle = chatTitle.replace(/<think>[\s\S]*?<\/think>/g, '');
-                    
-                    // Speichere den Titel im aktuellen Chat
-                    fetch(`/ais/${currentChatId}`, {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json",
-                            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                        },
-                        body: JSON.stringify({
-                            ai: { 
-                                title: chatTitle,
-                                chat: chatHistory 
-                            }
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) console.error("Fehler beim Speichern des Titels");
-                        return response.json();
-                    })
-                    .catch(error => console.error("Fehler beim Speichern des Titels:", error));
-                }
-            } else {
-                // Update the chat on the server without changing the title
-                updateChatOnServer();
-            }
+            // Unabhängig davon, ob es die erste Nachricht ist oder nicht,
+            // aktualisieren wir einfach den Chat auf dem Server
+            updateChatOnServer();
     
         } catch (error) {
             console.error('Fehler:', error);
@@ -223,20 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Funktion, die die UI zurücksetzt und einen neuen Chat erstellt
+    // Funktion, die die UI zurücksetzt und einen neuen Chat erstellt
     function createNewChat() {
         resetChatInterface();
-        
-        createNewChatOnServer()
-            .then(chatId => {
-                if (chatId) {
-                    currentChatId = chatId;
-                } else {
-                    console.error("Konnte keinen neuen Chat erstellen");
-                }
-            })
-            .catch(error => {
-                console.error("Fehler beim Erstellen des Chats:", error);
-            });
     }
     
     // Machen Sie die openChat-Funktion global verfügbar
