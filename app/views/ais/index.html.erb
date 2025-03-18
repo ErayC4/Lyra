@@ -226,11 +226,10 @@
                   seven_days_ago = today - 7
                   
                   # Gruppiere AIs nach Datum
-                  todays_ais = @ais.select { |ai| ai.created_at.to_date == today }
-                  yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }
-                  last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }
-                  older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }
-                  
+                  todays_ais = @ais.select { |ai| ai.created_at.to_date == today }.sort_by { |ai| ai.created_at }.reverse
+                  yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }.sort_by { |ai| ai.created_at }.reverse
+                  last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.sort_by { |ai| ai.created_at }.reverse
+                  older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.sort_by { |ai| ai.created_at }.reverse
                   # Hilfsfunktion zum Rendern der Chat-Buttons
                   def render_chat_button(ai)
                 %>
