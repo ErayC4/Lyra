@@ -178,7 +178,9 @@
   }
 
   .section-header{
+    margin-bottom: 8px;
     margin-left: 16px;
+    font-weight: bold;
   }
 </style>
     
@@ -207,7 +209,6 @@
       <div class="dropdown-content">
           <div class="dropdown-header">
             <div class="search-container">
-              <span class="archived-label">Archived</span>
               <div class="search-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -218,20 +219,24 @@
           </div>
           <div class="dropdown-content-body">
             <!-- Heute section -->
-            <div class="section">
-              <div class="section-header">Heute</div>
                 <div class="chat-list-container">
                   <% @ais.each do |ai| %>
+                    <% if Date.today  == ai.created_at.to_date%>
                     <button 
                       onclick="openChat(<%= ai.id %>)" 
                       data-chat-id="<%= ai.id %>"
                       class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
                     >
-                      <p class="chat-title"><%= ai.title %></p>
+                      <p class="chat-title">
+                        <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
+                        <% if user_message %>
+                          <%= user_message["content"].split.first(5).join(" ") %>
+                        <% end %>
+                      </p>
                     </button>
+                    <% end %>
                   <% end %>
                 </div>
-              </div>
             </div>
           </div>
     <div>

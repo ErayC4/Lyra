@@ -40,11 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Funktion zur Aktualisierung des Chats auf dem Server
     function updateChatOnServer() {
-        if (!currentChatId) {
-            console.warn("Kein aktueller Chat zum Speichern vorhanden");
-            return;
-        }
-        
         fetch(`/ais/${currentChatId}`, {
             method: "PATCH",
             headers: {
@@ -57,26 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         })
         .then(response => {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            } else {
-                console.warn("Serverantwort beim Speichern ist kein JSON: " + contentType);
-                return { success: true };
-            }
+            return response.json();
+
         })
-        .then(data => {
-            if (data.errors) {
-                console.error("Fehler beim Speichern des Chats:", data.errors);
-            }
-        })
-        .catch(error => console.error("Fehler beim Speichern des Chats:", error));
+        
     }
   
     // Funktion, die einen neuen Chat auf dem Server erstellt und die ID zurückgibt
-    function createNewChatOnServer() {
+    async function createNewChatOnServer() {
         
-        return fetch("/ais", {
+        const response = await fetch("/ais", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -86,24 +71,15 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({
                 ai: { chat: [{ role: "system", content: "" }] }
             })
-        })
-        .then(response => {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            } else {
-                throw new Error("Serverantwort ist kein JSON. Erhalten: " + contentType);
-            }
-        })
-        .then(data => {
-            if (data.errors) {
-                console.error("Fehler:", data.errors);
-                return null;
-            } else if (data.id) {
-                return data.id;
-            }
-            return null;
         });
+        const data = await response.json();
+        if (data.errors) {
+            console.error("Fehler:", data.errors);
+            return null;
+        } else if (data.id) {
+            return data.id;
+        }
+        return null;
     }
     
     // Funktion zum Senden einer Nachricht an DeepSeek
@@ -118,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         aiField.appendChild(typingIndicator);
         
         try {
-            // Prüfen, ob wir einen aktuellen Chat haben - wenn nicht, erstelle einen
+            // Prüfen, ob wir einen aktuellen Chat haben - wenn nicht, erstelle einen (bei default currentChatId = null)
             if (!currentChatId) {
                 const newChatId = await createNewChatOnServer();
                 
@@ -149,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage(aiResponse, false);
             chatHistory.push({ role: "assistant", content: aiResponse });
     
-            // Unabhängig davon, ob es die erste Nachricht ist oder nicht,
-            // aktualisieren wir einfach den Chat auf dem Server
+            // aktualisiert den Chat auf dem Server
             updateChatOnServer();
     
         } catch (error) {
@@ -171,40 +146,24 @@ document.addEventListener('DOMContentLoaded', function() {
             aiInput.value = '';
         }
     }
-    
-    // Funktion, die die UI zurücksetzt und einen neuen Chat erstellt
-    // Funktion, die die UI zurücksetzt und einen neuen Chat erstellt
-    function createNewChat() {
-        resetChatInterface();
-    }
-    
-    // Machen Sie die openChat-Funktion global verfügbar
-    window.openChat = function(chatId) {
-        // Update the current chat ID
-        currentChatId = chatId;
         
-        // Clear the current chat history and messages in the UI
+    // lädt und öffnet einen Chat mit einer bestimmten ID.
+    window.openChat = function(chatId) {
+        currentChatId = chatId;
         chatHistory = [];
         aiField.innerHTML = '';
-                
-        // Fetch the selected chat data from the server
+        
+        // Fetch the chat data from the server
         fetch(`/ais/${chatId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json", // Explizit JSON anfordern
+                "Accept": "application/json", 
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
             }
         })
         .then(response => {
-            // Überprüfen Sie den Content-Type der Antwort
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            } else {
-                // Wenn keine JSON-Antwort, zeigen Sie eine Fehlermeldung
-                throw new Error("Serverantwort ist kein JSON. Erhalten: " + contentType);
-            }
+            return response.json();
         })
         .then(data => {
             if (data.errors) {
@@ -223,22 +182,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
-            
-            // If chat is empty, add a welcome message
-            if (aiField.children.length === 0) {
-                addMessage('Chat geladen. Wie kann ich dir helfen?', false);
-            }
         })
         .catch(error => {
             console.error("Fehler beim Laden des Chats:", error);
             addMessage('Fehler beim Laden des Chats: ' + error.message, false);
         });
     };
-    
-    // Machen Sie die newChat-Funktion global verfügbar
-    window.newChat = createNewChat;
   
-    // Event-Listener für Chat-Buttons einrichten
+    // buttons im dropdown, zum laden von bestimmten chats
     document.querySelectorAll('.note-item button').forEach(button => {
         button.addEventListener('click', function() {
             const chatId = this.getAttribute('data-chat-id');
@@ -251,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event-Listener für den "Neuen Chat"-Button einrichten
     const createAiButton = document.getElementById("create-ai-button");
     if (createAiButton) {
-        createAiButton.addEventListener("click", createNewChat);
+        createAiButton.addEventListener("click", resetChatInterface);
     }
   
     // Event-Listener für den "Senden"-Button einrichten
