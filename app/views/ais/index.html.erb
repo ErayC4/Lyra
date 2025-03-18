@@ -179,6 +179,7 @@
 
   .section-header{
     margin-bottom: 8px;
+    margin-top: 32px;
     margin-left: 16px;
     font-weight: bold;
   }
@@ -218,25 +219,63 @@
             </div>
           </div>
           <div class="dropdown-content-body">
-            <!-- Heute section -->
-                <div class="chat-list-container">
-                  <% @ais.each do |ai| %>
-                    <% if Date.today  == ai.created_at.to_date%>
-                    <button 
-                      onclick="openChat(<%= ai.id %>)" 
-                      data-chat-id="<%= ai.id %>"
-                      class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
-                    >
-                      <p class="chat-title">
-                        <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
-                        <% if user_message %>
-                          <%= user_message["content"].split.first(5).join(" ") %>
-                        <% end %>
-                      </p>
-                    </button>
-                    <% end %>
+              <div class="chat-list-container">
+                <% 
+                  today = Date.today
+                  yesterday = today - 1
+                  seven_days_ago = today - 7
+                  
+                  # Gruppiere AIs nach Datum
+                  todays_ais = @ais.select { |ai| ai.created_at.to_date == today }
+                  yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }
+                  last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }
+                  older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }
+                  
+                  # Hilfsfunktion zum Rendern der Chat-Buttons
+                  def render_chat_button(ai)
+                %>
+                  <button 
+                    onclick="openChat(<%= ai.id %>)" 
+                    data-chat-id="<%= ai.id %>"
+                    class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
+                  >
+                    <p class="chat-title">
+                      <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
+                      <% if user_message %>
+                        <%= user_message["content"].split.first(5).join(" ") %>
+                      <% end %>
+                    </p>
+                  </button>
+                <% end %>
+
+                <% if todays_ais.any? %>
+                  <p class="section-header">Heute</p>
+                  <% todays_ais.each do |ai| %>
+                    <% render_chat_button(ai) %>
                   <% end %>
-                </div>
+                <% end %>
+
+                <% if yesterdays_ais.any? %>
+                  <p class="section-header">Gestern</p>
+                  <% yesterdays_ais.each do |ai| %>
+                    <% render_chat_button(ai) %>
+                  <% end %>
+                <% end %>
+
+                <% if last_week_ais.any? %>
+                  <p class="section-header">Letzte 7 Tage</p>
+                  <% last_week_ais.each do |ai| %>
+                    <% render_chat_button(ai) %>
+                  <% end %>
+                <% end %>
+
+                <% if older_ais.any? %>
+                  <p class="section-header">Älter</p>
+                  <% older_ais.each do |ai| %>
+                    <% render_chat_button(ai) %>
+                  <% end %>
+                <% end %>
+              </div>
             </div>
           </div>
     <div>
