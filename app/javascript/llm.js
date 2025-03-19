@@ -40,22 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function addMessage(text, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = isUser ? 'user-message' : 'ai-message';
-        messageDiv.style.padding = '8px 12px';
-        messageDiv.style.marginBottom = '8px';
-        messageDiv.style.borderRadius = '4px';
-  
         if (isUser) {
-            messageDiv.style.backgroundColor = '#F5D5FF';
-            messageDiv.style.marginLeft = 'auto';
             messageDiv.textContent = text;
         } else {
-            messageDiv.style.backgroundColor = 'transparent';
-            // Apply formatting to AI messages
             messageDiv.innerHTML = formatAIResponse(text);
         }
-  
         aiField.appendChild(messageDiv);
-        aiField.scrollTop = aiField.scrollHeight;
     }
   
     // Function to locally reset the chat without server interaction
