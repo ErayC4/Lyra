@@ -4,10 +4,12 @@
     background-color: transparent;
     width: 100%;
     transition: 0.3s ease;
-    padding: 2px 16px;
-  }
+    padding: 4px 16px; 
+    transition: 0.2s ease;
+}
   .chat-list-item:hover{
-    background-color: #DBDBDB
+    background-color: #F5D5FF;
+    padding: 6px 16px;
   }
   .chat-list-container{
     display: flex;
@@ -78,6 +80,20 @@
     height: 33px;
     transition: 0.2s ease;
   }
+  .long-white-button{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease;
+  }
+  .long-white-button:hover{
+    background-color: #DBDBDB;
+  }
   .small-black-button{
     background-color: black;
     padding: 4px;
@@ -138,45 +154,47 @@
   
   /* Dropdown header with search */
   .dropdown-header {
-    padding: 10px;
-    border-bottom: 1px solid #DBDBDB;
-  }
-  
-  .search-container {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    gap: 8px;
+    align-items: center;
+    margin: 0 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #DBDBDB
   }
   
-  .archived-label {
-    font-weight: bold;
-    font-size: 14px;
-  }
-  
-  .search-box {
+  .searchbar-container{
+    background-color: white;
     display: flex;
     align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 5px 8px;
+    gap: 4px;
+    padding: 2px;
+    border: 1px solid #DBDBDB;
+    border-radius: 8px;
+    flex-grow: 1;
   }
-  
-  .search-box input {
+
+  .search-button{
+    background-color: transparent;
     border: none;
-    background: transparent;
-    margin-left: 5px;
-    width: 100%;
-    outline: none;
-    font-size: 14px;
+    padding: 4px;
+    cursor: pointer;
+    margin: 0;
+    flex: 1;
   }
-  
+  .searchbar{
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color:rgb(235, 235, 235)
+  }
   .dropdown-content-body {
     overflow-y: auto;
     flex-grow: 1;
   }
 
   .section{
-    margin: 16px 0px;
+    margin-top: 32px;
   }
   .section-header{
     margin-bottom: 8px;
@@ -193,6 +211,24 @@
   .ai-message{
     padding-left: 8px;
     margin-bottom: 32px;
+  }
+  .chat-list-item-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+  .chat-actions{
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .chat-list-item:hover .chat-actions {
+    display: block; /* Wird beim Hover sichtbar */
+  }
+  .size-6{
+    height: 20px;
+    width: 20px;
   }
 </style>
     
@@ -219,13 +255,15 @@
     <div>
       <div class="dropdown-content">
           <div class="dropdown-header">
-            <div class="search-container">
-              <div class="search-box">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                </svg>
-                <input type="text" placeholder="Search...">
-              </div>
+            <div class="long-white-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+              <p>Bookmarks</p>
+            </div>
+            <div class="searchbar-container">
+              <button class="search-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </button>
+              <input placeholder="search" class="searchbar">
             </div>
           </div>
           <div class="dropdown-content-body">
@@ -249,12 +287,16 @@
                     data-chat-id="<%= ai.id %>"
                     class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
                   >
-                    <p class="chat-title">
                       <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
                       <% if user_message %>
-                        <%= user_message["content"].split.first(5).join(" ") %>
+                      <div class="chat-list-item-container">
+                        <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
+                        <div class="chat-actions">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>                          
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                        </div>
+                      </div>
                       <% end %>
-                    </p>
                   </button>
                 <% end %>
 
