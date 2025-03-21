@@ -50,24 +50,14 @@ class AisController < ApplicationController
   # DELETE /ais/1 or /ais/1.json
   def destroy
     @ai.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to ais_path, status: :see_other, notice: "Ai was successfully destroyed." }
-      format.json { head :no_content }
-    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ai
-      @ai = current_user.ais.find(params[:id])
-      unless @ai
-        respond_to do |format|
-          format.html { redirect_to ais_path, notice: "Chat not found" }
-          format.json { render json: { errors: [ "Chat not found" ] }, status: :not_found }
-        end
-      end
+      @ai = current_user.ais.find_by(id: params[:id])
     end
+
 
     # Only allow a list of trusted parameters through.
     def ai_params

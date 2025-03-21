@@ -215,10 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 addMessage('Chat geladen. Wie kann ich dir helfen?', false);
             }
         })
-        .catch(error => {
-            console.error("Fehler beim Laden des Chats:", error);
-            addMessage('Fehler beim Laden des Chats: ' + error.message, false);
-        });
+        
     };
     
     // Buttons in dropdown to load specific chats
@@ -237,6 +234,12 @@ document.addEventListener('DOMContentLoaded', function() {
         createAiButton.addEventListener("click", resetChatInterface);
     }
   
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('a[data-turbo-method="delete"]')) {
+            resetChatInterface();
+        }
+    });
+
     // Set up event listener for the "Send" button
     sendButton.addEventListener('click', function() {
         sendMessage();
