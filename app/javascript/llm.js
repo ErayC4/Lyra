@@ -171,9 +171,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createChatListItem(userMessage) {
-        // Container finden
+        // Check if a chat list item already exists
         const chatListContainer = document.querySelector('.just-added-content');
+        const existingChatItems = chatListContainer.querySelectorAll('.chat-list-item');
         
+        // Only create a new item if no items exist
+        if (existingChatItems.length > 0) {
+            return; // Exit the function if an item already exists
+        }
+    
         // Neue Chat-ID generieren oder von woanders beziehen
         const chatId = Date.now(); // Temporäre ID, ersetzen Sie diese mit Ihrer tatsächlichen ID
         
@@ -237,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentChatButton) {
             currentChatButton.classList.add('chat-list-item-active');
         }
-        
+
         currentChatId = chatId;
         
         // Clear the current chat history and messages in the UI
