@@ -232,7 +232,39 @@
   }
   
 </style>
-    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+  const section = document.querySelector(".section");
+  const targetNode = document.querySelector(".just-added-content");
+
+  if (!targetNode) return;
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length > 0) {
+        console.log("Neuer Inhalt wurde hinzugefügt!");
+        
+        // Falls die Section versteckt ist, zeige sie an
+        if (section.style.display === "none") {
+          section.style.display = "block";
+        }
+
+        mutation.addedNodes.forEach((node) => {
+          node.style.opacity = 0;
+          setTimeout(() => {
+            node.style.transition = "opacity 0.5s";
+            node.style.opacity = 1;
+          }, 10);
+        });
+      }
+    });
+  });
+
+  observer.observe(targetNode, { childList: true, subtree: true });
+});
+
+
+    </script>
 <%= javascript_include_tag "llm" %>
 <%= javascript_include_tag "dropdownmenu" %>
     <div class="toolbar">
@@ -308,18 +340,14 @@
                     <% end %>
                   </button>
                 <% end %>
+<div class="section" style="<%= todays_ais.any? ? '' : 'display: none;' %>">
+  <p class="section-header">Heute</p>
+  <div class="just-added-content"></div>
+  <% todays_ais.each do |ai| %>
+    <% render_chat_button(ai) %>
+  <% end %>
+</div>
 
-                <% if todays_ais.any? %>
-                <div class="section">
-                  <p class="section-header">Heute</p>
-                  <div class="just-now-content">
-                  </div>
-                  <% todays_ais.each do |ai| %>
-                    <% render_chat_button(ai) %>
-                  <% end %>
-                  
-                </div>
-                <% end %>
 
                 <% if yesterdays_ais.any? %>
                 <div class="section">

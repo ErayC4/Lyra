@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function createChatListItem(userMessage) {
         // Container finden
-        const chatListContainer = document.querySelector('.just-now-content');
+        const chatListContainer = document.querySelector('.just-added-content');
         
         // Neue Chat-ID generieren oder von woanders beziehen
         const chatId = Date.now(); // Temporäre ID, ersetzen Sie diese mit Ihrer tatsächlichen ID
