@@ -228,6 +228,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load and open a chat with a specific ID
     window.openChat = function(chatId) {
         // Update the current chat ID
+        document.querySelectorAll('.chat-list-item').forEach(item => {
+            item.classList.remove('chat-list-item-active');
+        });
+    
+        // Add 'chat-list-item-active' to the clicked chat list item
+        const currentChatButton = document.querySelector(`.chat-list-item[data-chat-id="${chatId}"]`);
+        if (currentChatButton) {
+            currentChatButton.classList.add('chat-list-item-active');
+        }
+        
         currentChatId = chatId;
         
         // Clear the current chat history and messages in the UI

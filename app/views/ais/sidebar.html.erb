@@ -7,6 +7,10 @@
     padding: 4px 16px; 
     transition: 0.2s ease;
 }
+  .chat-list-item-active{
+    background-color: #F5E1FC;
+    padding: 6px 16px;
+  }
   .chat-list-item:hover{
     background-color: #F5D5FF;
     padding: 6px 16px;
@@ -232,8 +236,8 @@
   }
   
 </style>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
   const section = document.querySelector(".section");
   const targetNode = document.querySelector(".just-added-content");
 
@@ -262,9 +266,7 @@
 
   observer.observe(targetNode, { childList: true, subtree: true });
 });
-
-
-    </script>
+</script>
 <%= javascript_include_tag "llm" %>
 <%= javascript_include_tag "dropdownmenu" %>
     <div class="toolbar">
@@ -318,7 +320,7 @@
                   <button 
                     onclick="openChat(<%= ai.id %>)" 
                     data-chat-id="<%= ai.id %>"
-                    class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
+                    class="chat-list-item"
                   >
                     <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
                     <% if user_message %>
