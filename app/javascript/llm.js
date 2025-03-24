@@ -218,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     };
     
+    
     // Buttons in dropdown to load specific chats
     document.querySelectorAll('.note-item button').forEach(button => {
         button.addEventListener('click', function() {
@@ -239,7 +240,89 @@ document.addEventListener('DOMContentLoaded', function() {
             resetChatInterface();
         }
     });
-
+    function toggleBookmark(event, chatId) {
+        // Prevent the click from bubbling to the parent button 
+        // (which would trigger openChat)
+        event.stopPropagation();
+        
+        // Get the bookmark icon that was clicked
+        const bookmarkIcon = event.currentTarget;
+        
+        // Toggle between filled and unfilled bookmark
+        const isSaved = bookmarkIcon.classList.contains('saved');
+        
+        // Update the visual state immediately for better UX
+        if (isSaved) {
+            bookmarkIcon.classList.remove('saved');
+        } else {
+            bookmarkIcon.classList.add('saved');
+        }
+        
+        // Send the update to the server
+        fetch(`/ais/${chatId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            },
+            body: JSON.stringify({
+                ai: { saved: !isSaved }
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Bookmark status updated successfully:', !isSaved);
+        })
+        .catch(error => {
+            console.error('Error updating bookmark status:', error);
+            // Revert the visual state if the server update failed
+            if (isSaved) {
+                bookmarkIcon.classList.add('saved');
+            } else {
+                bookmarkIcon.classList.remove('saved');
+            }
+        });
+    }
+    
+    // Function to initialize bookmark icons
+    function initializeBookmarkIcons() {
+        document.querySelectorAll('.lucide-bookmark').forEach(icon => {
+            // Remove any existing listeners to prevent duplicates
+            const newIcon = icon.cloneNode(true);
+            icon.parentNode.replaceChild(newIcon, icon);
+            
+            // Get the chat ID from the parent button
+            const chatButton = newIcon.closest('button[data-chat-id]');
+            if (chatButton) {
+                const chatId = chatButton.getAttribute('data-chat-id');
+                
+                // Add click event listener for the bookmark icon
+                newIcon.addEventListener('click', (event) => toggleBookmark(event, chatId));
+            }
+        });
+    }
+    
+    // Initialize bookmark icons when the page loads
+    initializeBookmarkIcons();
+    
+    // You should also add some CSS for visual feedback
+    const style = document.createElement('style');
+    style.textContent = `
+        .lucide-bookmark {
+            cursor: pointer;
+            transition: fill 0.2s ease;
+        }
+        .lucide-bookmark.saved {
+            fill: currentColor;
+        }
+    `;
+    document.head.appendChild(style);
     // Set up event listener for the "Send" button
     sendButton.addEventListener('click', function() {
         sendMessage();

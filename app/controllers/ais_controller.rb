@@ -62,6 +62,6 @@ class AisController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ai_params
       # Erlaubt ein Array von Nachrichten in 'chat'
-      params.require(:ai).permit(:title, chat: [ :role, :content ])
+      params.require(:ai).permit(:saved, :title, chat: [ :role, :content ])
     end
 end

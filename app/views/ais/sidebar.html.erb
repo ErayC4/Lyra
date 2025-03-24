@@ -218,18 +218,19 @@
     align-items: center;
 
   }
-  .chat-actions{
+  .lucide-bookmark{
     display: none;
     transition: opacity 0.3s ease-in-out;
   }
   
-  .chat-list-item:hover .chat-actions {
+  .chat-list-item:hover .lucide-bookmark {
     display: block; /* Wird beim Hover sichtbar */
   }
   .size-6{
     height: 20px;
     width: 20px;
   }
+  
 </style>
     
 <%= javascript_include_tag "llm" %>
@@ -287,16 +288,24 @@
                     data-chat-id="<%= ai.id %>"
                     class="<%= 'active' if @active_chat_id == ai.id %> chat-list-item"
                   >
-                      <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
-                      <% if user_message %>
-                      <div class="chat-list-item-container">
-                        <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
-                        <div class="chat-actions">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                          <div><%= link_to "Destroy this ai", ai, data: { turbo_method: :delete } %></div>
-                        </div>
-                      </div>
-                      <% end %>
+                    <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
+                    <% if user_message %>
+                    <div class="chat-list-item-container">
+                      <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="24" 
+                        height="24" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        stroke-width="2" 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        class="lucide lucide-bookmark <%= 'saved' if ai.saved %>"
+                      ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
+                    </div>
+                    <% end %>
                   </button>
                 <% end %>
 
