@@ -267,6 +267,44 @@
   observer.observe(targetNode, { childList: true, subtree: true });
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const bookmarksToggle = document.getElementById('bookmarksToggle');
+  const allAIsSection = document.getElementById('allAIsSection');
+  const savedAIsSection = document.getElementById('savedAIsSection');
+  let isBookmarksMode = false;
+
+  bookmarksToggle.addEventListener('click', function() {
+    isBookmarksMode = !isBookmarksMode;
+    
+    if (isBookmarksMode) {
+      // Wechsle zu gespeicherten AIs
+      allAIsSection.style.display = 'none';
+      savedAIsSection.style.display = 'block';
+      bookmarksToggle.classList.add('active');
+    } else {
+      // Wechsle zu allen AIs
+      allAIsSection.style.display = 'block';
+      savedAIsSection.style.display = 'none';
+      bookmarksToggle.classList.remove('active');
+    }
+  });
+});
+</script>
+
+<style>
+.bookmarks-toggle {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bookmarks-toggle.active {
+  background-color: #e0e0e0; /* Leichte Hervorhebung im Active-Zustand */
+}
+</style>
+
+
 <%= javascript_include_tag "llm" %>
 <%= javascript_include_tag "dropdownmenu" %>
     <div class="toolbar">
@@ -290,8 +328,10 @@
     <div>
       <div class="dropdown-content">
           <div class="dropdown-header">
-            <div class="long-white-button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            <div class="long-white-button bookmarks-toggle" id="bookmarksToggle">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
+                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+              </svg>
               <p>Bookmarks</p>
             </div>
             <div class="searchbar-container">
@@ -302,84 +342,123 @@
             </div>
           </div>
           <div class="dropdown-content-body">
-              <div class="chat-list-container">
-
-                <% 
-                  today = Date.today
-                  yesterday = today - 1
-                  seven_days_ago = today - 7
-                  
-                  # Gruppiere AIs nach Datum
-                  todays_ais = @ais.select { |ai| ai.created_at.to_date == today }.sort_by { |ai| ai.created_at }.reverse
-                  yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }.sort_by { |ai| ai.created_at }.reverse
-                  last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.sort_by { |ai| ai.created_at }.reverse
-                  older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.sort_by { |ai| ai.created_at }.reverse
-                  # Hilfsfunktion zum Rendern der Chat-Buttons
-                  def render_chat_button(ai)
-                %>
-                  <button 
-                    onclick="openChat(<%= ai.id %>)" 
-                    data-chat-id="<%= ai.id %>"
-                    class="chat-list-item"
-                  >
-                    <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
-                    <% if user_message %>
-                    <div class="chat-list-item-container">
-                      <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="24" 
-                        height="24" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        stroke-width="2" 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round" 
-                        class="lucide lucide-bookmark <%= 'saved' if ai.saved %>"
-                      ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
-                    </div>
-                    <% end %>
-                  </button>
-                <% end %>
-<div class="section" style="<%= todays_ais.any? ? '' : 'display: none;' %>">
-  <p class="section-header">Heute</p>
-  <div class="just-added-content"></div>
-  <% todays_ais.each do |ai| %>
-    <% render_chat_button(ai) %>
-  <% end %>
-</div>
-
-
-                <% if yesterdays_ais.any? %>
-                <div class="section">
-                  <p class="section-header">Gestern</p>
-                  <% yesterdays_ais.each do |ai| %>
-                    <% render_chat_button(ai) %>
-                  <% end %>
-                </div>
-
-                <% end %>
-
-                <% if last_week_ais.any? %>
-                <div class="section">
-                  <p class="section-header">Letzte 7 Tage</p>
-                  <% last_week_ais.each do |ai| %>
-                    <% render_chat_button(ai) %>
-                  <% end %>
-                </div>
-                <% end %>
-
-                <% if older_ais.any? %>
-                <div class="section">
-                  <p class="section-header">Älter</p>
-                  <% older_ais.each do |ai| %>
-                    <% render_chat_button(ai) %>
-                  <% end %>
-                </div>
-                <% end %>
-              </div>
+    <div class="chat-list-container" id="chatListContainer">
+      <% 
+        today = Date.today
+        yesterday = today - 1
+        seven_days_ago = today - 7
+        
+        # Gruppiere AIs nach Datum (unverändert)
+        todays_ais = @ais.select { |ai| ai.created_at.to_date == today }.sort_by { |ai| ai.created_at }.reverse
+        yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }.sort_by { |ai| ai.created_at }.reverse
+        last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.sort_by { |ai| ai.created_at }.reverse
+        older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.sort_by { |ai| ai.created_at }.reverse
+        
+        # Gefilterte gespeicherte AIs
+        saved_ais = @ais.select { |ai| ai.saved }
+        
+        # Hilfsfunktion zum Rendern der Chat-Buttons
+        def render_chat_button(ai, saved_only: false)
+      %>
+        <% if !saved_only || ai.saved %>
+          <button 
+            onclick="openChat(<%= ai.id %>)" 
+            data-chat-id="<%= ai.id %>"
+            class="chat-list-item"
+            <%= 'style="display:none;"' if saved_only && !ai.saved %>
+          >
+            <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
+            <% if user_message %>
+            <div class="chat-list-item-container">
+              <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                class="lucide lucide-bookmark <%= 'saved' if ai.saved %>"
+              ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
             </div>
+            <% end %>
+          </button>
+        <% end %>
+      <% end %>
+
+      <!-- Alle AIss Abschnitte -->
+      <div id="allAIsSection">
+        <div class="section" style="<%= todays_ais.any? ? '' : 'display: none;' %>">
+          <p class="section-header">Heute</p>
+          <div class="just-added-content"></div>
+          <% todays_ais.each do |ai| %>
+            <% render_chat_button(ai) %>
+          <% end %>
+        </div>
+
+        <% if yesterdays_ais.any? %>
+        <div class="section">
+          <p class="section-header">Gestern</p>
+          <% yesterdays_ais.each do |ai| %>
+            <% render_chat_button(ai) %>
+          <% end %>
+        </div>
+        <% end %>
+
+        <% if last_week_ais.any? %>
+        <div class="section">
+          <p class="section-header">Letzte 7 Tage</p>
+          <% last_week_ais.each do |ai| %>
+            <% render_chat_button(ai) %>
+          <% end %>
+        </div>
+        <% end %>
+
+        <% if older_ais.any? %>
+        <div class="section">
+          <p class="section-header">Älter</p>
+          <% older_ais.each do |ai| %>
+            <% render_chat_button(ai) %>
+          <% end %>
+        </div>
+        <% end %>
+      </div>
+
+      <!-- Gespeicherte AIs Abschnitte -->
+      <div id="savedAIsSection" style="display:none;">
+        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date == today }.any? ? '' : 'display: none;' %>">
+          <p class="section-header">Heute</p>
+          <% todays_ais.each do |ai| %>
+            <% render_chat_button(ai, saved_only: true) %>
+          <% end %>
+        </div>
+
+        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date == yesterday }.any? ? '' : 'display: none;' %>">
+          <p class="section-header">Gestern</p>
+          <% yesterdays_ais.each do |ai| %>
+            <% render_chat_button(ai, saved_only: true) %>
+          <% end %>
+        </div>
+
+        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.any? ? '' : 'display: none;' %>">
+          <p class="section-header">Letzte 7 Tage</p>
+          <% last_week_ais.each do |ai| %>
+            <% render_chat_button(ai, saved_only: true) %>
+          <% end %>
+        </div>
+
+        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.any? ? '' : 'display: none;' %>">
+          <p class="section-header">Älter</p>
+          <% older_ais.each do |ai| %>
+            <% render_chat_button(ai, saved_only: true) %>
+          <% end %>
+        </div>
+      </div>
+      </div>
+      </div>
           </div>
     <div>
     <div class="ai-container">
