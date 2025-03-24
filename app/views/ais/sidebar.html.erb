@@ -312,9 +312,12 @@
                 <% if todays_ais.any? %>
                 <div class="section">
                   <p class="section-header">Heute</p>
+                  <div class="just-now-content">
+                  </div>
                   <% todays_ais.each do |ai| %>
                     <% render_chat_button(ai) %>
                   <% end %>
+                  
                 </div>
                 <% end %>
 

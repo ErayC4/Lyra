@@ -158,10 +158,71 @@ document.addEventListener('DOMContentLoaded', function() {
     function sendMessage() {
         const userInput = aiInput.value.trim();
         if (userInput) {
+            // Nachricht wie gewohnt senden
             addMessage(userInput, true);
             sendToDeepSeek(userInput);
+            
+            // Chat-Button mit der Nachrichtenvorschau erstellen
+            createChatListItem(userInput);
+            
+            // Eingabefeld leeren
             aiInput.value = '';
         }
+    }
+    
+    function createChatListItem(userMessage) {
+        // Container finden
+        const chatListContainer = document.querySelector('.just-now-content');
+        
+        // Neue Chat-ID generieren oder von woanders beziehen
+        const chatId = Date.now(); // Temporäre ID, ersetzen Sie diese mit Ihrer tatsächlichen ID
+        
+        // Die ersten 5 Wörter der Nachricht extrahieren
+        const previewText = userMessage.split(' ').slice(0, 5).join(' ');
+        
+        // HTML für den Button erstellen
+        const buttonHTML = `
+            <button 
+                onclick="openChat(${chatId})" 
+                data-chat-id="${chatId}"
+                class="chat-list-item"
+                >
+                <div class="chat-list-item-container">
+                    <p class="chat-title">${previewText}</p>
+                    <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="lucide lucide-bookmark"
+                    ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
+                </div>
+            </button>
+        `;
+        
+        // Element erstellen und zum Container hinzufügen
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = buttonHTML.trim();
+        const buttonElement = tempDiv.firstChild;
+        
+        // Am Anfang der Liste einfügen oder ans Ende anhängen
+        if (chatListContainer.firstChild) {
+            chatListContainer.insertBefore(buttonElement, chatListContainer.firstChild);
+        } else {
+            chatListContainer.appendChild(buttonElement);
+        }
+    
+        // Add event listener for bookmark toggle
+        const bookmarkIcon = buttonElement.querySelector('.lucide-bookmark');
+        bookmarkIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent openChat from being called
+            toggleBookmark(event, chatId);
+        });
     }
         
     // Load and open a chat with a specific ID
