@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // !!!!! actually part of dropdownmenu, its here because idk 
     function createChatListItem(userMessage) {
         // Check if a chat list item already exists
         const chatListContainer = document.querySelector('.just-added-content');
@@ -230,7 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleBookmark(event, chatId);
         });
     }
-        
+    
+    // !!!!! actually part of dropdownmenu, its here because idk    
     // Load and open a chat with a specific ID
     window.openChat = function(chatId) {
         // Update the current chat ID

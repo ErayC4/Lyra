@@ -235,74 +235,13 @@
     width: 20px;
   }
   
-</style>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-  const section = document.querySelector(".section");
-  const targetNode = document.querySelector(".just-added-content");
-
-  if (!targetNode) return;
-
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.addedNodes.length > 0) {
-        console.log("Neuer Inhalt wurde hinzugefügt!");
-        
-        // Falls die Section versteckt ist, zeige sie an
-        if (section.style.display === "none") {
-          section.style.display = "block";
-        }
-
-        mutation.addedNodes.forEach((node) => {
-          node.style.opacity = 0;
-          setTimeout(() => {
-            node.style.transition = "opacity 0.5s";
-            node.style.opacity = 1;
-          }, 10);
-        });
-      }
-    });
-  });
-
-  observer.observe(targetNode, { childList: true, subtree: true });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const bookmarksToggle = document.getElementById('bookmarksToggle');
-  const allAIsSection = document.getElementById('allAIsSection');
-  const savedAIsSection = document.getElementById('savedAIsSection');
-  let isBookmarksMode = false;
-
-  bookmarksToggle.addEventListener('click', function() {
-    isBookmarksMode = !isBookmarksMode;
-    
-    if (isBookmarksMode) {
-      // Wechsle zu gespeicherten AIs
-      allAIsSection.style.display = 'none';
-      savedAIsSection.style.display = 'block';
-      bookmarksToggle.classList.add('active');
-    } else {
-      // Wechsle zu allen AIs
-      allAIsSection.style.display = 'block';
-      savedAIsSection.style.display = 'none';
-      bookmarksToggle.classList.remove('active');
-    }
-  });
-});
-</script>
-
-<style>
-.bookmarks-toggle {
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
 
 .bookmarks-toggle.active {
   background-color: #e0e0e0; /* Leichte Hervorhebung im Active-Zustand */
 }
 </style>
+
+
 
 
 <%= javascript_include_tag "llm" %>
