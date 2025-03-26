@@ -33,7 +33,7 @@
     padding: 32px 42px;
     border-radius: 8px;
     border: 1px solid #DBDBDB;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);   
   }
   .ce-paragraph { /*paragraph block line height*/
     line-height: 1.5;
@@ -616,7 +616,8 @@ class MultipleChoice {
       
 
 
-  <div id="editorjs" class="editorjs" 
+  <div id="editorjs" class="editorjs"
+        spellcheck="false" 
        data-instance-of-table-id="<%= @note.id %>" 
        data-table-name="note"
        data-autosave-interval="3000"
