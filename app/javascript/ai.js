@@ -6,7 +6,24 @@ document.addEventListener('DOMContentLoaded', function() {
   
     let chatHistory = [];
     let currentChatId = null; // Track the current chat ID
-  
+
+
+    const debugInfo = document.createElement('div');
+    debugInfo.style.position = 'fixed';
+    debugInfo.style.bottom = '10px';
+    debugInfo.style.right = '10px';
+    debugInfo.style.background = 'rgba(0,0,0,0.7)';
+    debugInfo.style.color = 'white';
+    debugInfo.style.padding = '5px 10px';
+    debugInfo.style.borderRadius = '5px';
+    debugInfo.style.fontSize = '12px';
+    debugInfo.textContent = 'Chat ID: null';
+    document.body.appendChild(debugInfo);
+    
+
+    function updateDebugInfo() {
+        debugInfo.textContent = `Chat ID: ${currentChatId}`;
+    }
     // Function to format AI responses with markdown-like syntax
     function formatAIResponse(text) {
         // Remove thinking sections
@@ -53,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentChatId = null;
         chatHistory = [];
         aiField.innerHTML = '';
-        
+        updateDebugInfo();
         // Add welcome message
         addMessage('Hallo! Wie kann ich dir helfen?', false);
     }
@@ -94,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Fehler:", data.errors);
             return null;
         } else if (data.id) {
+            updateDebugInfo();
             return data.id;
         }
         return null;
@@ -107,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading indicator
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'ai-message typing';
-        typingIndicator.textContent = 'DeepSeek denkt...';
+        typingIndicator.textContent = 'AI denkt...';
         aiField.appendChild(typingIndicator);
         
         try {
@@ -120,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 currentChatId = newChatId;
+                updateDebugInfo();
             }
             
             // Now we can send the request to DeepSeek
@@ -132,7 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     stream: false
                 })
             });
-    
+            createChatListItem(userInput);
+
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     
             const data = await response.json();
@@ -163,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
             sendToDeepSeek(userInput);
             
             // Chat-Button mit der Nachrichtenvorschau erstellen
-            createChatListItem(userInput);
             
             // Eingabefeld leeren
             aiInput.value = '';
@@ -180,9 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (existingChatItems.length > 0) {
             return; // Exit the function if an item already exists
         }
-    
-        // Neue Chat-ID generieren oder von woanders beziehen
-        const chatId = Date.now(); // Temporäre ID, ersetzen Sie diese mit Ihrer tatsächlichen ID
+        
+        const chatId = currentChatId 
         
         // Die ersten 5 Wörter der Nachricht extrahieren
         const previewText = userMessage.split(' ').slice(0, 5).join(' ');
@@ -234,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // !!!!! actually part of dropdownmenu, its here because idk    
     // Load and open a chat with a specific ID
-    window.openChat = function(chatId) {
+    openChat = function(chatId) {
         // Update the current chat ID
         document.querySelectorAll('.chat-list-item').forEach(item => {
             item.classList.remove('chat-list-item-active');
@@ -246,8 +264,9 @@ document.addEventListener('DOMContentLoaded', function() {
             currentChatButton.classList.add('chat-list-item-active');
         }
 
+        //updates current chat
         currentChatId = chatId;
-        
+        updateDebugInfo();
         // Clear the current chat history and messages in the UI
         chatHistory = [];
         aiField.innerHTML = '';
@@ -257,19 +276,12 @@ document.addEventListener('DOMContentLoaded', function() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json", // Explicitly request JSON
+                "Accept": "application/json",
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
             }
         })
         .then(response => {
-            // Check the Content-Type of the response
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            } else {
-                // If not a JSON response, show an error message
-                throw new Error("Serverantwort ist kein JSON. Erhalten: " + contentType);
-            }
+            return response.json();
         })
         .then(data => {
             if (data.errors) {
@@ -278,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Load the chat history
-            if (data.chat && Array.isArray(data.chat)) {
+            if (data.chat) {
                 chatHistory = data.chat;
                 
                 // Display messages in the UI
@@ -299,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     // Buttons in dropdown to load specific chats
-    document.querySelectorAll('.note-item button').forEach(button => {
+    document.querySelectorAll('.note-item').forEach(button => {
         button.addEventListener('click', function() {
             const chatId = this.getAttribute('data-chat-id');
             if (chatId) {
