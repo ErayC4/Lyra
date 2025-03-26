@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
             },
             body: JSON.stringify({
-                ai: { chat: [{ role: "system", content: "" }] }
+                ai: { chat: [] }
             })
         });
         const data = await response.json();
@@ -118,20 +118,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Function to send a message to DeepSeek
+    // Function to send a message to DeepSeek
     async function sendToDeepSeek(userInput) {
-        // Add user message to chat history
-        chatHistory.push({ role: "user", content: userInput });
-    
+        // Temporäre Kopie des Chat-Verlaufs erstellen
+        const tempChatHistory = [...chatHistory, { role: "user", content: userInput }];
+        
         // Show loading indicator
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'ai-message typing';
         typingIndicator.textContent = 'AI denkt...';
         aiField.appendChild(typingIndicator);
         
+        let newChatId = null;
+        let shouldSaveChat = false; // Flag to determine if we should save the chat
+        
         try {
             // Check if we have a current chat - if not, create one
             if (!currentChatId) {
-                const newChatId = await createNewChatOnServer();
+                newChatId = await createNewChatOnServer();
                 
                 if (!newChatId) {
                     throw new Error("Chat konnte nicht erstellt werden");
@@ -147,33 +151,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: "deepseek-r1:8b",
-                    messages: chatHistory,
+                    messages: tempChatHistory,
                     stream: false
                 })
             });
-            createChatListItem(userInput);
 
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    
+
             const data = await response.json();
             aiField.removeChild(typingIndicator);
-    
+
             const aiResponse = data.message.content;
             addMessage(aiResponse, false);
-            chatHistory.push({ role: "assistant", content: aiResponse });
-    
-            // Update the chat on the server
-            updateChatOnServer();
-    
+            
+            // Nur wenn wir hier angekommen sind, war die Antwort erfolgreich
+            shouldSaveChat = true;
+            
+            // Aktualisiere den Chat-Verlauf
+            chatHistory = [...tempChatHistory, { role: "assistant", content: aiResponse }];
+            
+            // Erstelle Chat-Listeneintrag nur bei erfolgreicher Antwort
+            createChatListItem(userInput);
+
         } catch (error) {
             console.error('Fehler:', error);
             if (typingIndicator.parentNode) {
                 aiField.removeChild(typingIndicator);
             }
-            addMessage('Fehler: ' + error.message, false);
+            
+            // Wenn es einen neuen Chat gab, aber die Antwort fehlgeschlagen ist, löschen wir ihn
+            if (newChatId && !shouldSaveChat) {
+                await deleteFailedChat(newChatId);
+                if (currentChatId === newChatId) {
+                    currentChatId = null;
+                    updateDebugInfo();
+                }
+            }
+        } finally {
+            // Nur wenn die Antwort erfolgreich war, speichern wir den Chat
+            if (shouldSaveChat && currentChatId) {
+                await updateChatOnServer();
+            }
         }
     }
-  
+
+    // Neue Funktion zum Löschen fehlgeschlagener Chats
+    async function deleteFailedChat(chatId) {
+        try {
+            await fetch(`/ais/${chatId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                }
+            });
+        } catch (error) {
+            console.error('Fehler beim Löschen des fehlgeschlagenen Chats:', error);
+        }
+    }
+    
     // Function to send a message from the input field
     function sendMessage() {
         const userInput = aiInput.value.trim();
