@@ -146,12 +146,10 @@
 <% # Startdatum (Anfang der Woche) festlegen %>
 <% current_date = Date.today %>
 <% current_weekday = (current_date.wday  - 1) % 7 %>
+<%= render "home/navbar" %>
 
 <div class="upper-container">
     <%= link_to '+ New Task', new_task_path, class: 'new-btn' %>
-
-    <%= link_to "Logout", destroy_user_session_path, method: :delete %>
-    <p>Angemeldet als: <%= current_user.email %></p>
 </div>
 <div class="calender-container">
   <!-- Wochentage oben -->
