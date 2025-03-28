@@ -70,11 +70,35 @@
     background-color: #DBDBDB;
   }
 </style>
+<script>
+  
+  function onOffButton(className, defaultColor, afterColor) {
+    const button = document.querySelector(`.${className}`); // Richtige Template-Syntax
+    if (button.style.backgroundColor === afterColor) {
+        button.style.backgroundColor = defaultColor; // Zurück zu Weiß
+        button.style.color = afterColor
+    } else {
+        button.style.backgroundColor = afterColor; // Setze auf Schwarz
+        button.style.color = defaultColor
+    }
+  }
+  function onOffsvg(className, defaultColor, afterColor) {
+    const svg = document.querySelector(`.${className}`); // Richtige Template-Syntax
+    if (svg.style.fill === afterColor) {
+        svg.style.fill = defaultColor; // Zurück zu Weiß
+    } else {
+        svg.style.fill = afterColor; // Setze auf Schwarz
+    }
+  }
+
+
+
+</script>
 <div id="notes" class="notes-container">
   <div class="notes-buttons">
     <%= link_to '+ New Task', new_note_path, class: 'new-btn' %>
     <div style="display: flex; gap: 8px;">
-      <div class="long-white-button bookmarks-toggle" id="bookmarksToggle">
+      <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
           <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
         </svg>
