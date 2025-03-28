@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             // Nur wenn die Antwort erfolgreich war, speichern wir den Chat
             if (shouldSaveChat && currentChatId) {
-                await updateChatOnServer();
+                updateChatOnServer();
             }
         }
     }
