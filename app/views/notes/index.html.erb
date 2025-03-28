@@ -1,16 +1,100 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Notes" %>
 <%= render "home/navbar" %>
+<style>
+  .note-item{
+    padding: 8px;
+    border-top: 1px solid #DBDBDB;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  .note-item:hover{
+    background-color: #DBDBDB;
+  }
+  .notes-container{
+    margin: 64px 10%;
+  }
+  .note-item-container{
+    margin-top: 32px;
+  }
+  .new-btn {
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s ease;
+      padding: 8.5px 16px;
+  }
+  .searchbar-container{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px;
+    border: 1px solid #DBDBDB;
+    border-radius: 8px;
+    width: 300px;
+  }
 
-<h1>Notes</h1>
+  .search-button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    flex: 1;
+  }
+  .searchbar{
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color:rgb(235, 235, 235)
+  }
+  .notes-buttons{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .long-white-button{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease;
+  }
+  .long-white-button:hover{
+    background-color: #DBDBDB;
+  }
+</style>
+<div id="notes" class="notes-container">
+  <div class="notes-buttons">
+    <%= link_to '+ New Task', new_note_path, class: 'new-btn' %>
+    <div style="display: flex; gap: 8px;">
+      <div class="long-white-button bookmarks-toggle" id="bookmarksToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+        </svg>
+        <p>Bookmarks</p>
+      </div>
+      <div class="searchbar-container">
+        <button class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <input placeholder="search" class="searchbar">
+      </div>
+    </div>
+  </div>
+  <div class="note-item-container">
+    <% @notes.each do |note| %>
+      <div class="note-item" onclick="window.location.href='<%= note_path(note) %>'">
+        <p><%= note.title %></p>
+        <p><%= format_date(note.updated_at) %></p>
 
-<div id="notes">
-  <% @notes.each do |note| %>
-    <p>
-      <%= link_to "Show this note", note %>
-    </p>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "New note", new_note_path %>
