@@ -75,10 +75,20 @@
   .note-actions{
     display: flex;
     gap: 8px;
+  }
+  .lucide-settings{
     display: none;
   }
-  .note-item:hover .note-actions {
-      display: flex;
+  .lucide-bookmark{
+    display: none;
+  }
+  .note-item:hover .lucide-settings,
+  .note-item:hover .lucide-bookmark {
+      display: block;
+  }
+
+  .saved{
+    display: block;
   }
 
 </style>
@@ -100,7 +110,7 @@
         window.location.href = url;
       }
   }
-  function toggleBookmark(event, chatId) {
+  function toggleBookmark(event, noteId) {
     // Prevent the click from bubbling to the parent
     event.stopPropagation();
     
@@ -118,7 +128,7 @@
     }
     
     // Send the update to the server
-    fetch(`/notes/${chatId}`, {
+    fetch(`/notes/${noteId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -157,13 +167,13 @@ function initializeBookmarkIcons() {
         icon.parentNode.replaceChild(newIcon, icon);
         
         // Get the chat ID directly from the SVG element
-        const chatId = newIcon.getAttribute('data-chat-id');
-        if (chatId) {
+        const noteId = newIcon.getAttribute('data-note-id');
+        if (noteId) {
             // Remove the inline onclick attribute if it exists
             newIcon.removeAttribute('onclick');
             
             // Add click event listener for the bookmark icon
-            newIcon.addEventListener('click', (event) => toggleBookmark(event, chatId));
+            newIcon.addEventListener('click', (event) => toggleBookmark(event, noteId));
         }
     });
 }
@@ -212,10 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
           <p><%= format_date(note.updated_at) %></p>
         </div>
         <div class="note-actions">
-          <svg onclick="event.stopPropagation();" data-chat-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark <%= 'saved' if note.bookmarked %>">
+          <svg onclick="event.stopPropagation();" data-note-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark <%= 'saved' if note.bookmarked %>" >
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
           </svg>
-          <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
       </div>
     <% end %>
