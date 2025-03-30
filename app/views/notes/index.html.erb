@@ -1,16 +1,274 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Notes" %>
 <%= render "home/navbar" %>
+<style>
+  .note-item{
+    height: 41px;
+    padding: 0 16px;
+    border-top: 1px solid #DBDBDB;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  .note-item:hover{
+    background-color: #DBDBDB;
+  }
 
-<h1>Notes</h1>
+  .notes-contnotener{
+    margin: 64px 10%;
+  }
+  .note-item-contnotener{
+    margin-top: 32px;
+  }
+  .new-btn {
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s ease;
+      padding: 8.5px 16px;
+  }
+  .searchbar-contnotener{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px;
+    border: 1px solid #DBDBDB;
+    border-radius: 8px;
+    width: 300px;
+  }
 
-<div id="notes">
-  <% @notes.each do |note| %>
-    <p>
-      <%= link_to "Show this note", note %>
-    </p>
-  <% end %>
+  .search-button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    flex: 1;
+  }
+  .searchbar{
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color:rgb(235, 235, 235)
+  }
+  .notes-buttons{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .long-white-button{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease;
+  }
+  .long-white-button:hover{
+    background-color: #DBDBDB;
+  }
+  .note-actions{
+    display: flex;
+    gap: 8px;
+  }
+  .lucide-settings{
+    display: none;
+  }
+  .lucide-bookmark{
+    display: none;
+  }
+  .note-item:hover .lucide-settings,
+  .note-item:hover .lucide-bookmark {
+      display: block;
+  }
+
+  .saved{
+    display: block;
+  }
+
+</style>
+<script>
+ // Modified onOffButton function that also toggles the bookmark filter
+// Modified onOffButton function that also toggles the bookmark filter
+function onOffButton(className, defaultColor, afterColor) {
+  const button = document.querySelector(`.${className}`);
+  const isFiltered = button.style.backgroundColor === afterColor;
+  
+  // Toggle button appearance
+  if (isFiltered) {
+    button.style.backgroundColor = defaultColor;
+    button.style.color = afterColor;
+  } else {
+    button.style.backgroundColor = afterColor;
+    button.style.color = defaultColor;
+  }
+  
+  // Toggle visibility of notes based on bookmark status
+  toggleBookmarkFilter(!isFiltered); // Passing the new state (not the previous state)
+}
+
+// Function to show/hide notes based on bookmark status
+function toggleBookmarkFilter(showOnlyBookmarked) {
+  const noteItems = document.querySelectorAll('.note-item');
+  
+  noteItems.forEach(noteItem => {
+    const bookmarkIcon = noteItem.querySelector('.lucide-bookmark');
+    const isBookmarked = bookmarkIcon && bookmarkIcon.classList.contains('saved');
+    
+    if (showOnlyBookmarked) {
+      // When filter is active, only show bookmarked notes
+      if (isBookmarked) {
+        noteItem.classList.remove('hidden-note');
+      } else {
+        noteItem.classList.add('hidden-note');
+      }
+    } else {
+      // When filter is inactive, show all notes
+      noteItem.classList.remove('hidden-note');
+    }
+  });
+}
+
+// Function to initialize bookmark icons (keep your existing code)
+function initializeBookmarkIcons() {
+  document.querySelectorAll('.lucide-bookmark').forEach(icon => {
+    // Remove any existing listeners to prevent duplicates
+    const newIcon = icon.cloneNode(true);
+    icon.parentNode.replaceChild(newIcon, icon);
+    
+    // Get the note ID directly from the SVG element
+    const noteId = newIcon.getAttribute('data-note-id');
+    if (noteId) {
+      // Remove the inline onclick attribute if it exists
+      newIcon.removeAttribute('onclick');
+      
+      // Add click event listener for the bookmark icon
+      newIcon.addEventListener('click', (event) => toggleBookmark(event, noteId));
+    }
+  });
+}
+
+// Modified toggleBookmark function to update the filter on bookmark change
+function toggleBookmark(event, noteId) {
+  // Prevent the click from bubbling to the parent
+  event.stopPropagation();
+  
+  // Get the bookmark icon that was clicked
+  const bookmarkIcon = event.currentTarget;
+  
+  // Toggle between filled and unfilled bookmark
+  const isSaved = bookmarkIcon.classList.contains('saved');
+  
+  // Update the visual state immediately for better UX
+  if (isSaved) {
+    bookmarkIcon.classList.remove('saved');
+  } else {
+    bookmarkIcon.classList.add('saved');
+  }
+  
+  // Send the update to the server
+  fetch(`/notes/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+    },
+    body: JSON.stringify({
+      note: { bookmarked: !isSaved }
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Bookmark status updated successfully:', !isSaved);
+    
+    // Check if bookmark filter is currently active
+    const bookmarkToggle = document.querySelector('.bookmark-toggle');
+    const isFilterActive = bookmarkToggle.style.backgroundColor === 'black';
+    
+    // If filter is active, update the visibility of this note
+    if (isFilterActive && !bookmarkIcon.classList.contains('saved')) {
+      bookmarkIcon.closest('.note-item').classList.add('hidden-note');
+    }
+  })
+  .catch(error => {
+    console.error('Error updating bookmark status:', error);
+    // Revert the visual state if the server update failed
+    if (isSaved) {
+      bookmarkIcon.classList.add('saved');
+    } else {
+      bookmarkIcon.classList.remove('saved');
+    }
+  });
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  initializeBookmarkIcons();
+  
+  // Add some CSS for visual feedback and maintain grid layout
+  const style = document.createElement('style');
+  style.textContent = `
+    .lucide-bookmark {
+      cursor: pointer;
+      transition: fill 0.2s ease;
+    }
+    .lucide-bookmark.saved {
+      display: block;
+      fill: currentColor;
+    }
+    .hidden-note {
+      display: none !important;
+    }
+    .note-item {
+      transition: opacity 0.3s ease;
+    }
+  `;
+  document.head.appendChild(style);
+});
+</script>
+<div id="notes" class="notes-contnotener">
+  <div class="notes-buttons">
+    <%= link_to '+ New Note', new_note_path, class: 'new-btn' %>
+    <div style="display: flex; gap: 8px;">
+      <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+        </svg>
+        <p>Bookmarks</p>
+      </div>
+      <div class="searchbar-contnotener">
+        <button class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <input placeholder="search" class="searchbar">
+      </div>
+    </div>
+  </div>
+  <div class="note-item-contnotener">
+    <% @notes.each do |note| %>
+      <div class="note-item" onclick="handleNoteClick(event, '<%= note_path(note) %>')">
+        <p><%= note.title %></p>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <p><%= format_date(note.updated_at) %></p>
+        </div>
+        <div class="note-actions">
+          <svg onclick="event.stopPropagation();" data-note-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark <%= 'saved' if note.bookmarked %>" >
+            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+          </svg>
+          <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "New note", new_note_path %>
