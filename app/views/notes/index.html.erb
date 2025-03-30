@@ -93,107 +93,148 @@
 
 </style>
 <script>
+ // Modified onOffButton function that also toggles the bookmark filter
+// Modified onOffButton function that also toggles the bookmark filter
+function onOffButton(className, defaultColor, afterColor) {
+  const button = document.querySelector(`.${className}`);
+  const isFiltered = button.style.backgroundColor === afterColor;
   
-  function onOffButton(className, defaultColor, afterColor) {
-    const button = document.querySelector(`.${className}`); // Richtige Template-Syntax
-    if (button.style.backgroundColor === afterColor) {
-        button.style.backgroundColor = defaultColor; // Zurück zu Weiß
-        button.style.color = afterColor
-    } else {
-        button.style.backgroundColor = afterColor; // Setze auf Schwarz
-        button.style.color = defaultColor
-    }
+  // Toggle button appearance
+  if (isFiltered) {
+    button.style.backgroundColor = defaultColor;
+    button.style.color = afterColor;
+  } else {
+    button.style.backgroundColor = afterColor;
+    button.style.color = defaultColor;
   }
   
-  function handleNoteClick(event, url) {
-      if (!event.target.closest("svg")) {
-        window.location.href = url;
+  // Toggle visibility of notes based on bookmark status
+  toggleBookmarkFilter(!isFiltered); // Passing the new state (not the previous state)
+}
+
+// Function to show/hide notes based on bookmark status
+function toggleBookmarkFilter(showOnlyBookmarked) {
+  const noteItems = document.querySelectorAll('.note-item');
+  
+  noteItems.forEach(noteItem => {
+    const bookmarkIcon = noteItem.querySelector('.lucide-bookmark');
+    const isBookmarked = bookmarkIcon && bookmarkIcon.classList.contains('saved');
+    
+    if (showOnlyBookmarked) {
+      // When filter is active, only show bookmarked notes
+      if (isBookmarked) {
+        noteItem.classList.remove('hidden-note');
+      } else {
+        noteItem.classList.add('hidden-note');
       }
-  }
-  function toggleBookmark(event, noteId) {
-    // Prevent the click from bubbling to the parent
-    event.stopPropagation();
-    
-    // Get the bookmark icon that was clicked
-    const bookmarkIcon = event.currentTarget;
-    
-    // Toggle between filled and unfilled bookmark
-    const isSaved = bookmarkIcon.classList.contains('saved');
-    
-    // Update the visual state immediately for better UX
-    if (isSaved) {
-        bookmarkIcon.classList.remove('saved');
     } else {
-        bookmarkIcon.classList.add('saved');
+      // When filter is inactive, show all notes
+      noteItem.classList.remove('hidden-note');
     }
-    
-    // Send the update to the server
-    fetch(`/notes/${noteId}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-        },
-        body: JSON.stringify({
-            note: { bookmarked: !isSaved }
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Bookmark status updated successfully:', !isSaved);
-    })
-    .catch(error => {
-        console.error('Error updating bookmark status:', error);
-        // Revert the visual state if the server update failed
-        if (isSaved) {
-            bookmarkIcon.classList.add('saved');
-        } else {
-            bookmarkIcon.classList.remove('saved');
-        }
-    });
+  });
 }
 
-// Function to initialize bookmark icons
+// Function to initialize bookmark icons (keep your existing code)
 function initializeBookmarkIcons() {
-    document.querySelectorAll('.lucide-bookmark').forEach(icon => {
-        // Remove any existing listeners to prevent duplicates
-        const newIcon = icon.cloneNode(true);
-        icon.parentNode.replaceChild(newIcon, icon);
-        
-        // Get the chat ID directly from the SVG element
-        const noteId = newIcon.getAttribute('data-note-id');
-        if (noteId) {
-            // Remove the inline onclick attribute if it exists
-            newIcon.removeAttribute('onclick');
-            
-            // Add click event listener for the bookmark icon
-            newIcon.addEventListener('click', (event) => toggleBookmark(event, noteId));
-        }
-    });
+  document.querySelectorAll('.lucide-bookmark').forEach(icon => {
+    // Remove any existing listeners to prevent duplicates
+    const newIcon = icon.cloneNode(true);
+    icon.parentNode.replaceChild(newIcon, icon);
+    
+    // Get the note ID directly from the SVG element
+    const noteId = newIcon.getAttribute('data-note-id');
+    if (noteId) {
+      // Remove the inline onclick attribute if it exists
+      newIcon.removeAttribute('onclick');
+      
+      // Add click event listener for the bookmark icon
+      newIcon.addEventListener('click', (event) => toggleBookmark(event, noteId));
+    }
+  });
 }
 
-// Initialize bookmark icons when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    initializeBookmarkIcons();
+// Modified toggleBookmark function to update the filter on bookmark change
+function toggleBookmark(event, noteId) {
+  // Prevent the click from bubbling to the parent
+  event.stopPropagation();
+  
+  // Get the bookmark icon that was clicked
+  const bookmarkIcon = event.currentTarget;
+  
+  // Toggle between filled and unfilled bookmark
+  const isSaved = bookmarkIcon.classList.contains('saved');
+  
+  // Update the visual state immediately for better UX
+  if (isSaved) {
+    bookmarkIcon.classList.remove('saved');
+  } else {
+    bookmarkIcon.classList.add('saved');
+  }
+  
+  // Send the update to the server
+  fetch(`/notes/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+    },
+    body: JSON.stringify({
+      note: { bookmarked: !isSaved }
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Bookmark status updated successfully:', !isSaved);
     
-    // You should also add some CSS for visual feedback
-    const style = document.createElement('style');
-    style.textContent = `
-        .lucide-bookmark {
-            cursor: pointer;
-            transition: fill 0.2s ease;
-        }
-        .lucide-bookmark.saved {
-            fill: currentColor;
-        }
-    `;
-    document.head.appendChild(style);
+    // Check if bookmark filter is currently active
+    const bookmarkToggle = document.querySelector('.bookmark-toggle');
+    const isFilterActive = bookmarkToggle.style.backgroundColor === 'black';
+    
+    // If filter is active, update the visibility of this note
+    if (isFilterActive && !bookmarkIcon.classList.contains('saved')) {
+      bookmarkIcon.closest('.note-item').classList.add('hidden-note');
+    }
+  })
+  .catch(error => {
+    console.error('Error updating bookmark status:', error);
+    // Revert the visual state if the server update failed
+    if (isSaved) {
+      bookmarkIcon.classList.add('saved');
+    } else {
+      bookmarkIcon.classList.remove('saved');
+    }
+  });
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  initializeBookmarkIcons();
+  
+  // Add some CSS for visual feedback and maintain grid layout
+  const style = document.createElement('style');
+  style.textContent = `
+    .lucide-bookmark {
+      cursor: pointer;
+      transition: fill 0.2s ease;
+    }
+    .lucide-bookmark.saved {
+      display: block;
+      fill: currentColor;
+    }
+    .hidden-note {
+      display: none !important;
+    }
+    .note-item {
+      transition: opacity 0.3s ease;
+    }
+  `;
+  document.head.appendChild(style);
 });
 </script>
 <div id="notes" class="notes-contnotener">
