@@ -93,6 +93,12 @@
 
 </style>
 <script>
+  function handleNoteClick(event, url) {
+      if (!event.target.closest("svg")) {
+        window.location.href = url;
+      }
+  }
+
  // Modified onOffButton function that also toggles the bookmark filter
 // Modified onOffButton function that also toggles the bookmark filter
 function onOffButton(className, defaultColor, afterColor) {
