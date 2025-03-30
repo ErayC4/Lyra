@@ -79,20 +79,21 @@
   .lucide-settings{
     display: none;
   }
-  .lucide-bookmark{
+  .bookmark-icon{
     display: none;
   }
   .note-item:hover .lucide-settings,
-  .note-item:hover .lucide-bookmark {
+  .note-item:hover .bookmark-icon {
       display: block;
   }
 
-  .saved{
+  .bookmarked{
     display: block;
   }
 
 </style>
 <script>
+
   function handleNoteClick(event, url) {
       if (!event.target.closest("svg")) {
         window.location.href = url;
@@ -120,47 +121,47 @@ function onOffButton(className, defaultColor, afterColor) {
 
 // Function to show/hide notes based on bookmark status
 function toggleBookmarkFilter(showOnlyBookmarked) {
-  const noteItems = document.querySelectorAll('.note-item');
+  const bookmarkItems = document.querySelectorAll('.bookmarkable-item');
   
-  noteItems.forEach(noteItem => {
-    const bookmarkIcon = noteItem.querySelector('.lucide-bookmark');
-    const isBookmarked = bookmarkIcon && bookmarkIcon.classList.contains('saved');
+  bookmarkItems.forEach(bookmarkItem => {
+    const bookmarkIcon = bookmarkItem.querySelector('.bookmark-icon');
+    const isBookmarked = bookmarkIcon && bookmarkIcon.classList.contains('bookmarked');
     
     if (showOnlyBookmarked) {
       // When filter is active, only show bookmarked notes
       if (isBookmarked) {
-        noteItem.classList.remove('hidden-note');
+        bookmarkItem.classList.remove('hidden-item');
       } else {
-        noteItem.classList.add('hidden-note');
+        bookmarkItem.classList.add('hidden-item');
       }
     } else {
       // When filter is inactive, show all notes
-      noteItem.classList.remove('hidden-note');
+      bookmarkItem.classList.remove('hidden-item');
     }
   });
 }
 
 // Function to initialize bookmark icons (keep your existing code)
-function initializeBookmarkIcons() {
-  document.querySelectorAll('.lucide-bookmark').forEach(icon => {
+function initializeBookmarkIcons(tableName) {
+  document.querySelectorAll('.bookmark-icon').forEach(icon => {
     // Remove any existing listeners to prevent duplicates
     const newIcon = icon.cloneNode(true);
     icon.parentNode.replaceChild(newIcon, icon);
     
     // Get the note ID directly from the SVG element
-    const noteId = newIcon.getAttribute('data-note-id');
-    if (noteId) {
+    const itemId = newIcon.getAttribute('data-item-id');
+    if (itemId) {
       // Remove the inline onclick attribute if it exists
       newIcon.removeAttribute('onclick');
       
       // Add click event listener for the bookmark icon
-      newIcon.addEventListener('click', (event) => toggleBookmark(event, noteId));
+      newIcon.addEventListener('click', (event) => toggleBookmark(event, itemId, tableName));
     }
   });
 }
 
 // Modified toggleBookmark function to update the filter on bookmark change
-function toggleBookmark(event, noteId) {
+function toggleBookmark(event, itemId, tableName) {
   // Prevent the click from bubbling to the parent
   event.stopPropagation();
   
@@ -168,17 +169,17 @@ function toggleBookmark(event, noteId) {
   const bookmarkIcon = event.currentTarget;
   
   // Toggle between filled and unfilled bookmark
-  const isSaved = bookmarkIcon.classList.contains('saved');
+  const isbookmarked = bookmarkIcon.classList.contains('bookmarked');
   
   // Update the visual state immediately for better UX
-  if (isSaved) {
-    bookmarkIcon.classList.remove('saved');
+  if (isbookmarked) {
+    bookmarkIcon.classList.remove('bookmarked');
   } else {
-    bookmarkIcon.classList.add('saved');
+    bookmarkIcon.classList.add('bookmarked');
   }
   
   // Send the update to the server
-  fetch(`/notes/${noteId}`, {
+  fetch(`/${tableName}/${itemId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -186,7 +187,7 @@ function toggleBookmark(event, noteId) {
       "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
     },
     body: JSON.stringify({
-      note: { bookmarked: !isSaved }
+      note: { bookmarked: !isbookmarked }
     })
   })
   .then(response => {
@@ -196,40 +197,40 @@ function toggleBookmark(event, noteId) {
     return response.json();
   })
   .then(data => {
-    console.log('Bookmark status updated successfully:', !isSaved);
+    console.log('Bookmark status updated successfully:', !isbookmarked);
     
     // Check if bookmark filter is currently active
     const bookmarkToggle = document.querySelector('.bookmark-toggle');
     const isFilterActive = bookmarkToggle.style.backgroundColor === 'black';
     
     // If filter is active, update the visibility of this note
-    if (isFilterActive && !bookmarkIcon.classList.contains('saved')) {
+    if (isFilterActive && !bookmarkIcon.classList.contains('bookmarked')) {
       bookmarkIcon.closest('.note-item').classList.add('hidden-note');
     }
   })
   .catch(error => {
     console.error('Error updating bookmark status:', error);
     // Revert the visual state if the server update failed
-    if (isSaved) {
-      bookmarkIcon.classList.add('saved');
+    if (isbookmarked) {
+      bookmarkIcon.classList.add('bookmarked');
     } else {
-      bookmarkIcon.classList.remove('saved');
+      bookmarkIcon.classList.remove('bookmarked');
     }
   });
 }
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-  initializeBookmarkIcons();
+  initializeBookmarkIcons("notes");
   
   // Add some CSS for visual feedback and maintain grid layout
   const style = document.createElement('style');
   style.textContent = `
-    .lucide-bookmark {
+    .bookmark-icon {
       cursor: pointer;
       transition: fill 0.2s ease;
     }
-    .lucide-bookmark.saved {
+    .bookmark-icon.bookmarked {
       display: block;
       fill: currentColor;
     }
@@ -248,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <%= link_to '+ New Note', new_note_path, class: 'new-btn' %>
     <div style="display: flex; gap: 8px;">
       <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide bookmark-icon">
           <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
         </svg>
         <p>Bookmarks</p>
@@ -263,13 +264,13 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
   <div class="note-item-contnotener">
     <% @notes.each do |note| %>
-      <div class="note-item" onclick="handleNoteClick(event, '<%= note_path(note) %>')">
+      <div class="note-item bookmarkable-item" onclick="handleNoteClick(event, '<%= note_path(note) %>')">
         <p><%= note.title %></p>
         <div style="display: flex; gap: 8px; align-items: center;">
           <p><%= format_date(note.updated_at) %></p>
         </div>
         <div class="note-actions">
-          <svg onclick="event.stopPropagation();" data-note-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark <%= 'saved' if note.bookmarked %>" >
+          <svg onclick="event.stopPropagation();" data-item-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide bookmark-icon <%= 'bookmarked' if note.bookmarked %>" >
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
           </svg>
           <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
