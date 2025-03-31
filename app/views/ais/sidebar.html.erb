@@ -237,106 +237,9 @@
   }
 </style>
 
-<script>
-
-
-      
-      // Function to initialize bookmark icons (keep your existing code)
-      function initializeBookmarkIcons(tableName) {
-        document.querySelectorAll('.bookmark-icon').forEach(icon => {
-          // Remove any existing listeners to prevent duplicates
-          const newIcon = icon.cloneNode(true);
-          icon.parentNode.replaceChild(newIcon, icon);
-          
-          // Get the note ID directly from the SVG element
-          const itemId = newIcon.getAttribute('data-item-id');
-          if (itemId) {
-            // Remove the inline onclick attribute if it exists
-            newIcon.removeAttribute('onclick');
-            
-            // Add click event listener for the bookmark icon
-            newIcon.addEventListener('click', (event) => toggleBookmark(event, itemId, tableName));
-          }
-        });
-      }
-      
-      // Modified toggleBookmark function to update the filter on bookmark change
-      function toggleBookmark(event, itemId, tableName) {
-        event.stopPropagation();
-
-        const bookmarkIcon = event.currentTarget;
-        
-        // Toggle between filled and unfilled bookmark
-        const isbookmarked = bookmarkIcon.classList.contains('bookmarked');
-        
-        // Update the visual state immediately for better UX
-        if (isbookmarked) {
-          bookmarkIcon.classList.remove('bookmarked');
-        } else {
-          bookmarkIcon.classList.add('bookmarked');
-        }
-        
-        // Send the update to the server
-        fetch(`/${tableName}s/${itemId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-          },
-          body: JSON.stringify({
-            [tableName]: { bookmarked: !isbookmarked }
-          })
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Bookmark status updated successfully:', !isbookmarked);
-          
-        })
-        .catch(error => {
-          console.error('Error updating bookmark status:', error);
-          // Revert the visual state if the server update failed
-          if (isbookmarked) {
-            bookmarkIcon.classList.add('bookmarked');
-          } else {
-            bookmarkIcon.classList.remove('bookmarked');
-          }
-        });
-      }
-      
-      // Initialize when the page loads
-      document.addEventListener('DOMContentLoaded', function() {
-        initializeBookmarkIcons("ai");
-        
-        // Add some CSS for visual feedback and maintain grid layout
-        const style = document.createElement('style');
-        style.textContent = `
-          .bookmark-icon {
-            cursor: pointer;
-            transition: fill 0.2s ease;
-          }
-          .bookmark-icon.bookmarked {
-            display: block;
-            fill: currentColor;
-          }
-          .hidden-note {
-            display: none !important;
-          }
-          .note-item {
-            transition: opacity 0.3s ease;
-          }
-        `;
-        document.head.appendChild(style);
-      });
-
-</script>
 <%= javascript_include_tag "ai" %>
 <%= javascript_include_tag "dropdownmenu" %>
+<%= javascript_include_tag "bookmark" %>
     <div class="toolbar">
       <button class="toolbar-button-active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magic" viewBox="0 0 16 16">
         <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707zM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1zM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707zM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0z"/>
@@ -405,6 +308,7 @@
                 xmlns="http://www.w3.org/2000/svg" 
                 width="24" 
                 height="24" 
+                data-table-name = "ai"
                 data-item-id="<%= ai.id %>"
                 viewBox="0 0 24 24" 
                 fill="none" 

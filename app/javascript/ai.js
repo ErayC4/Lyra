@@ -369,13 +369,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-
-
-
-
-
-
-
     // Set up event listener for the "Send" button
     sendButton.addEventListener('click', function() {
         sendMessage();

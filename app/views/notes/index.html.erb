@@ -92,6 +92,8 @@
   }
 
 </style>
+<%= javascript_include_tag "bookmark" %>
+
 <script>
 
   function handleNoteClick(event, url) {
@@ -141,106 +143,6 @@ function toggleBookmarkFilter(showOnlyBookmarked) {
   });
 }
 
-// Function to initialize bookmark icons (keep your existing code)
-function initializeBookmarkIcons(tableName) {
-  document.querySelectorAll('.bookmark-icon').forEach(icon => {
-    // Remove any existing listeners to prevent duplicates
-    const newIcon = icon.cloneNode(true);
-    icon.parentNode.replaceChild(newIcon, icon);
-    
-    // Get the note ID directly from the SVG element
-    const itemId = newIcon.getAttribute('data-item-id');
-    if (itemId) {
-      // Remove the inline onclick attribute if it exists
-      newIcon.removeAttribute('onclick');
-      
-      // Add click event listener for the bookmark icon
-      newIcon.addEventListener('click', (event) => toggleBookmark(event, itemId, tableName));
-    }
-  });
-}
-
-// Modified toggleBookmark function to update the filter on bookmark change
-function toggleBookmark(event, itemId, tableName) {
-  // Prevent the click from bubbling to the parent
-  // Get the bookmark icon that was clicked
-  const bookmarkIcon = event.currentTarget;
-  
-  // Toggle between filled and unfilled bookmark
-  const isbookmarked = bookmarkIcon.classList.contains('bookmarked');
-  
-  // Update the visual state immediately for better UX
-  if (isbookmarked) {
-    bookmarkIcon.classList.remove('bookmarked');
-  } else {
-    bookmarkIcon.classList.add('bookmarked');
-  }
-  
-  // Send the update to the server
-  fetch(`/${tableName}s/${itemId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-    },
-    body: JSON.stringify({
-      [tableName]: { bookmarked: !isbookmarked }
-    })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Bookmark status updated successfully:', !isbookmarked);
-    
-    // Check if bookmark filter is currently active
-    const bookmarkToggle = document.querySelector('.bookmark-toggle');
-    const isFilterActive = bookmarkToggle.style.backgroundColor === 'black';
-    
-    // If filter is active, update the visibility of this note
-    if (isFilterActive && !bookmarkIcon.classList.contains('bookmarked')) {
-      bookmarkIcon.closest('.note-item').classList.add('hidden-note');
-    }
-  })
-  .catch(error => {
-    console.error('Error updating bookmark status:', error);
-    // Revert the visual state if the server update failed
-    if (isbookmarked) {
-      bookmarkIcon.classList.add('bookmarked');
-    } else {
-      bookmarkIcon.classList.remove('bookmarked');
-    }
-  });
-}
-
-// Initialize when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-  initializeBookmarkIcons("note");
-  
-  // Add some CSS for visual feedback and maintain grid layout
-  const style = document.createElement('style');
-  style.textContent = `
-    .bookmark-icon {
-      cursor: pointer;
-      transition: fill 0.2s ease;
-    }
-    .bookmark-icon.bookmarked {
-      display: block;
-      fill: currentColor;
-    }
-    .hidden-note {
-      display: none !important;
-    }
-    .note-item {
-      transition: opacity 0.3s ease;
-    }
-  `;
-  document.head.appendChild(style);
-});
 </script>
 <div id="notes" class="notes-contnotener">
   <div class="notes-buttons">
@@ -268,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <p><%= format_date(note.updated_at) %></p>
         </div>
         <div class="note-actions">
-          <svg onclick="event.stopPropagation();" data-item-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="bookmark-icon <%= 'bookmarked' if note.bookmarked %>" >
+          <svg onclick="event.stopPropagation();" data-item-id="<%= note.id %>" data-table-name="note" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="bookmark-icon <%= 'bookmarked' if note.bookmarked %>" >
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
           </svg>
           <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
