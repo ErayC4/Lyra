@@ -245,9 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // HTML für den Button erstellen
         const buttonHTML = `
             <button 
-                onclick="openChat(${chatId})" 
-                data-chat-id="${chatId}"
-                class="chat-list-item"
+                onclick="openChat(${chatId})"                 
+                class="chat-list-item bookmarkable-item"
                 >
                 <div class="chat-list-item-container">
                     <p class="chat-title">${previewText}</p>
@@ -261,7 +260,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     stroke-width="2" 
                     stroke-linecap="round" 
                     stroke-linejoin="round" 
-                    class="lucide lucide-bookmark"
+                    class="bookmark-icon"
+                    data-table-name="ai"
+                    data-item-id="${chatId}"
                     ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
                 </div>
             </button>
@@ -278,7 +279,16 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             chatListContainer.appendChild(buttonElement);
         }
-    
+        
+        // Wichtig: Bookmark-Funktionalität für das neu erstellte Element aktivieren
+        const bookmarkIcon = buttonElement.querySelector('.bookmark-icon');
+        if (bookmarkIcon) {
+            const itemId = bookmarkIcon.getAttribute('data-item-id');
+            const tableName = bookmarkIcon.getAttribute('data-table-name');
+            
+            // Event-Listener direkt hinzufügen
+            bookmarkIcon.addEventListener('click', (event) => toggleBookmark(event, itemId, tableName));
+        }
     }
     
     // !!!!! actually part of dropdownmenu, its here because idk    
