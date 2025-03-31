@@ -26,27 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     observer.observe(targetNode, { childList: true, subtree: true });
   }
 
-  // Umschalten zwischen allen AIs und gespeicherten AIs
-  const bookmarksToggle = document.getElementById('bookmarksToggle');
-  const allAIsSection = document.getElementById('allAIsSection');
-  const savedAIsSection = document.getElementById('savedAIsSection');
-  let isBookmarksMode = false;
-
-  if (bookmarksToggle) {
-    bookmarksToggle.addEventListener('click', function() {
-      isBookmarksMode = !isBookmarksMode;
-      if (isBookmarksMode) {
-        allAIsSection.style.display = 'none';
-        savedAIsSection.style.display = 'block';
-        bookmarksToggle.classList.add('active');
-      } else {
-        allAIsSection.style.display = 'block';
-        savedAIsSection.style.display = 'none';
-        bookmarksToggle.classList.remove('active');
-      }
-    });
-  }
-
   // Dropdown-Button-Funktionalität
   const dropdownButton = document.querySelector('.dropdown-button');
   const dropdownContent = document.querySelector('.dropdown-content');

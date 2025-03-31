@@ -235,11 +235,16 @@
   .bookmarked{
     display: block;
   }
+  .hidden-item{
+    display: none;
+  }
 </style>
 
 <%= javascript_include_tag "ai" %>
 <%= javascript_include_tag "dropdownmenu" %>
 <%= javascript_include_tag "bookmark" %>
+<%= javascript_include_tag "bookmarktoggle" %>
+
     <div class="toolbar">
       <button class="toolbar-button-active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magic" viewBox="0 0 16 16">
         <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707zM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1zM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707zM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0z"/>
@@ -261,7 +266,7 @@
     <div>
       <div class="dropdown-content">
           <div class="dropdown-header">
-            <div class="long-white-button bookmarks-toggle" id="bookmarksToggle">
+            <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
                 <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
               </svg>
@@ -286,19 +291,11 @@
         yesterdays_ais = @ais.select { |ai| ai.created_at.to_date == yesterday }.sort_by { |ai| ai.created_at }.reverse
         last_week_ais = @ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.sort_by { |ai| ai.created_at }.reverse
         older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.sort_by { |ai| ai.created_at }.reverse
-        
-        # Gefilterte gespeicherte AIs
-        bookmarked_ais = @ais.select { |ai| ai.bookmarked }
-        
-        # Hilfsfunktion zum Rendern der Chat-Buttons
-        def render_chat_button(ai, bookmarked_only: false)
+        def render_chat_button(ai)
       %>
-        <% if !bookmarked_only || ai.bookmarked %>
           <button 
             onclick="openChat(<%= ai.id %>)" 
-            
-            class="chat-list-item"
-            <%= 'style="display:none;"' if bookmarked_only && !ai.bookmarked %>
+            class="chat-list-item bookmarkable-item"
           >
             <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
             <% if user_message %>
@@ -324,7 +321,6 @@
             <% end %>
           </button>
         <% end %>
-      <% end %>
 
       <!-- Alle AIss Abschnitte -->
       <div id="allAIsSection">
@@ -362,37 +358,6 @@
           <% end %>
         </div>
         <% end %>
-      </div>
-
-      <!-- Gespeicherte AIs Abschnitte -->
-      <div id="bookmarkedAIsSection" style="display:none;">
-        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date == today }.any? ? '' : 'display: none;' %>">
-          <p class="section-header">Heute</p>
-          <% todays_ais.each do |ai| %>
-            <% render_chat_button(ai, bookmarked_only: true) %>
-          <% end %>
-        </div>
-
-        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date == yesterday }.any? ? '' : 'display: none;' %>">
-          <p class="section-header">Gestern</p>
-          <% yesterdays_ais.each do |ai| %>
-            <% render_chat_button(ai, bookmarked_only: true) %>
-          <% end %>
-        </div>
-
-        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.any? ? '' : 'display: none;' %>">
-          <p class="section-header">Letzte 7 Tage</p>
-          <% last_week_ais.each do |ai| %>
-            <% render_chat_button(ai, bookmarked_only: true) %>
-          <% end %>
-        </div>
-
-        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.any? ? '' : 'display: none;' %>">
-          <p class="section-header">Älter</p>
-          <% older_ais.each do |ai| %>
-            <% render_chat_button(ai, bookmarked_only: true) %>
-          <% end %>
-        </div>
       </div>
       </div>
       </div>

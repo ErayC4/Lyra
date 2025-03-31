@@ -279,11 +279,6 @@ document.addEventListener('DOMContentLoaded', function() {
             chatListContainer.appendChild(buttonElement);
         }
     
-        // Add event listener for bookmark toggle
-        const bookmarkIcon = buttonElement.querySelector('.bookmark-icon');
-        bookmarkIcon.addEventListener('click', (event) => {
-            toggleBookmark(event, chatId);
-        });
     }
     
     // !!!!! actually part of dropdownmenu, its here because idk    
