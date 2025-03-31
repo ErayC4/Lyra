@@ -163,8 +163,6 @@ function initializeBookmarkIcons(tableName) {
 // Modified toggleBookmark function to update the filter on bookmark change
 function toggleBookmark(event, itemId, tableName) {
   // Prevent the click from bubbling to the parent
-  event.stopPropagation();
-  
   // Get the bookmark icon that was clicked
   const bookmarkIcon = event.currentTarget;
   
@@ -179,7 +177,7 @@ function toggleBookmark(event, itemId, tableName) {
   }
   
   // Send the update to the server
-  fetch(`/${tableName}/${itemId}`, {
+  fetch(`/${tableName}s/${itemId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -187,7 +185,7 @@ function toggleBookmark(event, itemId, tableName) {
       "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
     },
     body: JSON.stringify({
-      note: { bookmarked: !isbookmarked }
+      [tableName]: { bookmarked: !isbookmarked }
     })
   })
   .then(response => {
@@ -221,7 +219,7 @@ function toggleBookmark(event, itemId, tableName) {
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-  initializeBookmarkIcons("notes");
+  initializeBookmarkIcons("note");
   
   // Add some CSS for visual feedback and maintain grid layout
   const style = document.createElement('style');
@@ -270,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <p><%= format_date(note.updated_at) %></p>
         </div>
         <div class="note-actions">
-          <svg onclick="event.stopPropagation();" data-item-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide bookmark-icon <%= 'bookmarked' if note.bookmarked %>" >
+          <svg onclick="event.stopPropagation();" data-item-id="<%= note.id %>" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="bookmark-icon <%= 'bookmarked' if note.bookmarked %>" >
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
           </svg>
           <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>

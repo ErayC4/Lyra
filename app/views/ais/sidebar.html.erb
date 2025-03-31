@@ -222,28 +222,119 @@
     align-items: center;
 
   }
-  .lucide-bookmark{
-    display: none;
-    transition: opacity 0.3s ease-in-out;
-  }
   
-  .chat-list-item:hover .lucide-bookmark {
-    display: block; /* Wird beim Hover sichtbar */
-  }
   .size-6{
     height: 20px;
     width: 20px;
   }
   
+  .note-item:hover .bookmark-icon {
+      display: block;
+  }
 
-.bookmarks-toggle.active {
-  background-color: #e0e0e0; /* Leichte Hervorhebung im Active-Zustand */
-}
+  .bookmarked{
+    display: block;
+  }
 </style>
 
+<script>
 
 
+      
+      // Function to initialize bookmark icons (keep your existing code)
+      function initializeBookmarkIcons(tableName) {
+        document.querySelectorAll('.bookmark-icon').forEach(icon => {
+          // Remove any existing listeners to prevent duplicates
+          const newIcon = icon.cloneNode(true);
+          icon.parentNode.replaceChild(newIcon, icon);
+          
+          // Get the note ID directly from the SVG element
+          const itemId = newIcon.getAttribute('data-item-id');
+          if (itemId) {
+            // Remove the inline onclick attribute if it exists
+            newIcon.removeAttribute('onclick');
+            
+            // Add click event listener for the bookmark icon
+            newIcon.addEventListener('click', (event) => toggleBookmark(event, itemId, tableName));
+          }
+        });
+      }
+      
+      // Modified toggleBookmark function to update the filter on bookmark change
+      function toggleBookmark(event, itemId, tableName) {
+        event.stopPropagation();
 
+        const bookmarkIcon = event.currentTarget;
+        
+        // Toggle between filled and unfilled bookmark
+        const isbookmarked = bookmarkIcon.classList.contains('bookmarked');
+        
+        // Update the visual state immediately for better UX
+        if (isbookmarked) {
+          bookmarkIcon.classList.remove('bookmarked');
+        } else {
+          bookmarkIcon.classList.add('bookmarked');
+        }
+        
+        // Send the update to the server
+        fetch(`/${tableName}s/${itemId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+          },
+          body: JSON.stringify({
+            [tableName]: { bookmarked: !isbookmarked }
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Bookmark status updated successfully:', !isbookmarked);
+          
+        })
+        .catch(error => {
+          console.error('Error updating bookmark status:', error);
+          // Revert the visual state if the server update failed
+          if (isbookmarked) {
+            bookmarkIcon.classList.add('bookmarked');
+          } else {
+            bookmarkIcon.classList.remove('bookmarked');
+          }
+        });
+      }
+      
+      // Initialize when the page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        initializeBookmarkIcons("ai");
+        
+        // Add some CSS for visual feedback and maintain grid layout
+        const style = document.createElement('style');
+        style.textContent = `
+          .bookmark-icon {
+            cursor: pointer;
+            transition: fill 0.2s ease;
+          }
+          .bookmark-icon.bookmarked {
+            display: block;
+            fill: currentColor;
+          }
+          .hidden-note {
+            display: none !important;
+          }
+          .note-item {
+            transition: opacity 0.3s ease;
+          }
+        `;
+        document.head.appendChild(style);
+      });
+
+</script>
 <%= javascript_include_tag "ai" %>
 <%= javascript_include_tag "dropdownmenu" %>
     <div class="toolbar">
@@ -294,17 +385,17 @@
         older_ais = @ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.sort_by { |ai| ai.created_at }.reverse
         
         # Gefilterte gespeicherte AIs
-        saved_ais = @ais.select { |ai| ai.saved }
+        bookmarked_ais = @ais.select { |ai| ai.bookmarked }
         
         # Hilfsfunktion zum Rendern der Chat-Buttons
-        def render_chat_button(ai, saved_only: false)
+        def render_chat_button(ai, bookmarked_only: false)
       %>
-        <% if !saved_only || ai.saved %>
+        <% if !bookmarked_only || ai.bookmarked %>
           <button 
             onclick="openChat(<%= ai.id %>)" 
-            data-chat-id="<%= ai.id %>"
+            
             class="chat-list-item"
-            <%= 'style="display:none;"' if saved_only && !ai.saved %>
+            <%= 'style="display:none;"' if bookmarked_only && !ai.bookmarked %>
           >
             <% user_message = ai.chat.find { |message| message["role"] == "user" } %>
             <% if user_message %>
@@ -314,13 +405,16 @@
                 xmlns="http://www.w3.org/2000/svg" 
                 width="24" 
                 height="24" 
+                data-item-id="<%= ai.id %>"
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
                 stroke-width="2" 
                 stroke-linecap="round" 
                 stroke-linejoin="round" 
-                class="lucide lucide-bookmark <%= 'saved' if ai.saved %>"
+                class="bookmark-icon <%= 'bookmarked' if ai.bookmarked %>"
+                onclick="event.stopPropagation();"
+                
               ><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>                       
             </div>
             <% end %>
@@ -367,32 +461,32 @@
       </div>
 
       <!-- Gespeicherte AIs Abschnitte -->
-      <div id="savedAIsSection" style="display:none;">
-        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date == today }.any? ? '' : 'display: none;' %>">
+      <div id="bookmarkedAIsSection" style="display:none;">
+        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date == today }.any? ? '' : 'display: none;' %>">
           <p class="section-header">Heute</p>
           <% todays_ais.each do |ai| %>
-            <% render_chat_button(ai, saved_only: true) %>
+            <% render_chat_button(ai, bookmarked_only: true) %>
           <% end %>
         </div>
 
-        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date == yesterday }.any? ? '' : 'display: none;' %>">
+        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date == yesterday }.any? ? '' : 'display: none;' %>">
           <p class="section-header">Gestern</p>
           <% yesterdays_ais.each do |ai| %>
-            <% render_chat_button(ai, saved_only: true) %>
+            <% render_chat_button(ai, bookmarked_only: true) %>
           <% end %>
         </div>
 
-        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.any? ? '' : 'display: none;' %>">
+        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date > seven_days_ago && ai.created_at.to_date < yesterday }.any? ? '' : 'display: none;' %>">
           <p class="section-header">Letzte 7 Tage</p>
           <% last_week_ais.each do |ai| %>
-            <% render_chat_button(ai, saved_only: true) %>
+            <% render_chat_button(ai, bookmarked_only: true) %>
           <% end %>
         </div>
 
-        <div class="section" style="<%= saved_ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.any? ? '' : 'display: none;' %>">
+        <div class="section" style="<%= bookmarked_ais.select { |ai| ai.created_at.to_date <= seven_days_ago }.any? ? '' : 'display: none;' %>">
           <p class="section-header">Älter</p>
           <% older_ais.each do |ai| %>
-            <% render_chat_button(ai, saved_only: true) %>
+            <% render_chat_button(ai, bookmarked_only: true) %>
           <% end %>
         </div>
       </div>
