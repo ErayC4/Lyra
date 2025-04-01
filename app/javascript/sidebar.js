@@ -3,15 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const toolbarButtons = document.querySelectorAll('.toolbar-button');
   
   // Alle Fenster auswählen
-  const aiWindow = document.querySelector('.ai-window');
-  const tocWindow = document.querySelector('.table-of-contents-window');
-  const filesWindow = document.querySelector('.files-window');
+  const windows = document.querySelectorAll('.ai-window, .table-of-contents-window, .files-window');
   
-  // Alle Fenster in ein Array packen für einfacheren Zugriff
-  const allWindows = [aiWindow, tocWindow, filesWindow];
-  
-  // Initial alle Fenster verstecken, außer dem ersten (ai-window)
-  allWindows.forEach((window, index) => {
+  // Initial alle Fenster verstecken, außer dem ersten
+  windows.forEach((window, index) => {
     if (index === 0) {
       window.style.display = 'block';
     } else {
@@ -22,26 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Event-Listener für jeden Button hinzufügen
   toolbarButtons.forEach(button => {
     button.addEventListener('click', function() {
+      // Zuerst alle Fenster verstecken
+      windows.forEach(window => {
+        window.style.display = 'none';
+      });
+      
       // Das Attribut data-window-name abrufen
       const windowName = this.getAttribute('data-window-name');
       
-      // Zuerst alle Fenster verstecken
-      allWindows.forEach(window => {
-        if (window) {
-          window.style.display = 'none';
-        }
-      });
-      
-      // Das entsprechende Fenster anzeigen basierend auf dem data-window-name
-      if (windowName === 'ai-window') {
-        if (aiWindow) aiWindow.style.display = 'block';
-      } else if (windowName === 'table-of-contents-window') {
-        if (tocWindow) tocWindow.style.display = 'block';
-      } else if (windowName === 'files-window') {
-        if (filesWindow) filesWindow.style.display = 'block';
+      // Das entsprechende Fenster anzeigen
+      const targetWindow = document.querySelector('.' + windowName);
+      if (targetWindow) {
+        targetWindow.style.display = 'block';
       }
       
-      // Aktiven Button hervorheben
+      // Aktiven Button hervorheben (optional)
       toolbarButtons.forEach(btn => {
         btn.classList.remove('active');
       });
