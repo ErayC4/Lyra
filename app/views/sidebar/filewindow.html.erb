@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datei Ablage System</title>
+    <style>
+        :root {
+            --primary-color: #4a6fff;
+            --hover-color: #3956d8;
+            --bg-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --success-color: #28a745;
+        }
+
+        .file-container {
+            
+        }
+
+        h1 {
+            font-weight: 400;
+            color: var(--primary-color);
+        }
+
+        .search-bar {
+            display: flex;
+            width: 300px;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-color);
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 10px 15px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(74, 111, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .sidebar-item.active {
+            background-color: rgba(74, 111, 255, 0.2);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .sidebar-item .icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            flex: 1;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 255, 0.05);
+        }
+
+        .upload-area p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .upload-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .upload-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .file-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .file-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-icon {
+            height: 120px;
+            background-color: rgba(74, 111, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+
+        .file-info {
+            padding: 12px;
+        }
+
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(74, 111, 255, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="file-container">
+        <div class="main-content">
+            <div class="content">
+               
+
+                <div class="upload-area" id="drop-area">
+                    <div class="upload-icon">📤</div>
+                    <h3>Dateien hier ablegen</h3>
+                    <p>oder</p>
+                    <button class="upload-button" id="file-select">Dateien auswählen</button>
+                    <input type="file" id="fileInput" multiple style="display: none;">
+                </div>
+
+                <div class="file-grid">
+                    <div class="file-card">
+                        <div class="file-icon">📄</div>
+                        <div class="file-info">
+                            <div class="file-name">Präsentation.pptx</div>
+                            <div class="file-meta">
+                                <span>4.2 MB</span>
+                                <span>05.03.2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card">
+                        <div class="file-icon">📄</div>
+                        <div class="file-info">
+                            <div class="file-name">Bericht_Q1_2025.pdf</div>
+                            <div class="file-meta">
+                                <span>2.7 MB</span>
+                                <span>12.03.2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card">
+                        <div class="file-icon">🖼️</div>
+                        <div class="file-info">
+                            <div class="file-name">Team_Foto.jpg</div>
+                            <div class="file-meta">
+                                <span>3.1 MB</span>
+                                <span>24.03.2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card">
+                        <div class="file-icon">🎬</div>
+                        <div class="file-info">
+                            <div class="file-name">Produktdemo.mp4</div>
+                            <div class="file-meta">
+                                <span>15.6 MB</span>
+                                <span>30.03.2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
