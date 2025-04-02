@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+  // Den ersten Button (AI-Window) standardmäßig hervorheben
+  const defaultActiveButotn = document.querySelector('.toolbar-button[data-window-name="ai-window"]');
+  if (defaultActiveButotn) {
+    defaultActiveButotn.classList.remove('toolbar-button');
+    defaultActiveButotn.classList.add('toolbar-button-active');
+  }
+  
   // Event-Listener für jeden Button hinzufügen
   toolbarButtons.forEach(button => {
     button.addEventListener('click', function() {
@@ -31,11 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
         targetWindow.style.display = 'block';
       }
       
-      // Aktiven Button hervorheben (optional)
+      // Aktiven Button hervorheben
       toolbarButtons.forEach(btn => {
-        btn.classList.remove('active');
+        btn.classList.add('toolbar-button');
+        btn.classList.remove('toolbar-button-active');
       });
-      this.classList.add('active');
+      this.classList.remove('toolbar-button');
+      this.classList.add('toolbar-button-active');
     });
   });
 });

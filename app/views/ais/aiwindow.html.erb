@@ -1,4 +1,219 @@
-  <div class="ai-field" style="position: relative; font-size: 1.1rem; margin-top: 16px; height: calc(100% - 110px - 48px); overflow-y: auto;"></div>
+  <style>
+      
+
+  .small-white-button:hover{
+    background-color: #DBDBDB;
+  }
+.chat-list-item {
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    transition: 0.3s ease;
+    padding: 4px 16px; 
+    transition: 0.2s ease;
+}
+  .chat-list-item-active{
+    background-color: #F5E1FC;
+    padding: 6px 16px;
+  }
+  .chat-list-item:hover{
+    background-color: #F5D5FF;
+    padding: 6px 16px;
+  }
+  .chat-list-container{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-title{
+    text-align: left;
+    font-size: 1rem;
+  }
+    .ai-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .ai-chat-buttons{
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    margin-left: auto;
+  }
+
+  .small-white-button{
+    background-color: white;
+    padding: 4px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 33px;
+    height: 33px;
+    transition: 0.2s ease;
+  }
+  .long-white-button{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #DBDBDB;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s ease;
+  }
+  .long-white-button:hover{
+    background-color: #DBDBDB;
+  }
+  .small-black-button{
+    background-color: black;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 33px;
+  }
+  .ai-chat-container{
+    display:flex;
+    gap: 16px;
+    align-items: center;
+    background-color: white;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #DBDBDB;
+
+  }
+  .ai-inputfield{
+    border: none;
+    flex-grow: 1;
+    outline: none;
+    background-color: transparent
+  }
+
+  /* ai */
+  .dropdown-content {
+  position: absolute;
+  top: calc(32px + 35px + 16px);
+  width: calc(38.46% - 64px - 28px);
+  height: calc(100vh - 110px - 64px - 35px - 16px);
+  background-color: white;
+  border: 1px solid #DBDBDB;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  
+  /* Transition-Eigenschaften hinzufügen */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+  
+  /* Show the dropdown menu when button is clicked */
+  .dropdown-button:focus + .dropdown-content,
+  .dropdown-content:hover {
+    display: flex;
+  }
+  
+  /* Dropdown header with search */
+  .dropdown-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #DBDBDB
+  }
+  
+  .searchbar-container{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px;
+    border: 1px solid #DBDBDB;
+    border-radius: 8px;
+    flex-grow: 1;
+  }
+
+  .search-button{
+    background-color: transparent;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    margin: 0;
+    flex: 1;
+  }
+  .searchbar{
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color:rgb(235, 235, 235)
+  }
+
+    .dropdown-content-body {
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  .section{
+    margin-top: 32px;
+  }
+  .section-header{
+    margin-bottom: 8px;
+    margin-left: 16px;
+    font-weight: bold;
+  }
+
+  .user-message{
+    background-color: #F5D5FF;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .ai-message{
+    padding-left: 8px;
+    margin-bottom: 32px;
+  }
+  .chat-list-item-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+  
+  .size-6{
+    height: 20px;
+    width: 20px;
+  }
+  .bookmark-icon{
+    display: none;
+  }
+  .chat-list-item:hover .bookmark-icon {
+      display: block;
+  }
+
+  .bookmarked{
+    display: block;
+  }
+  .hidden-item{
+    display: none;
+  }
+  .table-of-contents-window{
+    display: none;
+  }
+  </style>
+  <div class="ai-field" style="position: relative; font-size: 1.1rem; height: calc(100% - 138px); overflow-y: auto;"></div>
   
   <div>
     <div class="dropdown-content">
