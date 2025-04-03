@@ -151,6 +151,6 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.require(:note).permit(:bookmarked, :title, content: {}, pictures: []) # Erlaubt JSON-Parameter
+      params.require(:note).permit(:bookmarked, :title, files: [], content: {}, pictures: []) # Erlaubt JSON-Parameter
     end
 end
