@@ -7,23 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let chatHistory = [];
     let currentChatId = null; // Track the current chat ID
 
-
-    const debugInfo = document.createElement('div');
-    debugInfo.style.position = 'fixed';
-    debugInfo.style.bottom = '10px';
-    debugInfo.style.right = '10px';
-    debugInfo.style.background = 'rgba(0,0,0,0.7)';
-    debugInfo.style.color = 'white';
-    debugInfo.style.padding = '5px 10px';
-    debugInfo.style.borderRadius = '5px';
-    debugInfo.style.fontSize = '12px';
-    debugInfo.textContent = 'Chat ID: null';
-    document.body.appendChild(debugInfo);
-    
-
-    function updateDebugInfo() {
-        debugInfo.textContent = `Chat ID: ${currentChatId}`;
-    }
     // Function to format AI responses with markdown-like syntax
     function formatAIResponse(text) {
         // Remove thinking sections
@@ -70,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentChatId = null;
         chatHistory = [];
         aiField.innerHTML = '';
-        updateDebugInfo();
         // Add welcome message
         addMessage('Hallo! Wie kann ich dir helfen?', false);
     }
@@ -111,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Fehler:", data.errors);
             return null;
         } else if (data.id) {
-            updateDebugInfo();
+            
             return data.id;
         }
         return null;
@@ -142,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 currentChatId = newChatId;
-                updateDebugInfo();
+                
             }
             
             // Now we can send the request to DeepSeek
@@ -184,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 await deleteFailedChat(newChatId);
                 if (currentChatId === newChatId) {
                     currentChatId = null;
-                    updateDebugInfo();
+                    
                 }
             }
         } finally {
@@ -308,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         //updates current chat
         currentChatId = chatId;
-        updateDebugInfo();
+        
         // Clear the current chat history and messages in the UI
         chatHistory = [];
         aiField.innerHTML = '';
