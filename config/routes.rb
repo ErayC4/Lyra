@@ -5,6 +5,9 @@ Rails.application.routes.draw do
       post "upload_image"
       post "fetch_image"
     end
+    member do
+      post :upload_files
+    end
   end
   devise_for :users
   resources :tasks

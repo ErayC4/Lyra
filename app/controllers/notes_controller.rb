@@ -43,6 +43,14 @@ class NotesController < ApplicationController
   # PATCH/PUT /notes/1 or /notes/1.json
   def update
     @note = Note.find(params[:id])
+    if params[:note][:files].present?
+      # Füge die neuen Dateien zu den bestehenden hinzu
+      @note.files.attach(params[:note][:files])
+
+      # Entferne den files-Parameter, damit die bestehenden Anhänge nicht überschrieben werden
+      params[:note].delete(:files)
+    end
+
     if @note.update(note_params)
       render json: { success: true, note: @note }
     else
