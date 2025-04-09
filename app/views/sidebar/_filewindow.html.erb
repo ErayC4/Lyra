@@ -86,7 +86,7 @@
             align-items: center;
         }
 
-        .content {
+        .file-selector {
             flex: 1;
             background-color: var(--card-color);
             border-radius: 10px;
@@ -94,7 +94,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        .content-header {
+        .file-selector-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -367,155 +367,49 @@
             margin: 0 10px;
             font-size: 18px;
         }
-        .pdf-viewer{
+        .file-viewer{
             width: 100%;
-            height: calc(100% - 4px);
+            height: calc(100% - 12px);
+        }
+        .back-btn{
+            background-color: white;
+            border: 1px solid #DBDBDB;
+            border-radius: 8px;
+            height: 40px;
+            width: 40px;
+            position: absolute;
+            margin-left: 16px;
+            margin-top: calc(100vh - 35px - 64px - 64px);
+            cursor: pointer;
         }
     </style>
+
 </head>
 <body>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Elemente auswählen
-    const dropZone = document.getElementById('dropZone');
-    const plainFileInput = document.getElementById('fileInput');
-    const railsFileInput = document.querySelector('input[type="file"][multiple]'); // Der vom Rails-Helper generierte Input
-    const fileList = document.getElementById('fileList');
-    
-    // Datenspeicher für bereits hinzugefügte Dateien
-    let selectedFiles = new Map(); // Speichert Dateiname -> File-Objekt
-    
-    // Event-Listener für beide Datei-Eingabefelder
-    plainFileInput.addEventListener('change', handleFileSelect);
-    railsFileInput.addEventListener('change', handleFileSelect);
-    
-    // Event-Listener für Drag & Drop
-    dropZone.addEventListener('dragover', handleDragOver);
-    dropZone.addEventListener('dragleave', handleDragLeave);
-    dropZone.addEventListener('drop', handleDrop);
-    
-    // Drag & Drop Handler
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.add('drag-over');
-    }
-    
-    function handleDragLeave(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.remove('drag-over');
-    }
-    
-    function handleDrop(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.remove('drag-over');
-        
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        addFiles(files);
-    }
-    
-    // Dateiauswahl-Handler
-    function handleFileSelect(e) {
-        const files = e.target.files;
-        addFiles(files);
-    }
-    
-    
-    // Funktion zum Hinzufügen von Dateien
-    function addFiles(files) {
-        Array.from(files).forEach(file => {
-            if (!selectedFiles.has(file.name)) {
-                selectedFiles.set(file.name, file);
-
-                const fileItem = createFileItem(file);
-                fileList.appendChild(fileItem);
-            }
-        });
-    }
-
-    
-    // Funktion zum Erstellen eines Datei-Elements
-    function createFileItem(file) {
-        // Dateigröße formatieren
-        const fileSize = formatFileSize(file.size);
-        
-        // Dateityp extrahieren
-        const fileType = file.name.split('.').pop().toUpperCase();
-        
-        // Erstelle das DOM-Element
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-        fileItem.dataset.filename = file.name;
-        
-        fileItem.innerHTML = `
-            <div class="file-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <div class="file-info">
-                <div class="file-title">${file.name}</div>
-                <div class="file-meta">
-                    <span class="file-size">${fileSize}</span>
-                    <span class="file-type">${fileType}</span>
-                </div>
-            </div>
-            <button class="file-remove" data-filename="${file.name}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <%= javascript_include_tag "filemanager" %>
+    <%= javascript_include_tag "filenavigator" %>
+    <div class="file-container">
+            <button class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left">
+                    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
                 </svg>
             </button>
-        `;
-        
-        // Event-Listener für den Entfernen-Button
-        const removeButton = fileItem.querySelector('.file-remove');
-        removeButton.addEventListener('click', function() {
-            const filename = this.dataset.filename;
-            removeFile(filename);
-        });
-        
-        return fileItem;
-    }
-    
-    // Funktion zum Formatieren der Dateigröße
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-    }
-    
-    // Funktion zum Entfernen einer Datei
-    function removeFile(filename) {
-    selectedFiles.delete(filename);
-
-    const fileElement = fileList.querySelector(`.file-item[data-filename="${filename}"]`);
-        if (fileElement) {
-            fileElement.remove();
-        }
-    }
-
-});
-    </script>
-    <div class="file-container">
             <% note.files.each do |file| %>
-                <% if file.filename == "the-power-of-discipline-how-to-use-self-control-and-mental-toughness-to-achieve-your-goals-9798631735408.pdf" %>
-                    <embed 
-                        src="<%= rails_blob_path(file) %>#view=FitH&navpanes=0" 
-                        type="application/pdf" 
-                        class="pdf-viewer" 
+                <% if file.content_type.include?('pdf') %>
+                    <embed
+                        src="<%= rails_blob_path(file) %>#view=FitH&navpanes=0"
+                        type="application/pdf"
+                        class="file-viewer"
+                        data-filename="<%= file.filename %>"
+                        style="display: none;"
                     />
+                <% elsif file.image? %>
+                    <img src="<%= rails_blob_path(file) %>" width="500" height="600" class="file-viewer" data-filename="<%= file.filename %>" style="display: none;">
+                <% elsif file.content_type.include?('video') %>
+                    <video src="<%= rails_blob_path(file) %>" controls style="display: none;" class="file-viewer" data-filename="<%= file.filename %>"></video>
                 <% end %>
             <% end %>
-            <div class="content" style="display: none;">
+            <div class="file-selector">
                
                 <%= form_with(model: @note, local: true) do |form| %>
                         <% if @note.errors.any? %>
@@ -561,7 +455,7 @@
                                 </div>
                                 </div>
                             <% elsif file.content_type.include?('pdf') %>
-                                <div class="uploaded-file-card">
+                                <div class="uploaded-file-card pdf-file">
                                 <div class="uploaded-file-icon">📄</div>
                                 <div class="uploaded-file-info">
                                     <div class="uploaded-file-name"><%= file.filename %></div>
@@ -571,50 +465,7 @@
                                     </div>
                                 </div>
                                 </div>
-                            <% elsif file.content_type.include?('word') || file.content_type.include?('docx') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📝</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% elsif file.content_type.include?('excel') || file.content_type.include?('xlsx') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📊</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% elsif file.content_type.include?('powerpoint') || file.content_type.include?('pptx') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📊</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% elsif file.content_type.include?('audio') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">🔊</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
+
                             <% elsif file.content_type.include?('video') %>
                                 <div class="uploaded-file-card">
                                 <div class="uploaded-file-icon">🎬</div>
@@ -626,39 +477,8 @@
                                     </div>
                                 </div>
                                 </div>
-                            <% elsif file.content_type.include?('text') || file.content_type.include?('txt') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📝</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% elsif file.content_type.include?('csv') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📋</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% else %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">📎</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
+
+    
                             <% end %>
                             <% end %>
                     <% end %>
