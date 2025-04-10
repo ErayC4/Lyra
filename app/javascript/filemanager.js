@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const plainFileInput = document.getElementById('fileInput');
     const railsFileInput = document.querySelector('input[type="file"][multiple][accept]'); // Der vom Rails-Helper generierte Input
     const fileList = document.getElementById('fileList');
+    const submitButton = document.getElementById('submitButton'); // Submit-Button finden
+    
+    // Setze den Submit-Button initial auf deaktiviert
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
     
     // Datenspeicher für bereits hinzugefügte Dateien
     let selectedFiles = new Map(); // Speichert Dateiname -> File-Objekt
@@ -64,6 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Aktualisiere den Rails-File-Input mit allen ausgewählten Dateien
         updateRailsFileInput();
+        
+        // Überprüfen, ob Dateien vorhanden sind und den Submit-Button aktualisieren
+        updateSubmitButtonState();
     }
     
     // Funktion zum Erstellen eines Datei-Elements
@@ -133,21 +142,30 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Aktualisiere den Rails-File-Input nach dem Entfernen
         updateRailsFileInput();
+        
+        // Überprüfen, ob Dateien vorhanden sind und den Submit-Button aktualisieren
+        updateSubmitButtonState();
     }
     
     // Funktion zum Aktualisieren des Rails-File-Input mit ausgewählten Dateien
-    // Modify the updateRailsFileInput function
-function updateRailsFileInput() {
-    // FileList ist nicht direkt manipulierbar, daher DataTransfer verwenden
-    const dataTransfer = new DataTransfer();
+    function updateRailsFileInput() {
+        // FileList ist nicht direkt manipulierbar, daher DataTransfer verwenden
+        const dataTransfer = new DataTransfer();
+        
+        // Alle ausgewählten Dateien zum DataTransfer-Objekt hinzufügen
+        selectedFiles.forEach((file) => {
+            dataTransfer.items.add(file);
+        });
+        
+        // Das files-Attribut des Rails-Inputs mit dem DataTransfer-Objekt aktualisieren
+        railsFileInput.files = dataTransfer.files;
+    }
     
-    // Alle ausgewählten Dateien zum DataTransfer-Objekt hinzufügen
-    selectedFiles.forEach((file) => {
-        dataTransfer.items.add(file);
-    });
-    
-    // Das files-Attribut des Rails-Inputs mit dem DataTransfer-Objekt aktualisieren
-    railsFileInput.files = dataTransfer.files;
-
-}
+    // Neue Funktion zum Aktualisieren des Submit-Button-Status
+    function updateSubmitButtonState() {
+        if (submitButton) {
+            // Aktiviere den Button nur, wenn mindestens eine Datei ausgewählt wurde
+            submitButton.disabled = selectedFiles.size === 0;
+        }
+    }
 });
