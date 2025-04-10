@@ -381,7 +381,50 @@
             margin-left: 16px;
             margin-top: calc(100vh - 35px - 64px - 64px);
             cursor: pointer;
+            z-index: 50;
         }
+        .responsive-image {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.upload-area.drag-over {
+    border-color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+
+.file-remove {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #dc3545;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.file-remove:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
     </style>
 
 </head>
@@ -404,9 +447,11 @@
                         style="display: none;"
                     />
                 <% elsif file.image? %>
-                    <img src="<%= rails_blob_path(file) %>" width="500" height="600" class="file-viewer" data-filename="<%= file.filename %>" style="display: none;">
+                    <img src="<%= rails_blob_path(file) %>" width="500" height="600" class="file-viewer responsive-image" data-filename="<%= file.filename %>" style="display: none;">
                 <% elsif file.content_type.include?('video') %>
-                    <video src="<%= rails_blob_path(file) %>" controls style="display: none;" class="file-viewer" data-filename="<%= file.filename %>"></video>
+                <div class="file-viewer" data-filename="<%= file.filename %>" style="display: none; align-items: center">
+                    <video src="<%= rails_blob_path(file) %>" controls style="width: 100%; height: 100%"></video>
+                </div>
                 <% end %>
             <% end %>
             <div class="file-selector">
@@ -426,7 +471,7 @@
                         <p class="upload-placeholder">Ziehen Sie Dateien hierher oder wählen Sie Dateien aus</p>
                         <input type="file" id="fileInput" multiple>
                         <%= form.label :files, "Dateien auswählen", class: "btn btn-secondary" %>
-                        <%= form.file_field :files, multiple: true, direct_upload: true , style: "display: none;"%>
+                        <%= form.file_field :files, multiple: true, direct_upload: true, style: "display: none;", accept: ".pdf, image/*, video/*" %>
                     </div>
                     
                     <div class="file-list" id="fileList">

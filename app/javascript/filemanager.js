@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elemente auswählen
     const dropZone = document.getElementById('dropZone');
     const plainFileInput = document.getElementById('fileInput');
-    const railsFileInput = document.querySelector('input[type="file"][multiple]'); // Der vom Rails-Helper generierte Input
+    const railsFileInput = document.querySelector('input[type="file"][multiple][accept]'); // Der vom Rails-Helper generierte Input
     const fileList = document.getElementById('fileList');
     
     // Datenspeicher für bereits hinzugefügte Dateien
@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     dropZone.addEventListener('dragover', handleDragOver);
     dropZone.addEventListener('dragleave', handleDragLeave);
     dropZone.addEventListener('drop', handleDrop);
+    
+    // Klick auf die Upload-Area soll den Rails-File-Input öffnen
+    dropZone.addEventListener('click', function() {
+        railsFileInput.click();
+    });
     
     // Drag & Drop Handler
     function handleDragOver(e) {
@@ -46,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addFiles(files);
     }
     
-    
     // Funktion zum Hinzufügen von Dateien
     function addFiles(files) {
         Array.from(files).forEach(file => {
@@ -57,8 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 fileList.appendChild(fileItem);
             }
         });
+        
+        // Aktualisiere den Rails-File-Input mit allen ausgewählten Dateien
+        updateRailsFileInput();
     }
-
     
     // Funktion zum Erstellen eines Datei-Elements
     function createFileItem(file) {
@@ -118,13 +124,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Funktion zum Entfernen einer Datei
     function removeFile(filename) {
-    selectedFiles.delete(filename);
+        selectedFiles.delete(filename);
 
-    const fileElement = fileList.querySelector(`.file-item[data-filename="${filename}"]`);
+        const fileElement = fileList.querySelector(`.file-item[data-filename="${filename}"]`);
         if (fileElement) {
             fileElement.remove();
         }
+        
+        // Aktualisiere den Rails-File-Input nach dem Entfernen
+        updateRailsFileInput();
     }
-
+    
+    // Funktion zum Aktualisieren des Rails-File-Input mit ausgewählten Dateien
+    function updateRailsFileInput() {
+        // FileList ist nicht direkt manipulierbar, daher DataTransfer verwenden
+        const dataTransfer = new DataTransfer();
+        
+        // Alle ausgewählten Dateien zum DataTransfer-Objekt hinzufügen
+        selectedFiles.forEach((file) => {
+            dataTransfer.items.add(file);
+        });
+        
+        // Das files-Attribut des Rails-Inputs mit dem DataTransfer-Objekt aktualisieren
+        railsFileInput.files = dataTransfer.files;
+        
+        // Change-Event auslösen, damit Rails weiß, dass Dateien ausgewählt wurden
+        const event = new Event('change', { bubbles: true });
+        railsFileInput.dispatchEvent(event);
+    }
 });
-document.querySelector
