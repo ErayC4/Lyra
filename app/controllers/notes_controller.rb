@@ -43,6 +43,14 @@ class NotesController < ApplicationController
   # PATCH/PUT /notes/1 or /notes/1.json
   def update
     @note = Note.find(params[:id])
+    if params[:note][:files].present?
+      # Füge die neuen Dateien zu den bestehenden hinzu
+      @note.files.attach(params[:note][:files])
+
+      # Entferne den files-Parameter, damit die bestehenden Anhänge nicht überschrieben werden
+      params[:note].delete(:files)
+    end
+
     if @note.update(note_params)
       render json: { success: true, note: @note }
     else
@@ -57,6 +65,23 @@ class NotesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to notes_path, status: :see_other, notice: "Note was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def purge_attachment
+    @note = current_user.notes.find(params[:id])
+    attachment = @note.files.find(params[:attachment_id])
+
+    if attachment.purge
+      respond_to do |format|
+        format.html { redirect_back fallback_location: note_path(@note), notice: "File was successfully deleted." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back fallback_location: note_path(@note), alert: "Failed to delete file." }
+        format.json { render json: { error: "Failed to delete file" }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -151,6 +176,6 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.require(:note).permit(:bookmarked, :title, content: {}, pictures: []) # Erlaubt JSON-Parameter
+      params.require(:note).permit(:bookmarked, :title, files: [], content: {}, pictures: []) # Erlaubt JSON-Parameter
     end
 end

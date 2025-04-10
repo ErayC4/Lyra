@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datei Ablage System</title>
+    <style>
+        :root {
+            --primary-color: #4a6fff;
+            --hover-color: #3956d8;
+            --bg-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --success-color: #28a745;
+        }
+
+        .file-container {
+            height: calc(100vh - 35px - 64px);
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            display: flex;
+            width: 300px;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-color);
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 10px 15px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--hover-color);
+        }
+
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(74, 111, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .sidebar-item.active {
+            background-color: rgba(74, 111, 255, 0.2);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .sidebar-item .icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .file-selector {
+            flex: 1;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 255, 0.05);
+        }
+
+        .upload-area p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .upload-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .upload-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .uploaded-file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .uploaded-file-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .uploaded-file-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .uploaded-file-icon {
+            height: 120px;
+            background-color: rgba(74, 111, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+
+        .uploaded-file-info {
+            padding: 12px;
+        }
+
+        .uploaded-file-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .uploaded-file-meta {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(74, 111, 255, 0.1);
+        }
+
+        * {
+
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .action-button:hover {
+            opacity: 1;
+        }
+
+        .upload-area {
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #fff;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #999;
+            background-color: #fafafa;
+        }
+
+        .upload-placeholder {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #000;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #333;
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .file-header{
+            border-top: 1px solid #DBDBDB;
+            padding: 16px 0;
+            font-size: 32px;
+        }
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid #eaeaea;
+        }
+
+        .file-icon {
+            margin-right: 12px;
+            color: #666;
+        }
+
+        .file-info {
+            flex-grow: 1;
+        }
+
+        .file-title {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .file-meta {
+            display: flex;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .file-size, .file-type {
+            margin-right: 12px;
+        }
+
+        .file-remove {
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .file-remove:hover {
+            opacity: 1;
+        }
+
+        .actions {
+            margin-top: 16px;
+            margin-bottom: 32px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .editor-placeholder {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .editor-placeholder svg {
+            margin-right: 10px;
+        }
+
+        .editor-placeholder .dot {
+            margin: 0 10px;
+            font-size: 18px;
+        }
+        .file-viewer{
+            width: 100%;
+            height: calc(100% - 12px);
+        }
+        .back-btn{
+            background-color: white;
+            border: 1px solid #DBDBDB;
+            border-radius: 8px;
+            height: 40px;
+            width: 40px;
+            position: absolute;
+            margin-left: 16px;
+            margin-top: calc(100vh - 35px - 64px - 64px);
+            cursor: pointer;
+            z-index: 50;
+        }
+        .responsive-image {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.upload-area.drag-over {
+    border-color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+
+.file-remove {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #dc3545;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.file-remove:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+    </style>
+
+<style>
+  .uploaded-file-card {
+    position: relative;
+  }
+  
+  .uploaded-file-card:hover .delete-button {
+    display: block !important;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .delete-file-btn {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .delete-file-btn:hover {
+    background-color: #ff7875;
+  }
+</style>
+</head>
+<body>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileCards = document.querySelectorAll('.uploaded-file-card');
+    
+    fileCards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        const deleteButton = this.querySelector('.delete-button');
+        if (deleteButton) {
+          deleteButton.style.display = 'block';
+        }
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        const deleteButton = this.querySelector('.delete-button');
+        if (deleteButton) {
+          deleteButton.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+    <%= javascript_include_tag "filemanager" %>
+    <%= javascript_include_tag "filenavigator" %>
+    <div class="file-container">
+            <button class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left">
+                    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+                </svg>
+            </button>
+            <% note.files.each do |file| %>
+                <% if file.content_type.include?('pdf') %>
+                    <embed
+                        src="<%= rails_blob_path(file) %>#view=FitH&navpanes=0"
+                        type="application/pdf"
+                        class="file-viewer"
+                        data-filename="<%= file.filename %>"
+                        style="display: none;"
+                    />
+                <% elsif file.image? %>
+                    <img src="<%= rails_blob_path(file) %>" width="500" height="600" class="file-viewer responsive-image" data-filename="<%= file.filename %>" style="display: none;">
+                <% elsif file.content_type.include?('video') %>
+                <div class="file-viewer" data-filename="<%= file.filename %>" style="display: none; align-items: center">
+                    <video src="<%= rails_blob_path(file) %>" controls style="width: 100%; height: 100%"></video>
+                </div>
+                <% end %>
+            <% end %>
+            <div class="file-selector">
+               
+                <%= form_with(model: @note, local: true) do |form| %>
+                        <% if @note.errors.any? %>
+                            <div id="error_explanation">
+                            <h2><%= pluralize(@note.errors.count, "error") %> verhinderten das Speichern:</h2>
+                            <ul>
+                                <% @note.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                                <% end %>
+                            </ul>
+                            </div>
+                        <% end %>
+                    <div class="upload-area" id="dropZone">
+                        <p class="upload-placeholder">Ziehen Sie Dateien hierher oder wählen Sie Dateien aus</p>
+                        <input type="file" id="fileInput" multiple>
+                        <%= form.label :files, "Dateien auswählen", class: "btn btn-secondary" %>
+                        <%= form.file_field :files, multiple: true, direct_upload: true, style: "display: none;", accept: ".pdf, image/*, video/*" %>
+                    </div>
+                    
+                    <div class="file-list" id="fileList">
+                        
+                    </div>
+                    
+                    <div class="actions">
+                        <%= form.submit "Add To Files", class: "btn btn-primary", id: "submitButton" %>
+                    </div>
+                <% end %>
+                    <p class="file-header">Files</p>
+
+                <div class="uploaded-file-grid">
+                    <% if note.files.attached? %>
+                    
+                        <% if note.files.attached? %>
+  <% note.files.each do |file| %>
+    <% if file.image? %>
+      <div class="uploaded-file-card">
+        <div class="uploaded-file-icon">🖼️</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% elsif file.content_type.include?('pdf') %>
+      <!-- Similar changes for PDF files -->
+      <div class="uploaded-file-card pdf-file">
+        <div class="uploaded-file-icon">📄</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% elsif file.content_type.include?('video') %>
+      <!-- Similar changes for video files -->
+      <div class="uploaded-file-card">
+        <div class="uploaded-file-icon">🎬</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+                    <% end %>
+
+
+                </div>
+            </div>
+    </div>
+
+    
+</body>
+</html>

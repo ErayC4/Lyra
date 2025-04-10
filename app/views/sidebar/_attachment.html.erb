@@ -1,0 +1,8 @@
+<%= note.title %>
+<% if note.files.attached? %>
+    <% note.files.each do |file| %>
+        <% if file.image? %>
+            <%= image_tag(file) %>
+        <% end %>
+    <% end %>
+<% end %>
