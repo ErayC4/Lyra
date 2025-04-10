@@ -136,20 +136,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Funktion zum Aktualisieren des Rails-File-Input mit ausgewählten Dateien
-    function updateRailsFileInput() {
-        // FileList ist nicht direkt manipulierbar, daher DataTransfer verwenden
-        const dataTransfer = new DataTransfer();
-        
-        // Alle ausgewählten Dateien zum DataTransfer-Objekt hinzufügen
-        selectedFiles.forEach((file) => {
-            dataTransfer.items.add(file);
-        });
-        
-        // Das files-Attribut des Rails-Inputs mit dem DataTransfer-Objekt aktualisieren
-        railsFileInput.files = dataTransfer.files;
-        
-        // Change-Event auslösen, damit Rails weiß, dass Dateien ausgewählt wurden
-        const event = new Event('change', { bubbles: true });
-        railsFileInput.dispatchEvent(event);
-    }
+    // Modify the updateRailsFileInput function
+function updateRailsFileInput() {
+    // FileList ist nicht direkt manipulierbar, daher DataTransfer verwenden
+    const dataTransfer = new DataTransfer();
+    
+    // Alle ausgewählten Dateien zum DataTransfer-Objekt hinzufügen
+    selectedFiles.forEach((file) => {
+        dataTransfer.items.add(file);
+    });
+    
+    // Das files-Attribut des Rails-Inputs mit dem DataTransfer-Objekt aktualisieren
+    railsFileInput.files = dataTransfer.files;
+
+}
 });
