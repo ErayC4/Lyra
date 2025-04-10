@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
     member do
       post :upload_files
+      delete :purge_attachment
     end
   end
   devise_for :users

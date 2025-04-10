@@ -68,6 +68,23 @@ class NotesController < ApplicationController
     end
   end
 
+  def purge_attachment
+    @note = current_user.notes.find(params[:id])
+    attachment = @note.files.find(params[:attachment_id])
+
+    if attachment.purge
+      respond_to do |format|
+        format.html { redirect_back fallback_location: note_path(@note), notice: "File was successfully deleted." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back fallback_location: note_path(@note), alert: "Failed to delete file." }
+        format.json { render json: { error: "Failed to delete file" }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def upload_image
     # Sicherheitsprüfungen
     return head :forbidden unless params[:image] && valid_image?(params[:image])

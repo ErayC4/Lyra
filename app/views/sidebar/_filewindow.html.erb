@@ -427,8 +427,55 @@
 }
     </style>
 
+<style>
+  .uploaded-file-card {
+    position: relative;
+  }
+  
+  .uploaded-file-card:hover .delete-button {
+    display: block !important;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .delete-file-btn {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .delete-file-btn:hover {
+    background-color: #ff7875;
+  }
+</style>
 </head>
 <body>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileCards = document.querySelectorAll('.uploaded-file-card');
+    
+    fileCards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        const deleteButton = this.querySelector('.delete-button');
+        if (deleteButton) {
+          deleteButton.style.display = 'block';
+        }
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        const deleteButton = this.querySelector('.delete-button');
+        if (deleteButton) {
+          deleteButton.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
     <%= javascript_include_tag "filemanager" %>
     <%= javascript_include_tag "filenavigator" %>
     <div class="file-container">
@@ -487,45 +534,67 @@
                 <div class="uploaded-file-grid">
                     <% if note.files.attached? %>
                     
-                        <% note.files.each do |file| %>
-                            <% if file.image? %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">🖼️</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-                            <% elsif file.content_type.include?('pdf') %>
-                                <div class="uploaded-file-card pdf-file">
-                                <div class="uploaded-file-icon">📄</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-
-                            <% elsif file.content_type.include?('video') %>
-                                <div class="uploaded-file-card">
-                                <div class="uploaded-file-icon">🎬</div>
-                                <div class="uploaded-file-info">
-                                    <div class="uploaded-file-name"><%= file.filename %></div>
-                                    <div class="uploaded-file-meta">
-                                    <span><%= number_to_human_size(file.byte_size) %></span>
-                                    <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
-                                    </div>
-                                </div>
-                                </div>
-
-    
-                            <% end %>
-                            <% end %>
+                        <% if note.files.attached? %>
+  <% note.files.each do |file| %>
+    <% if file.image? %>
+      <div class="uploaded-file-card">
+        <div class="uploaded-file-icon">🖼️</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% elsif file.content_type.include?('pdf') %>
+      <!-- Similar changes for PDF files -->
+      <div class="uploaded-file-card pdf-file">
+        <div class="uploaded-file-icon">📄</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% elsif file.content_type.include?('video') %>
+      <!-- Similar changes for video files -->
+      <div class="uploaded-file-card">
+        <div class="uploaded-file-icon">🎬</div>
+        <div class="uploaded-file-info">
+          <div class="uploaded-file-name"><%= file.filename %></div>
+          <div class="uploaded-file-meta">
+            <span><%= number_to_human_size(file.byte_size) %></span>
+            <span><%= file.created_at.strftime("%d.%m.%Y") %></span>
+          </div>
+        </div>
+        <div class="delete-button" style="display: none;">
+  <%= button_to "Löschen", 
+      purge_attachment_note_path(note, attachment_id: file.id), 
+      method: :delete, 
+      data: { turbo: false, turbo_confirm: "Bist du sicher?" }, 
+      class: "delete-file-btn" %>
+</div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
                     <% end %>
 
 
