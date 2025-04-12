@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OMCS</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    *{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.best-rated-button-container{
+    margin-top: 64px;
+    width: 100%;
+    height: 48px;
+}
+
+.best-rated-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00ff99;
+    color: black;
+    text-decoration: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.best-rated-content-row1{
+    display: block;
+}
+
+.row-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 48px;
+}
+
+.best-rated-card{
+    padding-top: 34px;
+    width: 100%;
+    border-bottom: 4px solid black;
+
+}
+
+.best-rated-image-container{
+    width: 100%;
+    height: 150px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.best-rated-image-1{
+    width: 100%;
+    height: 100%;
+    transition: .25s;
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 12px solid #00ff99;
+    
+}
+
+img:hover{
+    transform: scale(1.2);
+}
+
+
+@media all and (max-width: 800px){
+    
+    .row-grid{
+        padding-top: 34px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 48px;
+    }
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.footer{
+    background-color: rgb(32, 31, 36);
+}
+
+.footer-content{
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 64px;
+}
+
+.footer-top{
+    padding-top: 64px;
+}
+
+.newsletter{
+    color: white;
+    font-size: 24px;
+    padding-bottom: 24px;
+}
+
+.input-newsletter-container{
+    
+    width: 400px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid white;
+    display: inline-block;
+    margin-right: 40px;
+}
+
+input[type="email"] {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: gray;
+}
+
+
+.newsletter-button{
+    border: none;
+    color: black;
+    font-size: 16px;
+    background-color: #00ff99;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    width: 180px;
+    transition: 0.25s;
+}
+
+.newsletter-button:hover{
+    background-color: white;
+}
+
+.newsletter-button:active{
+    background-color: rgb(129, 129, 129);
+}
+
+.footer-bottom{
+    display: flex;
+    padding-top: 64px;
+
+}
+
+.footer-link{
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    padding-right: 32px;
+    padding-bottom: 32px;
+}
+
+.copyright-privacy{
+    font-size: 16;
+    color: white;
+    display: block;
+    background-color: rgb(19, 19, 19);
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 32px;
+}
+
+.copy-pri{
+    padding-top: 32px;
+}
+
+@media all and (max-width: 800px){
+    
+    .newsletter-button{
+        border: none;
+        color: black;
+        font-size: 16px;
+        margin-top: 16px;
+        background-color: #00ff99;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        width: 400px;
+        transition: 0.25s;
+    }
+
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.bottom-content{
+    padding-top: 34px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    column-gap: 48px;
+}
+
+.latest-card{
+    width: 100%;
+    border-bottom: 3px solid black;
+}
+
+.latest-button-container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.latest-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00ff99;
+    color: black;
+    text-decoration: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    transition: .3s;
+}
+
+
+.arrow{
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.arrow-container{
+    background-color: black;
+    width: 30px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.latest-image-container{
+    width: 100%;
+    height: 300px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 32px;
+}
+
+.quandale-image-1{
+    width: 100%;
+    height: 100%;
+    transition: .25s;
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 12px solid #00ff99;
+
+}
+
+/* ----- button ----- */
+
+.latest-button-container:hover .latest-button {
+    background-color: black;
+    color: white;
+}
+
+.latest-button-container:hover .arrow {
+    fill: black;
+}
+
+.latest-button-container:hover .arrow-container{
+    background-color: #00ff99;
+}
+
+.latest-button-container:active {
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
+}
+
+.latest-image:hover{
+    background-size: 110%;
+}
+
+.article-author{
+    font-size: 12px;
+    color: rgb(68, 67, 67);
+    padding-bottom: 24px;
+}
+
+.article-link{
+    display: inline-block;
+    font-size: 24px;
+    margin-top: 12px;
+    padding-bottom: 1px;
+    position: relative;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+    margin-bottom: 16px;
+}
+
+.article-title{   
+    background-image: linear-gradient(transparent calc(90% - 6px), #00ff99 6px);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size .25s;
+}
+
+.article-link:hover .article-title {
+  background-size: 100% 100%;
+}
+
+
+.latest-content-bottom-container{
+    border-top: 1px solid black ;
+}
+.latest-content-bottom{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-top: 4px;
+    gap: 24px;
+}
+
+@media all and (max-width: 800px){
+    
+    .bottom-content{
+        display: block; 
+    }
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ----- font ----- */
+.article-author-2{
+    font-size: 12px;
+    margin-top: 12px;
+    color: rgb(68, 67, 67);
+}
+
+.article-link-2{
+    display: inline-block;
+    font-size: 20px;
+    position: relative;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.article-title-2{   
+    background-image: linear-gradient(transparent calc(90% - 6px), #00ff99 6px);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size .25s;
+}
+
+.article-link-2:hover .article-title-2 {
+  background-size: 100% 100%;
+}
+
+
+.most-read-content{
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(201, 201, 201) ;
+
+}
+
+.most-read-row{
+    padding-bottom: 20px;
+}
+
+.most-read-heading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    background-color: #00ff99;
+    margin: 0;
+}
+.most-read-card{
+    background-color: rgb(230, 228, 228);
+}
+
+.most-read-number{
+    font-size: 70px;
+    margin-left: 10%;
+    margin-right: 12px;
+    padding-bottom: 46px;
+}
+
+.most-read-info{    
+    margin-right: 10%;
+}
+
+.most-read-content {
+    display: flex;
+    align-items: center;
+}
+
+@media all and (max-width: 800px){
+    
+    .bottom-content-right{
+        padding-top: 64px;
+    }
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.topics-container{
+    margin-top: 24px;
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    
+}
+.topics{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    column-gap: 1em;
+    row-gap: 16px;
+    
+}
+.topic, .topic-1, .topic-2, .topic-3, .topic-4, .topic-5{
+    position: relative;
+    font-size: 16px;
+    font-family: gotham;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+    letter-spacing: 1px;
+
+}
+
+.topic::after, .topic-1::after, .topic-2::after, .topic-3::after, .topic-4::after, .topic-5::after{
+    content: "";
+    position: absolute;
+    background-color: #00ff99;
+    ;
+    height: 4px;
+    width: 0%;
+    left: 0;
+    z-index: -1;
+    bottom: 2px;
+    transition: .25s;
+}
+.topic:hover::after, .topic-1:hover::after, .topic-2:hover::after, .topic-3:hover::after, .topic-4:hover::after, .topic-5:hover::after{
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+
+
+    <div id="content">
+        <div class="topics-container">
+            <div class="topics">
+                <a href="https://www.example.com" class="topic">MACHINELEARNING</a>
+                <a href="https://www.example.com" class="topic">PROGRAMMING</a>
+                <a href="https://www.example.com" class="topic">MATH</a>
+                <a href="https://www.example.com" class="topic">DATA-MANAGEMENT</a>
+                <a href="https://www.example.com" class="topic">CLOUD COMPUTING</a>
+            </div>
+        </div>
+
+        <div class="bottom-content">
+            <div class="bottom-content-left">
+
+                <div class="latest-content">
+                    <div class="latest-button-container">
+                        <a href="https://www.example.com" class="latest-button">LATEST</a>
+                        <div class="arrow-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="arrow" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+
+                    <div class="latest-card">
+                        <div class="latest-image-container">
+                            <img src="/WebDeploy1/assets/motherboard-b41a92d1.jpg" class="quandale-image-1">
+                        </div>
+                        <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                        <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                    </div>
+                
+                </div>
+                
+                <div class="latest-content-bottom-container">
+                    <div class="latest-content-bottom">
+
+                        <div class="latest-card">
+                            <div class="latest-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund1-6a808af2.jpg" class="quandale-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+                        
+                        <div class="latest-card">
+                            <div class="latest-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund2-d7f2d593.jpg" class="quandale-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="bottom-content-right">
+                <div class="most-read-card">
+                    <p class="most-read-heading">MOST READ</p>
+                    
+                    <div class="most-read-content-container">
+                        <div class="most-read-content">
+                            
+                            <div class="most-read-number">
+                                <p>1</p>
+                            </div>
+                            
+                            <div class="most-read-row">
+                                <div class="most-read-info">
+                                    <a href="/xyz.com" class="article-link-2"><span class="article-title-2">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                                </div>
+                                <p class="article-author-2"><span> <span class="by">BY </span>ERAY COSKUN</span></p>
+                            </div>
+
+                        </div>
+                        <div class="most-read-content">
+                            
+                            <div class="most-read-number">
+                                <p>2</p>
+                            </div>
+                            
+                            <div class="most-read-row">
+                                <div class="most-read-info">
+                                    <a href="/xyz.com" class="article-link-2"><span class="article-title-2">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                                </div>
+                                <p class="article-author-2"><span> <span class="by">BY </span>ERAY COSKUN</span></p>
+                            </div>
+                        </div>
+
+                        <div class="most-read-content">
+                            
+                            <div class="most-read-number">
+                                <p>3</p>
+                            </div>
+                            
+                            <div class="most-read-row">
+                                <div class="most-read-info">
+                                    <a href="/xyz.com" class="article-link-2"><span class="article-title-2">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                                </div>
+                                <p class="article-author-2"><span> <span class="by">BY </span>ERAY COSKUN</span></p>
+                            </div>
+                        </div>
+
+                        <div class="most-read-content">
+                            
+                            <div class="most-read-number">
+                                <p>4</p>
+                            </div>
+                            
+                            <div class="most-read-row">
+                                <div class="most-read-info">
+                                    <a href="/xyz.com" class="article-link-2"><span class="article-title-2">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                                </div>
+                                <p class="article-author-2"><span> <span class="by">BY </span>ERAY COSKUN</span></p>
+                            </div>
+                        </div>
+
+                        <div class="most-read-content">
+                            
+                            <div class="most-read-number">
+                                <p>5</p>
+                            </div>
+                            
+                            <div class="most-read-row">
+                                <div class="most-read-info">
+                                    <a href="/xyz.com" class="article-link-2"><span class="article-title-2">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                                </div>
+                                <p class="article-author-2"><span> <span class="by">BY </span>ERAY COSKUN</span></p>
+                            </div>
+                        </div>
+                            
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+
+        <!--BOTTOM-->
+
+        <div class="best-rated-content-container">
+
+            <div class="best-rated-button-container">
+                <p class="best-rated-button">BEST RATED</p>
+            </div>
+
+            <div class="best-rated-content">
+
+                <div class="best-rated-content-row1">
+                    <div class="row-grid">
+                        
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund3-8cbc4241.jpg" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund4-f589665f.jpg" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund5-86021c30.png" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/hintergrund6-5d3fb6ad.jpg" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/motherboard-b41a92d1.jpg" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+
+                        <div class="best-rated-card">
+                            <div class="best-rated-image-container">
+                                <img src="/WebDeploy1/assets/image-7ee33321.png" class="best-rated-image-1">
+                            </div>
+                            <a href="/xyz.com" class="article-link"><span class="article-title">Lorem ipsum dolor sit amet, ed diam no </span></a>
+                            <p class="article-author"><span><span class="by">BY </span>ERAY COSKUN</span></p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <p class="newsletter">Get our newsletter</p>
+                
+                <div class="input-newsletter-container">
+                    <input type="email" class="input-newsletter" placeholder="Enter Email Adress...">
+                </div>
+                <button class="newsletter-button">Enter</button>
+            </div>
+
+            <div class="footer-bottom">
+                <a href="1MinCS.COM" class="footer-link">About</a>
+                <a href="1MinCS.COM" class="footer-link">Contanct</a>
+                <a href="1MinCS.COM" class="footer-link">News</a>
+                <a href="1MinCS.COM" class="footer-link">Tools</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright-privacy">
+        <p class="copy-pri">© 2023 1MinuteComputerSciene</p>
+        <p class="copy-pri">Privacy and Cookies</p>
+        <p class="copy-pri">Personal Information</p>
+    </div>
+</body>
+</html>
