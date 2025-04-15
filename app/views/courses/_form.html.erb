@@ -213,10 +213,8 @@
             
             <div class="form-group">
                 <label for="cover">Cover Image</label>
-                <input type="file" id="cover" name="cover" accept="image/*">
-                <div class="image-preview" id="imagePreview">
-                    <span class="image-preview-text">Image preview will appear here</span>
-                </div>
+                <!-- FilePond implementation for cover image -->
+                <input type="file" class="filepond" id="cover" name="cover" multiple>
             </div>
             
             <div class="form-group">
@@ -244,12 +242,10 @@
 
                 <label style="padding-top: 16px; ">Add additional Files</label>
                 <div class="file-input-container">
-                    <input type="file" id="courseFiles" name="courseFiles" multiple>
+                    <!-- FilePond implementation for multiple files -->
+                    <input type="file" class="filepond" id="courseFiles" name="courseFiles" multiple>
                 </div>
             </div>
-
-
-            
             
             <div class="form-group">
                 <label>Course Tags</label>
@@ -273,8 +269,46 @@
 
 
 
+<!-- FilePond CSS -->
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
+<!-- FilePond JS -->
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 
+<script>
+    // Register plugins
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginFileValidateType
+    );
+
+    // Initialize FilePond for cover image
+    const coverPond = FilePond.create(document.querySelector('input#cover'), {
+        labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
+        allowMultiple: true,
+        maxFiles: 10,
+        server: {
+            url: '/upload',
+            process: '/process-files',
+            revert: '/revert-files',
+        }
+    });
+
+    // Initialize FilePond for course files
+    const filesPond = FilePond.create(document.querySelector('input#courseFiles'), {
+        labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
+        allowMultiple: true,
+        maxFiles: 10,
+        server: {
+            url: '/upload',
+            process: '/process-files',
+            revert: '/revert-files',
+        }
+    });
+</script>
 
   <div style="display: none">
   <img src="https://fototapetenwelt.de/wp-content/uploads/2021/01/AdobeStock_284628054.jpeg">
