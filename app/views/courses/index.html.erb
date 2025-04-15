@@ -182,7 +182,7 @@ input[type="email"] {
 
 /* Bottom Content */
 .bottom-content {
-  padding-top: var(--space-lg);
+  margin-top: var(--space-xxl);
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   column-gap: var(--space-xxl);
@@ -196,10 +196,9 @@ input[type="email"] {
 
 .latest-button-container {
   display: flex;
-  width: 100%;
+  width: 25%;
   align-items: center;
   height: var(--button-height);
-  margin: 0 auto;
   cursor: pointer;
 }
 
@@ -229,6 +228,8 @@ input[type="email"] {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: 0.3s ease;
+
 }
 
 .latest-image-container {
@@ -256,6 +257,7 @@ input[type="email"] {
 
 .latest-button-container:hover .arrow {
   fill: var(--dark-color);
+  stroke: var(--dark-color);
 }
 
 .latest-button-container:hover .arrow-container {
@@ -484,14 +486,17 @@ input[type="email"] {
   }
   
   .bottom-content-right {
-    padding-top: var(--space-3xl);
+    margin-top: var(--space-3xl);
   }
 }
     </style>
 </head>
 <body>
     <%= render "home/navbar" %>
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 128px 0; width: 100%; background-color: rgb(230, 228, 228); border-bottom: 1px solid rgb(201, 201, 201);">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 96px 0; width: 100%; background-color: rgb(230, 228, 228); border-bottom: 1px solid rgb(201, 201, 201);">
+    <div style="font-size: 70px; width: 100%; text-align: center; margin-bottom: 16px;">
+        <p>Learn Something New</p>
+    </div>
     <div class="search-container">
         <input type="text" class="search-bar" placeholder="Search...">
         <button class="search-button">
@@ -507,16 +512,26 @@ input[type="email"] {
             <a href="https://www.example.com" class="topic">PROGRAMMING</a>
             <a href="https://www.example.com" class="topic">MATH</a>
             <a href="https://www.example.com" class="topic">DATA-MANAGEMENT</a>
-            <a href="https://www.example.com" class="topic">CLOUD COMPUTING</a>
+            <a href="https://www.example.com" class="topic">ELECTRICAL ENGENEERING</a>
+            <a href="https://www.example.com" class="topic">PHYSICS</a>
+            <a href="https://www.example.com" class="topic">SELFIMPROVEMENT</a>
+            <a href="https://www.example.com" class="topic">HARDWARE</a>
         </div>
     </div>
 </div>
 
         
     <div class="main">
-    
-        
 
+            <div class="latest-button-container" style="margin-top: 24px;" onclick="window.location.href='http://127.0.0.1:3000/courses/new'">
+                <p class="latest-button">UPLOAD NOTE</p>
+                <div class="arrow-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                    </svg>                
+                </div>
+            </div>
+            
         <div class="bottom-content">
             <div class="bottom-content-left">
 
