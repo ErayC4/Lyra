@@ -1,5 +1,4 @@
-<%= form_with(model: course) do |form| %>
- <style>
+<style>
 
         
         .container {
@@ -185,6 +184,8 @@
       }
 
     </style>
+  
+  <%= form_with(model: course) do |form| %>
   <% if course.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
@@ -197,136 +198,106 @@
     </div>
   <% end %>
     
-    <div class="container">
-        <h2 class="form-title">Upload New Course</h2>
-        
-        <form>
-            <div class="form-group">
-                <label for="title">Course Title</label>
-                <input type="text" id="title" name="title" placeholder="Enter course title">
-            </div>
-            
-            <div class="form-group">
-                <label for="description">Course Description</label>
-                <textarea id="description" name="description" placeholder="Enter detailed course description"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="cover">Cover Image</label>
-                <!-- FilePond implementation for cover image -->
-                <input type="file" class="filepond" id="cover" name="cover" multiple>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes">Additional Notes</label>
-                <textarea id="notes" name="notes" placeholder="Enter any additional notes about the course"></textarea>
-            </div>
-            
-
-            <div class="form-group">
-                <label>Files From Notes</label>
-                <div class="file-templates">
-                    <label class="template-checkbox">
-                        <input type="checkbox" name="template" value="disclaimer"> Disclaimer.pdf
-                    </label>
-                    <label class="template-checkbox">
-                        <input type="checkbox" name="template" value="aboutme"> AboutMe.pdf
-                    </label>
-                    <label class="template-checkbox">
-                        <input type="checkbox" name="template" value="certificates"> Certificates.pdf
-                    </label>
-                    <label class="template-checkbox">
-                        <input type="checkbox" name="template" value="numbers"> numbers.txt
-                    </label>
-                </div>
-
-                <label style="padding-top: 16px; ">Add additional Files</label>
-                <div class="file-input-container">
-                    <!-- FilePond implementation for multiple files -->
-                    <input type="file" class="filepond" id="courseFiles" name="courseFiles" multiple>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Course Tags</label>
-                <div class="tag-create">
-                      <input type="text" id="newTag" placeholder="New tag name">
-                      <button type="button" class="button" id="addTagBtn">Add Tag</button>
-                  </div>
-                <div class="tags-container" id="tagsContainer">
-                    <div class="tag">more tags here</div>
-                    
-                </div>
-            </div>
-            
-            <div class="actions">
-                <a href="#" class="button button-secondary go-back-btn">Go Back</a>
-                <button type="submit" class="button">Create Course</button>
-            </div>
-        </form>
+  <div class="container">
+    <h2 class="form-title">Upload New Course</h2>
+    
+    <div class="form-group">
+      <%= form.label :title, "Course Title" %>
+      <%= form.text_field :title, placeholder: "Enter course title" %>
     </div>
+    
+    <div class="form-group">
+      <%= form.label :description, "Course Description" %>
+      <%= form.text_area :description, placeholder: "Enter detailed course description" %>
+    </div>
+    <div class="form-group">
+  <%= form.label :image, "Cover Image" %>
+  <%= form.file_field :image, class: "filepond-single", id: "cover_image" %>
+</div>
 
+    
+    <div class="form-group">
+      <%= form.label :notes, "Additional Notes" %>
+      <%= form.text_area :notes, placeholder: "Enter any additional notes about the course" %>
+    </div>
+    
+    <div class="form-group">
+      <label>Files From Notes</label>
+      <div class="file-templates">
+        <label class="template-checkbox">
+          <input type="checkbox" name="template[]" value="disclaimer"> Disclaimer.pdf
+        </label>
+        <label class="template-checkbox">
+          <input type="checkbox" name="template[]" value="aboutme"> AboutMe.pdf
+        </label>
+        <label class="template-checkbox">
+          <input type="checkbox" name="template[]" value="certificates"> Certificates.pdf
+        </label>
+        <label class="template-checkbox">
+          <input type="checkbox" name="template[]" value="numbers"> numbers.txt
+        </label>
+      </div>
 
+      <label style="padding-top: 16px;">Add additional Files</label>
+<div class="form-group">
+  <%= form.label :files, "Add additional Files" %>
+  <%= form.file_field :files, multiple: true, direct_upload: true, class: "filepond", id: "file_upload" %>
+</div>
 
+    </div>
+    
+    <div class="form-group">
+      <label>Course Tags</label>
+      <div class="tag-create">
+        <input type="text" id="newTag" placeholder="New tag name">
+        <button type="button" class="button" id="addTagBtn">Add Tag</button>
+      </div>
+      <div class="tags-container" id="tagsContainer">
+        <!-- Tags werden per JavaScript hinzugefügt -->
+      </div>
+    </div>
+    
+    <div class="actions">
+      <%= link_to "Go Back", courses_path, class: "button button-secondary go-back-btn" %>
+      <%= form.submit "Create Course", class: "button" %>
+    </div>
+  </div>
+<% end %>
 
-<!-- FilePond CSS -->
+<!-- CSRF-Token für JavaScript-Requests -->
+<%= csrf_meta_tags %>
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
 <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
 <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
-<!-- FilePond JS -->
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 
 <script>
-    // Register plugins
+  document.addEventListener('DOMContentLoaded', function() {
+    // FilePond Plugins registrieren
     FilePond.registerPlugin(
-        FilePondPluginImagePreview,
-        FilePondPluginFileValidateType
+      FilePondPluginImagePreview,
+      FilePondPluginFileValidateType
     );
-
-    // Initialize FilePond for cover image
-    const coverPond = FilePond.create(document.querySelector('input#cover'), {
-        labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
-        allowMultiple: true,
-        maxFiles: 10,
-        server: {
-            url: '/upload',
-            process: '/process-files',
-            revert: '/revert-files',
-        }
+    
+    // FilePond initialisieren
+    const inputElement = document.getElementById('file_upload');
+    const pond = FilePond.create(inputElement, {
+      allowMultiple: true,
+      labelIdle: 'Drag & Drop deine Dateien oder <span class="filepond--label-action">Browse</span>',
+      storeAsFile: true, // Um die Dateien als Datei-Objekte zu speichern (für Rails' Form-Submission)
     });
-
-    // Initialize FilePond for course files
-    const filesPond = FilePond.create(document.querySelector('input#courseFiles'), {
-        labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
-        allowMultiple: true,
-        maxFiles: 10,
-        server: {
-            url: '/upload',
-            process: '/process-files',
-            revert: '/revert-files',
-        }
+    
+    const coverImageInput = document.getElementById('cover_image');
+    const coverPond = FilePond.create(coverImageInput, {
+      allowMultiple: false,
+      labelIdle: 'Drag & Drop ein Bild oder <span class="filepond--label-action">Browse</span>',
+      storeAsFile: true,
+      acceptedFileTypes: ['image/*']
     });
+    // Optional: Server-seitiges Hochladen mit Active Storage Direct Upload
+    // Wenn du Direct Upload verwenden möchtest, kannst du das hier konfigurieren
+    // Dafür müsstest du auch Rails-seitig Endpoints einrichten
+  });
 </script>
-
-  <div style="display: none">
-  <img src="https://fototapetenwelt.de/wp-content/uploads/2021/01/AdobeStock_284628054.jpeg">
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
-    <p>By UserName</p>
-
-  </div>
-  <%= form.hidden_field :user_id, value: current_user.id %>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-  </div>
-<% end %>

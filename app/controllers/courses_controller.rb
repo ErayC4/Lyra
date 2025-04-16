@@ -65,6 +65,6 @@ class CoursesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def course_params
-      params.expect(course: [ :title, :likes, :dislikes, :description ])
+      params.expect(course: [ :title, :image, :likes, :dislikes, :description, files: [] ])
     end
 end
