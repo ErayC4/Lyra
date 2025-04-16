@@ -65,6 +65,6 @@ class CoursesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def course_params
-      params.expect(course: [ :title, :image, :likes, :dislikes, :description, files: [] ])
+      params.require(:course).permit(:title, :image, :likes, :dislikes, :description, :note_id, { files: [] })
     end
 end

@@ -200,7 +200,10 @@
     
   <div class="container">
     <h2 class="form-title">Upload New Course</h2>
-    
+    <div class="form-group">
+      <%= form.label :note_id, "Select Note" %>
+      <%= form.collection_select :note_id, Note.all, :id, :title, { include_blank: "-- Select a note --" }, { class: "form-control" } %>
+    </div>
     <div class="form-group">
       <%= form.label :title, "Course Title" %>
       <%= form.text_field :title, placeholder: "Enter course title" %>
@@ -214,35 +217,18 @@
   <%= form.label :image, "Cover Image" %>
   <%= form.file_field :image, class: "filepond-single", id: "cover_image" %>
 </div>
-
     
     <div class="form-group">
-      <%= form.label :notes, "Additional Notes" %>
-      <%= form.text_area :notes, placeholder: "Enter any additional notes about the course" %>
-    </div>
-    
-    <div class="form-group">
-      <label>Files From Notes</label>
       <div class="file-templates">
         <label class="template-checkbox">
-          <input type="checkbox" name="template[]" value="disclaimer"> Disclaimer.pdf
-        </label>
-        <label class="template-checkbox">
-          <input type="checkbox" name="template[]" value="aboutme"> AboutMe.pdf
-        </label>
-        <label class="template-checkbox">
-          <input type="checkbox" name="template[]" value="certificates"> Certificates.pdf
-        </label>
-        <label class="template-checkbox">
-          <input type="checkbox" name="template[]" value="numbers"> numbers.txt
+          <input type="checkbox" name="template[]" value="disclaimer"> SomeFileFromNotes.pdf
         </label>
       </div>
 
-      <label style="padding-top: 16px;">Add additional Files</label>
-<div class="form-group">
-  <%= form.label :files, "Add additional Files" %>
-  <%= form.file_field :files, multiple: true, direct_upload: true, class: "filepond", id: "file_upload" %>
-</div>
+  <div class="form-group">
+    <%= form.label :files, "Add additional Files" %>
+    <%= form.file_field :files, multiple: true, direct_upload: true, class: "filepond", id: "file_upload" %>
+  </div>
 
     </div>
     
