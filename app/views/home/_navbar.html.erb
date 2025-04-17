@@ -70,7 +70,8 @@
                 <span><%= link_to "Courses", courses_path, style:"text-decoration: none; color: black;" %></span>
             </div>   
         
-            <%#= link_to "Edit Profile", edit_user_registration_path%>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { confirm: "Wirklich abmelden?" }, class: "btn btn-danger" %>
+
         </div>
         <p class="date"><%= Time.now.strftime("%d %B %Y")%></p>
         <div class="list-button-container">
