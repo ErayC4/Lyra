@@ -3,7 +3,7 @@ class CoursesController < ApplicationController
 
   # GET /courses or /courses.json
   def index
-    @courses = Course.all
+    @courses = current_user.courses
   end
 
   # GET /courses/1 or /courses/1.json
@@ -21,7 +21,7 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
-    @course = Course.new(course_params)
+    @course = current_user.courses.new(course_params)
 
     respond_to do |format|
       if @course.save
