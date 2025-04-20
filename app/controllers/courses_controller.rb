@@ -14,7 +14,10 @@ class CoursesController < ApplicationController
   def new
     @course = Course.new
   end
-
+  def read
+    @course = Course.find(params[:id])
+    # Weitere Logik für den Leseansicht
+  end
   # GET /courses/1/edit
   def edit
   end

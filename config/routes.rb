@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :courses
+  resources :courses do
+    member do
+      get :read
+    end
+  end
   resources :ais
   resources :notes do
     collection do
