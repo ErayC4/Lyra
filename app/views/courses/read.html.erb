@@ -1,104 +1,159 @@
-<!-- app/views/courses/show.html.erb or wherever you're displaying the note -->
-
-<div class="note-container">
-  <div id="note-content"></div>
-  <div id="note-timestamp" class="note-timestamp"></div>
-</div>
 
 <style>
+  :root {
+    /* Farbvariablen */
+    --primary-color: #00ff99;
+    --dark-color: #000000;
+    --white-color: #ffffff;
+    --light-gray: #e6e4e4;
+    --medium-gray: #c9c9c9;
+    --dark-gray: #444343;
+    --footer-bg: rgb(32, 31, 36);
+    --footer-copyright-bg: rgb(19, 19, 19);
+    
+    /* Abstands-System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+    --space-3xl: 64px;
+    
+    /* Größen-System */
+    --button-height: 48px;
+    --card-border: 4px;
+    --image-border: 12px;
+
+    /* Font Größen*/
+    --font-sm: 1rem;
+    --font-md: 1.5rem;
+    --font-xl: 2rem;
+  }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.6;
-    color: #333;
   }
   
-  .note-container {
-    max-width: 800px;
-    margin: 0 auto;
+  .note-container{
+    padding: 0 25%;
+  }
+  .question-element{
+    background-color: #DBDBDB;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid black; 
   }
-  
+
   h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 30px;
   }
-  
-  h2 {
-    font-size: 2rem;
-    color: #3498db;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+  .question-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 25px;
   }
-  
-  p {
-    margin-bottom: 1rem;
+  .question-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #2c3e50;
   }
-  
-  ul, ol {
-    margin-bottom: 1.5rem;
-    padding-left: 2rem;
+  .question-text {
+      margin-bottom: 15px;
+      line-height: 1.5;
   }
-  
-  ul.checklist {
-    list-style-type: none;
-    padding-left: 0.5rem;
+  .options-container {
+      margin-left: 10px;
+      margin-bottom: 16px;
   }
-  
-  .checklist-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  .option {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
   }
-  
-  .checklist-item input[type="checkbox"] {
-    margin-right: 0.75rem;
+  .option input {
+      margin-right: 10px;
   }
-  
-  .alert {
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
+  .option label {
+      cursor: pointer;
   }
-  
-  .alert-primary {
-    background-color: #d4edff;
-    border-left: 4px solid #3498db;
-    color: #0c5460;
+  .submit-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
+      transition: background-color 0.3s;
   }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
+  .submit-btn:hover {
+      background-color: #2980b9;
   }
-  
-  th, td {
-    padding: 0.75rem;
-    border: 1px solid #dee2e6;
-    text-align: left;
+  .question-type {
+      font-size: 0.8em;
+      color: #7f8c8d;
+      margin-bottom: 5px;
   }
-  
-  th {
-    background-color: #f8f9fa;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f8f9fa;
-  }
-  
-  .note-timestamp {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-bottom: 1.5rem;
-    text-align: right;
-  }
+  .latest-button-container {
+  display: flex;
+  width: 25%;
+  align-items: center;
+  height: var(--button-height);
+  cursor: pointer;
+}
+
+.latest-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+  text-decoration: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  transition: .3s;
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  fill: var(--white-color);
+}
+
+.arrow-container {
+  background-color: var(--dark-color);
+  width: 30px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
+
+}
+
+.latest-button-container:hover .latest-button {
+  background-color: var(--dark-color);
+  color: var(--white-color);
+}
+
+.latest-button-container:hover .arrow {
+  fill: var(--dark-color);
+  stroke: var(--dark-color);
+}
+
+.latest-button-container:hover .arrow-container {
+  background-color: var(--primary-color);
+}
+
+.latest-button-container:active {
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
+}
 </style>
 
 <script>
@@ -108,22 +163,14 @@
       const noteContent = document.getElementById('note-content-data').textContent;
       const noteData = JSON.parse(noteContent);
       
-      // Function to format timestamp
-      function formatTimestamp(timestamp) {
-        const date = new Date(timestamp);
-        return `Last updated: ${date.toLocaleString()}`;
-      }
+
       
       // Function to render the note content
       function renderNote(data) {
         const contentElement = document.getElementById('note-content');
         const timestampElement = document.getElementById('note-timestamp');
-        
-        // Set timestamp
-        if (data.time) {
-          timestampElement.textContent = formatTimestamp(data.time);
-        }
-        
+      
+
         // Render blocks
         data.blocks.forEach(block => {
           const blockElement = renderBlock(block);
@@ -220,8 +267,112 @@
     }
   });
 </script>
-
-<!-- Hidden div to store the JSON data -->
 <div id="note-content-data" style="display: none;">
   <%= @course.note.content.to_json.html_safe %>
 </div>
+
+<div class="note-container">
+  <div id="note-content"></div>
+  <div class="question-container">
+        <div class="question-type">Single-Choice</div>
+        <div class="question-title">Frage 1</div>
+        <div class="question-text">Welches Betriebssystem nutzen Sie hauptsächlich?</div>
+        <div class="options-container">
+            <div class="option">
+                <input type="radio" id="q1-opt1" name="question1" value="windows">
+                <label for="q1-opt1">Windows</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q1-opt2" name="question1" value="macos">
+                <label for="q1-opt2">macOS</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q1-opt3" name="question1" value="linux">
+                <label for="q1-opt3">Linux</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q1-opt4" name="question1" value="other">
+                <label for="q1-opt4">Anderes</label>
+            </div>
+        </div>
+        <div class="latest-button-container">
+          <div class="latest-button">SHOW ANSWER</div>
+          <div class="arrow-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>                
+          </div>
+        </div>
+    </div>
+    
+    <!-- Beispiel für eine Multiple-Choice-Frage -->
+    <div class="question-container">
+        <div class="question-type">Multiple-Choice</div>
+        <div class="question-title">Frage 2</div>
+        <div class="question-text">Welche der folgenden Programmiersprachen haben Sie bereits benutzt? (Mehrere Antworten möglich)</div>
+        <div class="options-container">
+            <div class="option">
+                <input type="checkbox" id="q2-opt1" name="question2" value="java">
+                <label for="q2-opt1">Java</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="q2-opt2" name="question2" value="python">
+                <label for="q2-opt2">Python</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="q2-opt3" name="question2" value="javascript">
+                <label for="q2-opt3">JavaScript</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="q2-opt4" name="question2" value="csharp">
+                <label for="q2-opt4">C#</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="q2-opt5" name="question2" value="cpp">
+                <label for="q2-opt5">C++</label>
+            </div>
+        </div>
+        <div class="latest-button-container">
+          <div class="latest-button">SHOW ANSWER</div>
+          <div class="arrow-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>                
+          </div>
+        </div>
+    </div>
+    
+    <!-- Beispiel für eine weitere Single-Choice-Frage -->
+    <div class="question-container">
+        <div class="question-type">Single-Choice</div>
+        <div class="question-title">Frage 3</div>
+        <div class="question-text">Wie viel Erfahrung haben Sie mit HTML und CSS?</div>
+        <div class="options-container">
+            <div class="option">
+                <input type="radio" id="q3-opt1" name="question3" value="beginner">
+                <label for="q3-opt1">Anfänger</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q3-opt2" name="question3" value="intermediate">
+                <label for="q3-opt2">Fortgeschritten</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q3-opt3" name="question3" value="expert">
+                <label for="q3-opt3">Experte</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="q3-opt4" name="question3" value="none">
+                <label for="q3-opt4">Keine Erfahrung</label>
+            </div>
+        </div>
+        <div class="latest-button-container">
+          <div class="latest-button">SHOW ANSWER</div>
+          <div class="arrow-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>                
+          </div>
+        </div>
+    </div>
+</div>
+
