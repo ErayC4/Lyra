@@ -252,7 +252,97 @@
             });
             
             return table;
+          
+         case 'singleChoise':
+          const singleChoise = document.createElement('div');
+          singleChoise.className = 'question-container';
+          
+          // Frage-Typ hinzufügen
+          const questionType = document.createElement('div');
+          questionType.className = 'question-type';
+          questionType.textContent = 'Single-Choice';
+          singleChoise.appendChild(questionType);
+          
+          // Frage-Titel hinzufügen
+          const questionTitle = document.createElement('div');
+          questionTitle.className = 'question-title';
+          questionTitle.textContent = 'Frage 1';
+          singleChoise.appendChild(questionTitle);
+          
+          // Fragetext hinzufügen
+          
+          const questionText = document.createElement('div');
+          questionText.className = 'question-text';
+          questionText.textContent = block.data.question;
+          singleChoise.appendChild(questionText);
+          
+          // Optionen-Container erstellen
+
+          const optionsContainer = document.createElement('div');
+          optionsContainer.className = 'options-container';
+          const options = block.data.options.map((option, index) => {
+            return {
+              id: `q1-opt${index+1}`, 
+              value: option.text.toLowerCase().replace(/\s+/g, '-'),
+              label: option.text
+            };
+          });
+          options.forEach(option => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option';
             
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.id = option.id;
+            input.name = 'question1';
+            input.value = option.value;
+            
+            const label = document.createElement('label');
+            label.setAttribute('for', option.id);
+            label.textContent = option.label;
+            
+            optionDiv.appendChild(input);
+            optionDiv.appendChild(label);
+            optionsContainer.appendChild(optionDiv);
+          });
+          
+          singleChoise.appendChild(optionsContainer);
+          
+          // Button-Container hinzufügen
+          const buttonContainer = document.createElement('div');
+          buttonContainer.className = 'latest-button-container';
+          
+          const button = document.createElement('div');
+          button.className = 'latest-button';
+          button.textContent = 'SHOW ANSWER';
+          buttonContainer.appendChild(button);
+          
+          const arrowContainer = document.createElement('div');
+          arrowContainer.className = 'arrow-container';
+          
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
+          svg.setAttribute('fill', 'white');
+          svg.setAttribute('stroke', 'white');
+          svg.setAttribute('class', 'arrow');
+          svg.setAttribute('viewBox', '0 0 16 16');
+          
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('fill-rule', 'evenodd');
+          path.setAttribute('d', 'M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708');
+          svg.appendChild(path);
+          
+          arrowContainer.appendChild(svg);
+          buttonContainer.appendChild(arrowContainer);
+          singleChoise.appendChild(buttonContainer);
+          
+          // Hier können Sie den singleChoise zu einem Elternelement hinzufügen
+          // z.B.: parentElement.appendChild(singleChoise);
+          
+          return singleChoise;
+          
           default:
             console.warn(`Unsupported block type: ${block.type}`);
             return null;
@@ -376,3 +466,4 @@
     </div>
 </div>
 
+<%= @course.note.content %>
