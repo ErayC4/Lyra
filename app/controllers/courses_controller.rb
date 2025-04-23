@@ -17,6 +17,19 @@ class CoursesController < ApplicationController
   def read
     @course = Course.find(params[:id])
     # Weitere Logik für den Leseansicht
+    if current_user
+      # Überprüfen, ob der Benutzer den Kurs bereits angesehen hat
+      unless CourseView.exists?(user: current_user, course: @course)
+        @course.course_views.create(user: current_user)
+      end
+    else
+      # Für nicht eingeloggte Benutzer kannst du IP-Adresse speichern
+      # oder einen anonymen View zählen
+      @course.course_views.create
+    end
+
+    # View anzeigen
+    render :read
   end
   # GET /courses/1/edit
   def edit
