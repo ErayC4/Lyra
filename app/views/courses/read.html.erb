@@ -154,10 +154,46 @@
 .latest-button-container:active {
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
 }
+
+.explanation-area{
+  width: 100%; height: 256px; margin-bottom: 16px;
+}
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+
+    function createShowButton() {
+      const buttonContainer = document.createElement('div');
+      buttonContainer.className = 'latest-button-container';
+      
+      const button = document.createElement('div');
+      button.className = 'latest-button';
+      button.textContent = 'SHOW ANSWER';
+      buttonContainer.appendChild(button);
+      
+      const arrowContainer = document.createElement('div');
+      arrowContainer.className = 'arrow-container';
+      
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      svg.setAttribute('width', '16');
+      svg.setAttribute('height', '16');
+      svg.setAttribute('fill', 'white');
+      svg.setAttribute('stroke', 'white');
+      svg.setAttribute('class', 'arrow');
+      svg.setAttribute('viewBox', '0 0 16 16');
+      
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('fill-rule', 'evenodd');
+      path.setAttribute('d', 'M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708');
+      svg.appendChild(path);
+      
+      arrowContainer.appendChild(svg);
+      buttonContainer.appendChild(arrowContainer);
+      
+      return buttonContainer;
+    }
     try {
       // Get the note content from a data attribute that we'll create in the HTML
       const noteContent = document.getElementById('note-content-data').textContent;
@@ -253,28 +289,28 @@
             
             return table;
           
-         case 'singleChoise':
-          const singleChoise = document.createElement('div');
-          singleChoise.className = 'question-container';
+         case 'multipleChoise':
+          const multipleChoise = document.createElement('div');
+          multipleChoise.className = 'question-container';
           
           // Frage-Typ hinzufügen
           const questionType = document.createElement('div');
           questionType.className = 'question-type';
           questionType.textContent = 'Single-Choice';
-          singleChoise.appendChild(questionType);
+          multipleChoise.appendChild(questionType);
           
           // Frage-Titel hinzufügen
           const questionTitle = document.createElement('div');
           questionTitle.className = 'question-title';
           questionTitle.textContent = 'Frage 1';
-          singleChoise.appendChild(questionTitle);
+          multipleChoise.appendChild(questionTitle);
           
           // Fragetext hinzufügen
           
           const questionText = document.createElement('div');
           questionText.className = 'question-text';
           questionText.textContent = block.data.question;
-          singleChoise.appendChild(questionText);
+          multipleChoise.appendChild(questionText);
           
           // Optionen-Container erstellen
 
@@ -292,7 +328,7 @@
             optionDiv.className = 'option';
             
             const input = document.createElement('input');
-            input.type = 'radio';
+            input.type = 'checkbox';
             input.id = option.id;
             input.name = 'question1';
             input.value = option.value;
@@ -306,43 +342,44 @@
             optionsContainer.appendChild(optionDiv);
           });
           
-          singleChoise.appendChild(optionsContainer);
+          multipleChoise.appendChild(optionsContainer);
           
           // Button-Container hinzufügen
-          const buttonContainer = document.createElement('div');
-          buttonContainer.className = 'latest-button-container';
+          multipleChoise.appendChild(createShowButton());
+
+          return multipleChoise;
           
-          const button = document.createElement('div');
-          button.className = 'latest-button';
-          button.textContent = 'SHOW ANSWER';
-          buttonContainer.appendChild(button);
-          
-          const arrowContainer = document.createElement('div');
-          arrowContainer.className = 'arrow-container';
-          
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-          svg.setAttribute('width', '16');
-          svg.setAttribute('height', '16');
-          svg.setAttribute('fill', 'white');
-          svg.setAttribute('stroke', 'white');
-          svg.setAttribute('class', 'arrow');
-          svg.setAttribute('viewBox', '0 0 16 16');
-          
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('fill-rule', 'evenodd');
-          path.setAttribute('d', 'M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708');
-          svg.appendChild(path);
-          
-          arrowContainer.appendChild(svg);
-          buttonContainer.appendChild(arrowContainer);
-          singleChoise.appendChild(buttonContainer);
-          
-          // Hier können Sie den singleChoise zu einem Elternelement hinzufügen
-          // z.B.: parentElement.appendChild(singleChoise);
-          
-          return singleChoise;
-          
+          case 'explanation':
+            const explanation = document.createElement('div');
+            explanation.className = 'question-container';
+            
+            // Frage-Typ hinzufügen
+            const questionTypeExplanation = document.createElement('div');
+            questionTypeExplanation.className = 'question-type';
+            questionTypeExplanation.textContent = 'Explanation';
+            explanation.appendChild(questionTypeExplanation);
+            
+            // Frage-Titel hinzufügen
+            const questionTitleExplanation = document.createElement('div');
+            questionTitleExplanation.className = 'question-title';
+            questionTitleExplanation.textContent = 'Frage 1';
+            explanation.appendChild(questionTitleExplanation);
+            
+            // Fragetext hinzufügen
+            
+            const questionTextExplanation = document.createElement('div');
+            questionTextExplanation.className = 'question-text';
+            questionTextExplanation.textContent = block.data.question;
+            explanation.appendChild(questionTextExplanation);
+
+            const explanationArea = document.createElement('textarea');
+            explanationArea.className = "explanation-area";
+            explanation.appendChild(explanationArea);
+            
+
+            explanation.appendChild(createShowButton());
+            return explanation;
+
           default:
             console.warn(`Unsupported block type: ${block.type}`);
             return null;
@@ -362,108 +399,6 @@
 </div>
 
 <div class="note-container">
-  <div id="note-content"></div>
-  <div class="question-container">
-        <div class="question-type">Single-Choice</div>
-        <div class="question-title">Frage 1</div>
-        <div class="question-text">Welches Betriebssystem nutzen Sie hauptsächlich?</div>
-        <div class="options-container">
-            <div class="option">
-                <input type="radio" id="q1-opt1" name="question1" value="windows">
-                <label for="q1-opt1">Windows</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q1-opt2" name="question1" value="macos">
-                <label for="q1-opt2">macOS</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q1-opt3" name="question1" value="linux">
-                <label for="q1-opt3">Linux</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q1-opt4" name="question1" value="other">
-                <label for="q1-opt4">Anderes</label>
-            </div>
-        </div>
-        <div class="latest-button-container">
-          <div class="latest-button">SHOW ANSWER</div>
-          <div class="arrow-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-              </svg>                
-          </div>
-        </div>
-    </div>
-    
-    <!-- Beispiel für eine Multiple-Choice-Frage -->
-    <div class="question-container">
-        <div class="question-type">Multiple-Choice</div>
-        <div class="question-title">Frage 2</div>
-        <div class="question-text">Welche der folgenden Programmiersprachen haben Sie bereits benutzt? (Mehrere Antworten möglich)</div>
-        <div class="options-container">
-            <div class="option">
-                <input type="checkbox" id="q2-opt1" name="question2" value="java">
-                <label for="q2-opt1">Java</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="q2-opt2" name="question2" value="python">
-                <label for="q2-opt2">Python</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="q2-opt3" name="question2" value="javascript">
-                <label for="q2-opt3">JavaScript</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="q2-opt4" name="question2" value="csharp">
-                <label for="q2-opt4">C#</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" id="q2-opt5" name="question2" value="cpp">
-                <label for="q2-opt5">C++</label>
-            </div>
-        </div>
-        <div class="latest-button-container">
-          <div class="latest-button">SHOW ANSWER</div>
-          <div class="arrow-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-              </svg>                
-          </div>
-        </div>
-    </div>
-    
-    <!-- Beispiel für eine weitere Single-Choice-Frage -->
-    <div class="question-container">
-        <div class="question-type">Single-Choice</div>
-        <div class="question-title">Frage 3</div>
-        <div class="question-text">Wie viel Erfahrung haben Sie mit HTML und CSS?</div>
-        <div class="options-container">
-            <div class="option">
-                <input type="radio" id="q3-opt1" name="question3" value="beginner">
-                <label for="q3-opt1">Anfänger</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q3-opt2" name="question3" value="intermediate">
-                <label for="q3-opt2">Fortgeschritten</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q3-opt3" name="question3" value="expert">
-                <label for="q3-opt3">Experte</label>
-            </div>
-            <div class="option">
-                <input type="radio" id="q3-opt4" name="question3" value="none">
-                <label for="q3-opt4">Keine Erfahrung</label>
-            </div>
-        </div>
-        <div class="latest-button-container">
-          <div class="latest-button">SHOW ANSWER</div>
-          <div class="arrow-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-              </svg>                
-          </div>
-        </div>
-    </div>
+  <div id="note-content"></div>   
 </div>
 
-<%= @course.note.content %>
