@@ -1,0 +1,22 @@
+<%= turbo_frame_tag dom_id(course, :ratings) do %>
+  <div class="ratings">
+    <div class="likes">
+      <span><%= course.likes_count %> Likes</span>
+      <% if user_signed_in? %>
+        <% user_rating = current_user.ratings.find_by(course: course) %>
+        <%= button_to like_course_path(course), method: :post, class: "like-button #{user_rating&.rating_type == 'like' ? 'active' : ''}" do %>
+          👍
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="dislikes">
+      <span><%= course.dislikes_count %> Dislikes</span>
+      <% if user_signed_in? %>
+        <%= button_to dislike_course_path(course), method: :post, class: "dislike-button #{user_rating&.rating_type == 'dislike' ? 'active' : ''}" do %>
+          👎
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

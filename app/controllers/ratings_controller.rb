@@ -2,15 +2,22 @@ class RatingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_course
 
-  def like
-    handle_rating("like")
-    redirect_to @course
+ def like
+  handle_rating("like")
+  respond_to do |format|
+    format.turbo_stream
+    format.html { redirect_to @course }
   end
+end
 
-  def dislike
-    handle_rating("dislike")
-    redirect_to @course
+def dislike
+  handle_rating("dislike")
+  respond_to do |format|
+    format.turbo_stream
+    format.html { redirect_to @course }
   end
+end
+
 
   private
 
