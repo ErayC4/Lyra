@@ -4,4 +4,14 @@ class Course < ApplicationRecord
   has_many :course_views
   belongs_to :note
   belongs_to :user
+
+  has_many :ratings, dependent: :destroy
+
+  def likes_count
+    ratings.where(rating_type: "like").count
+  end
+
+  def dislikes_count
+    ratings.where(rating_type: "dislike").count
+  end
 end
