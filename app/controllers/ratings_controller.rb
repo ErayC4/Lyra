@@ -8,7 +8,7 @@ class RatingsController < ApplicationController
     format.turbo_stream
     format.html { redirect_to @course }
   end
-end
+ end
 
 def dislike
   handle_rating("dislike")
