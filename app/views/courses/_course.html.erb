@@ -150,7 +150,7 @@
 <div id="<%= dom_id course %>">
   <div class="main">
     <div>
-    <img class="cover"src="https://images.pexels.com/photos/12166189/pexels-photo-12166189.jpeg?cs=srgb&dl=pexels-op23-12166189.jpg&fm=jpg">
+    <%= image_tag @course.image, class: "cover" if @course.image.attached? %>
     <div class="course-header">
       <div>
         <p class="title"><%= course.title %></p>
@@ -206,19 +206,40 @@
           </div>
         </div>
       </div>
-      <div style="margin-top: 32px; margin-bottom: 32px;" >
-        <p class="heading" style="margin-bottom: 8px">Table of Contents</p>
-        <div class="table-of-contents-container" >
-          <p class="table-of-contents-item">1. oerkor oejrojera </p>
-          <p class="table-of-contents-item">2. rrrrrrr awrr </p>
-          <p class="table-of-contents-item">3. aiwzzwazsadryh jtdjdtj </p>
-          <p class="table-of-contents-item">4. ofdtkxerkor ktkkt </p>
-          <p class="table-of-contents-item">5. oerkor kxfkdfkyx </p>
-          <p class="table-of-contents-item">6. 326e tw4et3 ofxtkejrojera </p>
-          <p class="table-of-contents-item">7. oeryererkor oejr üorrjera </p>
-          <p class="table-of-contents-item">8. oerkor oejrfrr xtkojera </p>
-        </div>
-      </div>
+
+<% 
+  headers = []
+  if @course.note.content.present?
+    # Parse den JSON-String direkt
+    content_json = JSON.parse(@course.note.content.to_json.html_safe)
+    content_json["blocks"].each do |block|
+  if block["type"] == "header"
+    # HTML-Tags entfernen
+    header_text = block["data"]["text"]
+    header_text = header_text.gsub(/<\/?[^>]+(>|$)/, "")
+    
+    # HTML-Entities dekodieren
+    header_text = CGI.unescapeHTML(header_text)
+    
+    # Für den Fall, dass spezielle Entities wie &nbsp; nicht richtig dekodiert wurden
+    header_text = header_text.gsub(/&nbsp;/, ' ')
+    
+    headers << header_text
+  end
+end
+  end
+%>
+
+<% if headers.any? %>
+  <div style="margin-top: 32px; margin-bottom: 32px;">
+    <p class="heading" style="margin-bottom: 8px">Table of Contents</p>
+    <div class="table-of-contents-container">
+      <% headers.each_with_index do |header, index| %>
+        <p class="table-of-contents-item"><%= index + 1 %>. <%= header %></p>
+      <% end %>
+    </div>
+  </div>
+<% end %>
     </div>
   </div>
 </div>
