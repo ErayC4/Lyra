@@ -1,40 +1,119 @@
+<style>
+  p{
+    margin: 0; 
+    padding: 0;
+  }
+  .front-page{
+    background-image: url("/landscape4.jpg");
+    background-size: 125%;
+    background-position: 18% 0%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 33vh;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .text-2xl{
+    font-size: 4rem;
+  }
+
+  .front-page-container{
+    margin: 0 16px;
+  }
+  .searchbar-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .searchbar{
+    height: 40px;
+    padding: 0;
+    width: 33%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+  }
+  .search-button{
+    height: 40px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  .navigator{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 64px;
+  }
+  .navigator-item-container, .navigator-item-container-active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 128px;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .navigator-item-container-active{
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .navigator-item{
+    cursor: pointer;
+    font-size: 1.15rem;
+    color: white;
+
+  }
+</style>
 <div class="front-page-container">
-  <p>Discover Something New</p>
-  <div class="searchbar-container">
-    <input class="searchbar" />
-    <div class="search-button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
-        <path d="m21 21-4.34-4.34" />
-        <circle cx="11" cy="11" r="8" />
-      </svg>
+  <div class="front-page">
+    <p class="text-2xl" style="color: white">Discover Something New</p>
+    <div class="searchbar-container">
+      <input class="searchbar" />
+      <div class="search-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
+          <path d="m21 21-4.34-4.34" />
+          <circle cx="11" cy="11" r="8" />
+        </svg>
+      </div>
     </div>
-  </div>
-  <div class="navigator">
-    <div>
-      <p>Home</p>
-    </div>
-    <div>
-      <p>Following</p>
-    </div>
-    <div>
-      <p>Saved</p>
-    </div>
-    <div>
-      <p>History</p>
-    </div>
-    <div>
-      <p>Search</p>
+    <div class="navigator">
+      <div class="navigator-item-container-active">
+        <p class="navigator-item">Home</p>
+      </div>
+      <div class="navigator-item-container">
+        <p class="navigator-item">Following</p>
+      </div>
+      <div class="navigator-item-container">
+        <p class="navigator-item">Saved</p>
+      </div>
+      <div class="navigator-item-container">
+        <p class="navigator-item">History</p>
+      </div>
+      <div class="navigator-item-container">
+        <p class="navigator-item">Search</p>
+      </div>
+
     </div>
   </div>
 </div>
-
 <div class="content-container">
   <div class="trending-container">
     <p>Trending</p>
     <div class="trending-row-1">
       <div class="course-card">
         <div>
-          <%= image_tag "landscape-copy.jpg" %>
+          <img>
           <p class="course-title">Title</p>
           <p class="course-author">Author</p>
           <p class="views">1636 Views</p>
