@@ -102,27 +102,29 @@
   }
   .trending-container{
     margin-top: 32px;
+  }
+
+  .row-2-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(50% - 8px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .row-3-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(33.333% - 11px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .row-4-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(25% - 12px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
     
-  }
-  .row-2-cols{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 8px;
-  }
-  .row-3-cols{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  .row-4-cols{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  
   .right-side{
     margin-top: 32px;
   }
@@ -154,6 +156,10 @@
   }
 
   .continue-container{
+    margin-top: 32px;
+  }
+
+  .mostread-container{
     margin-top: 32px;
   }
 </style>
@@ -200,22 +206,29 @@
                             .group(:id)
                             .order(Arel.sql('COUNT(ratings.id) DESC'))
                             .limit(5)
-          
           if trending_courses.any?
         %>
         <p class="text-xl">Trending <%= trending_courses.length %></p>
-        <div class="row-2-cols">
-          <% trending_courses[0..1].each do |course| %>
-            <%= render "coursecard", course: course%>
+        <% if trending_courses.present? %>
+          <% first_row = trending_courses[0..1] %>
+          <% remaining_courses = trending_courses[2..-1] %>
+          
+          <% if first_row.present? %> 
+            <div class="row-2-cols">
+              <% first_row.each do |course| %>
+                <%= render "coursecard", course: course %>
+              <% end %>
+            </div>
           <% end %>
-        </div>
-        <div class="row-3-cols">
-          <% if trending_courses.length >= 5 %>
-            <% trending_courses[2..4].each do |course| %>
-              <%= render "coursecard", course: course%>
-            <% end %>
+          
+          <% if remaining_courses.present? %>
+            <div class="row-<%= [remaining_courses.size, 3].min %>-cols">
+              <% remaining_courses.each do |course| %>
+                <%= render "coursecard", course: course %>
+              <% end %>
+            </div>
           <% end %>
-        </div>
+        <% end %>
         <% else %>
           <p>No trending courses availiable</p>
         <% end %>
@@ -232,23 +245,26 @@
         </button>
         <div class="continue-container">
           <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
-          <%= render "coursecard"%>
+          <%#= render "coursecard"%>
         </div>
       </div>
     </div>
-    <div class="trending-container">
+    <div class="mostread-container">
+        <% 
+            # Fetch courses with most views using a subquery to count views
+          most_read_courses = Course.joins(:course_views)
+                            .group(:id)
+                            .order(Arel.sql('COUNT(course_views.id) DESC'))
+                            .limit(8)
+          
+          if most_read_courses.any?
+        %>
         <p class="text-xl">Most Read</p>
         <div class="row-4-cols">
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
+          <% most_read_courses.each do |course| %>
+            <%= render "coursecard", course: course%>
+          <% end %>
         </div>
-        <div class="row-4-cols">
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-        </div>
+        <% end %>
   </div>
 </div>
