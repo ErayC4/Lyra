@@ -193,16 +193,32 @@
   <div class="content-container">
     <div class="top-container">
       <div class="trending-container">
-        <p class="text-xl">Trending</p>
+        <% 
+          # Fetch courses with most likes in the last month
+          trending_courses = Course.joins(:ratings)
+                            .where(ratings: { rating_type: 'like', created_at: 1.month.ago..Time.now })
+                            .group(:id)
+                            .order(Arel.sql('COUNT(ratings.id) DESC'))
+                            .limit(5)
+          
+          if trending_courses.any?
+        %>
+        <p class="text-xl">Trending <%= trending_courses.length %></p>
         <div class="row-2-cols">
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
+          <% trending_courses[0..1].each do |course| %>
+            <%= render "coursecard", course: course%>
+          <% end %>
         </div>
         <div class="row-3-cols">
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
-          <%= render "coursecard"%>
+          <% if trending_courses.length >= 5 %>
+            <% trending_courses[2..4].each do |course| %>
+              <%= render "coursecard", course: course%>
+            <% end %>
+          <% end %>
         </div>
+        <% else %>
+          <p>No trending courses availiable</p>
+        <% end %>
       </div>
       <div class="right-side">
         <button class="black-button">
