@@ -3,6 +3,11 @@
     margin: 0; 
     padding: 0;
   }
+  .main{
+    background-color: #E4E4E6;
+    padding-top: 32px;
+    padding-bottom: 256px;
+  }
   .front-page{
     background-image: url("/landscape4.jpg");
     background-size: 125%;
@@ -19,7 +24,19 @@
   .text-2xl{
     font-size: 4rem;
   }
+  .text-xl{
+    font-size: 2rem;
+  }
 
+  .text-lg{
+    font-size: 1.75rem;
+  }
+  .text-md{
+    font-size: 1.5rem;
+  }
+  .text-sm{
+    font-size: 1.05rem;
+  }
   .front-page-container{
     margin: 0 16px;
   }
@@ -72,128 +89,217 @@
     cursor: pointer;
     font-size: 1.15rem;
     color: white;
+  }
+  .content-container{
+    margin-left: 64px;
+    margin-right: 64px;
+  }
+  .top-container{
+    
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 64px;
+  }
+  .trending-container{
+    margin-top: 32px;
+    
+  }
+  .row-2-cols{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .row-3-cols{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .row-4-cols{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  
+  .right-side{
+    margin-top: 32px;
+  }
+  .black-button{
+    border: none;
+    display: flex;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 4px;
+    height: 44px;
+    width: 100%;
+    background-color: black;
+    border-radius: 16px;
+  }
+  .button-text{
+    text-align: center;
+    color: white;
+    width: 100%;
+    font-size: 1.05rem;
+  }
+  .inner-button{
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+  }
 
+  .continue-container{
+    margin-top: 32px;
   }
 </style>
-<div class="front-page-container">
-  <div class="front-page">
-    <p class="text-2xl" style="color: white">Discover Something New</p>
-    <div class="searchbar-container">
-      <input class="searchbar" />
-      <div class="search-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
-          <path d="m21 21-4.34-4.34" />
-          <circle cx="11" cy="11" r="8" />
-        </svg>
+<div class="main">
+  <div class="front-page-container">
+    <div class="front-page">
+      <p class="text-2xl" style="color: white">Discover Something New</p>
+      <div class="searchbar-container">
+        <input class="searchbar" />
+        <div class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
+            <path d="m21 21-4.34-4.34" />
+            <circle cx="11" cy="11" r="8" />
+          </svg>
+        </div>
       </div>
-    </div>
-    <div class="navigator">
-      <div class="navigator-item-container-active">
-        <p class="navigator-item">Home</p>
-      </div>
-      <div class="navigator-item-container">
-        <p class="navigator-item">Following</p>
-      </div>
-      <div class="navigator-item-container">
-        <p class="navigator-item">Saved</p>
-      </div>
-      <div class="navigator-item-container">
-        <p class="navigator-item">History</p>
-      </div>
-      <div class="navigator-item-container">
-        <p class="navigator-item">Search</p>
-      </div>
+      <div class="navigator">
+        <div class="navigator-item-container-active">
+          <p class="navigator-item">Home</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Following</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Saved</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">History</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Search</p>
+        </div>
 
-    </div>
-  </div>
-</div>
-<div class="content-container">
-  <div class="trending-container">
-    <p>Trending</p>
-    <div class="trending-row-1">
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
-      </div>
-
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
-      </div>
-    </div>
-    <div class="trending-row-2">
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
-      </div>
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
-      </div>
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
       </div>
     </div>
   </div>
-  <div class="continue-container">
-    <button>
-      <p>Upload Note</p>
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
-          <path d="M5 12h14" />
-          <path d="M12 5v14" />
-        </svg>
-      </div>
-    </button>
-    <div>
-      <p>Continue Reading</p>
-      <div class="course-card">
-        <div>
-          <img>
-          <p class="course-title">Title</p>
-          <p class="course-author">Author</p>
-          <p class="views">1636 Views</p>
+  <div class="content-container">
+    <div class="top-container">
+      <div class="trending-container">
+        <p class="text-xl">Trending</p>
+        <div class="row-2-cols">
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 Views</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
+
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 text-sm</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
+        <div class="row-3-cols">
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 text-sm</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 text-sm</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 text-sm</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-side">
+        <button class="black-button">
+          <p class="button-text">Upload Note</p>
+          <div class="inner-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </div>
+        </button>
+        <div class="continue-container">
+          <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
+          <div class="course-card">
+              <img src="/landscape.jpg" class="course-image">
+              <div class="course-information">
+                <div>
+                  <p class="text-md">Title</p>
+                  <p class="text-sm">Author</p>
+                  <p class="text-sm">1636 text-sm</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="trending-container">
+        <p class="text-xl">Most Read</p>
+        <div class="row-4-cols">
+          <%= render "coursecard"%>
+
+        <div class="row-4-cols">
+          
+        </div>
   </div>
 </div>
