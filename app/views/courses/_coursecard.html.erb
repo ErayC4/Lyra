@@ -15,19 +15,50 @@
   }
   .course-information{
     padding: 16px;
+    display: flex;
+    justify-content: space-between;
   }
+  .course-actions{
+    display: flex;
+    gap: 8px;
+  }
+.course-card .course-actions {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-card:hover .course-actions {
+  opacity: 1;
+}
+
+.course-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.course-actions svg {
+  cursor: pointer;
+}
+
+.course-actions svg:hover {
+  color: #0F9864;
+}
 </style>
 
 <div class="course-card">
     <img src="/landscape.jpg" class="course-image">
     <div class="course-information">
-    <div>
-        <p class="text-md">Title</p>
-        <p class="text-sm">Author</p>
-        <p class="text-sm">1636 Views</p>
-    </div>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
+      <div>
+          <p class="text-md">Title</p>
+          <p class="text-sm">Author</p>
+          <p class="text-sm">1636 Views</p>
+      </div>
+      <div class="course-actions">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+        </svg>
+      </div>
     </div>
 </div>

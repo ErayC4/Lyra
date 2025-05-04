@@ -195,74 +195,13 @@
       <div class="trending-container">
         <p class="text-xl">Trending</p>
         <div class="row-2-cols">
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 Views</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
-
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 text-sm</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
         </div>
         <div class="row-3-cols">
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 text-sm</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 text-sm</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 text-sm</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
         </div>
       </div>
       <div class="right-side">
@@ -277,19 +216,7 @@
         </button>
         <div class="continue-container">
           <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
-          <div class="course-card">
-              <img src="/landscape.jpg" class="course-image">
-              <div class="course-information">
-                <div>
-                  <p class="text-md">Title</p>
-                  <p class="text-sm">Author</p>
-                  <p class="text-sm">1636 text-sm</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
-          </div>
+          <%= render "coursecard"%>
         </div>
       </div>
     </div>
@@ -297,9 +224,15 @@
         <p class="text-xl">Most Read</p>
         <div class="row-4-cols">
           <%= render "coursecard"%>
-
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
+        </div>
         <div class="row-4-cols">
-          
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
+          <%= render "coursecard"%>
         </div>
   </div>
 </div>
