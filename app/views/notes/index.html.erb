@@ -8,22 +8,31 @@
   .note-item{
     height: 41px;
     padding: 0 16px;
-    border-top: 1px solid #DBDBDB;
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 1fr 1fr;
     cursor: pointer;
     transition: 0.3s ease;
+    background-color: #EEEEEE;
+    border-radius: 8px;
   }
   .note-item:hover{
-    background-color: #DBDBDB;
+    background-color: #CBCBCB;
   }
 
-  .notes-contnotener{
-    margin: 64px 10%;
+  .main{
+    margin-left: 64px;
+    background-color: #E4E4E6;
+    min-height: 100vh;
   }
-  .note-item-contnotener{
+  .notes-container{
+    padding: 32px 64px;
+  }
+  .note-item-container{
     margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   .new-btn {
       background-color: black;
@@ -33,13 +42,13 @@
       transition: 0.3s ease;
       padding: 8.5px 16px;
   }
-  .searchbar-contnotener{
+  .searchbar-container{
     background-color: white;
     display: flex;
     align-items: center;
     gap: 4px;
     padding: 2px;
-    border: 1px solid #DBDBDB;
+    border: 1px solid #CBCBCB;
     border-radius: 8px;
     width: 300px;
   }
@@ -69,13 +78,13 @@
     align-items: center;
     gap: 4px;
     padding: 8px;
-    border: 1px solid #DBDBDB;
+    border: 1px solid #CBCBCB;
     cursor: pointer;
     border-radius: 8px;
     transition: 0.2s ease;
   }
   .long-white-button:hover{
-    background-color: #DBDBDB;
+    background-color: #CBCBCB;
   }
   .note-actions{
     display: flex;
@@ -101,7 +110,8 @@
 </style>
 <%= javascript_include_tag "bookmark" %>
 <%= javascript_include_tag "bookmarktoggle" %>
-<div id="notes" class="notes-contnotener">
+<div class="main">
+<div id="notes" class="notes-container">
   <div class="notes-buttons">
     <%= link_to '+ New Note', new_note_path, class: 'new-btn' %>
     <div style="display: flex; gap: 8px;">
@@ -111,7 +121,7 @@
         </svg>
         <p>Bookmarks</p>
       </div>
-      <div class="searchbar-contnotener">
+      <div class="searchbar-container">
         <button class="search-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
@@ -119,7 +129,7 @@
       </div>
     </div>
   </div>
-  <div class="note-item-contnotener">
+  <div class="note-item-container">
     <% @notes.each do |note| %>
       <div class="note-item bookmarkable-item" onclick="handleNoteClick(event, '<%= note_path(note) %>')">
         <p><%= note.title %></p>
@@ -135,4 +145,5 @@
       </div>
     <% end %>
   </div>
+</div>
 </div>

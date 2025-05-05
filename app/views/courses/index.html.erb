@@ -3,6 +3,10 @@
     margin: 0; 
     padding: 0;
   }
+  button{
+    padding: 0;
+    margin: 0;
+  }
   .main{
     background-color: #E4E4E6;
     padding-top: 32px;
@@ -131,34 +135,36 @@
   .right-side{
     margin-top: 32px;
   }
-  .black-button{
+  .upload-button{
     border: none;
     display: flex;
     grid-template-columns: 1fr auto;
     align-items: center;
-    padding: 4px;
-    height: 44px;
+    height: 40px;
     width: 100%;
-    background-color: black;
-    border-radius: 16px;
     cursor: pointer;
+    background-color: transparent;
   }
   .button-text{
     text-align: center;
     color: white;
     width: 100%;
+    height: 100%;
+    background-color: black;
     font-size: 1.05rem;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
   }
   .inner-button{
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height:40px;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
-    border-radius: 12px;
+    background-color:rgb(46, 46, 46);
   }
-
   .continue-container{
     margin-top: 32px;
   }
@@ -238,14 +244,14 @@
         <% end %>
       </div>
       <div class="right-side">
-        <button class="black-button" onclick="window.location.href='<%= new_course_path %>'">
-          <p class="button-text">Upload Note</p>
+        <button class="upload-button" onclick="window.location.href='<%= new_course_path %>'">
           <div class="inner-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
+            <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 2px;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
               <path d="M5 12h14" />
               <path d="M12 5v14" />
             </svg>
           </div>
+          <p class="button-text">Upload Note</p>
         </button>
         <div class="continue-container">
           <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
