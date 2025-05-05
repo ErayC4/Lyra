@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_30_202456) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_25_144015) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,48 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_202456) do
     t.index ["user_id"], name: "index_ais_on_user_id"
   end
 
+  create_table "course_reactions", force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "user_id", null: false
+    t.string "reaction_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_reactions_on_course_id"
+    t.index ["user_id"], name: "index_course_reactions_on_user_id"
+  end
+
+  create_table "course_views", force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_views_on_course_id"
+    t.index ["user_id"], name: "index_course_views_on_user_id"
+  end
+
+  create_table "courses", force: :cascade do |t|
+    t.string "title"
+    t.integer "likes_count", default: 0
+    t.integer "dislikes"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "note_id", null: false
+    t.integer "user_id", null: false
+    t.index ["note_id"], name: "index_courses_on_note_id"
+    t.index ["user_id"], name: "index_courses_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id"], name: "index_likes_on_record"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "notes", force: :cascade do |t|
     t.string "title"
     t.json "content"
@@ -56,6 +98,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_202456) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.boolean "bookmarked"
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "course_id", null: false
+    t.string "rating_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_ratings_on_course_id"
+    t.index ["user_id"], name: "index_ratings_on_user_id"
+  end
+
+  create_table "reactions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "course_id", null: false
+    t.string "reaction_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_reactions_on_course_id"
+    t.index ["user_id"], name: "index_reactions_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -81,9 +143,32 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_202456) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "course_id", null: false
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_votes_on_course_id"
+    t.index ["user_id"], name: "index_votes_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "ais", "users"
+  add_foreign_key "course_reactions", "courses"
+  add_foreign_key "course_reactions", "users"
+  add_foreign_key "course_views", "courses"
+  add_foreign_key "course_views", "users"
+  add_foreign_key "courses", "notes"
+  add_foreign_key "courses", "users"
+  add_foreign_key "likes", "users"
   add_foreign_key "notes", "users"
+  add_foreign_key "ratings", "courses"
+  add_foreign_key "ratings", "users"
+  add_foreign_key "reactions", "courses"
+  add_foreign_key "reactions", "users"
   add_foreign_key "tasks", "users"
+  add_foreign_key "votes", "courses"
+  add_foreign_key "votes", "users"
 end

@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :courses do
+    post "like", to: "ratings#like", on: :member
+    post "dislike", to: "ratings#dislike", on: :member
+    member do
+      get :read
+    end
+  end
   resources :ais
   resources :notes do
     collection do

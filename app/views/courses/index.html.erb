@@ -1,0 +1,273 @@
+<style>
+  p{
+    margin: 0; 
+    padding: 0;
+  }
+  .main{
+    background-color: #E4E4E6;
+    padding-top: 32px;
+    padding-bottom: 256px;
+  }
+  .front-page{
+    background-image: url("/landscape4.jpg");
+    background-size: 125%;
+    background-position: 18% 0%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 33vh;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .text-2xl{
+    font-size: 4rem;
+  }
+  .text-xl{
+    font-size: 2rem;
+  }
+
+  .text-lg{
+    font-size: 1.75rem;
+  }
+  .text-md{
+    font-size: 1.5rem;
+  }
+  .text-sm{
+    font-size: 1.05rem;
+  }
+  .front-page-container{
+    margin: 0 16px;
+  }
+  .searchbar-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .searchbar{
+    height: 40px;
+    padding: 0;
+    width: 33%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+  }
+  .search-button{
+    height: 40px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  .navigator{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 64px;
+  }
+  .navigator-item-container, .navigator-item-container-active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 128px;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .navigator-item-container-active{
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .navigator-item{
+    cursor: pointer;
+    font-size: 1.15rem;
+    color: white;
+  }
+  .content-container{
+    margin-left: 64px;
+    margin-right: 64px;
+  }
+  .top-container{
+    
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 64px;
+  }
+  .trending-container{
+    margin-top: 32px;
+  }
+  .row-1-cols{
+    margin-top: 16px;
+  }
+  .row-2-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(50% - 8px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .row-3-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(33.333% - 11px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .row-4-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(25% - 12px), 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+    
+  .right-side{
+    margin-top: 32px;
+  }
+  .black-button{
+    border: none;
+    display: flex;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 4px;
+    height: 44px;
+    width: 100%;
+    background-color: black;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .button-text{
+    text-align: center;
+    color: white;
+    width: 100%;
+    font-size: 1.05rem;
+  }
+  .inner-button{
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+  }
+
+  .continue-container{
+    margin-top: 32px;
+  }
+
+  .mostread-container{
+    margin-top: 32px;
+  }
+</style>
+<div class="main">
+  <div class="front-page-container">
+    <div class="front-page">
+      <p class="text-2xl" style="color: white">Discover Something New</p>
+      <div class="searchbar-container">
+        <input class="searchbar" />
+        <div class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
+            <path d="m21 21-4.34-4.34" />
+            <circle cx="11" cy="11" r="8" />
+          </svg>
+        </div>
+      </div>
+      <div class="navigator">
+        <div class="navigator-item-container-active">
+          <p class="navigator-item">Home</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Following</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Saved</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">History</p>
+        </div>
+        <div class="navigator-item-container">
+          <p class="navigator-item">Search</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="top-container">
+      <div class="trending-container">
+        <% 
+          # Fetch courses with most likes in the last month
+          trending_courses = Course.joins(:ratings)
+                            .where(ratings: { rating_type: 'like', created_at: 1.month.ago..Time.now })
+                            .group(:id)
+                            .order(Arel.sql('COUNT(ratings.id) DESC'))
+                            .limit(5)
+          if trending_courses.any?
+        %>
+        <p class="text-xl">Trending</p>
+        <% if trending_courses.present? %>
+          <% first_row = trending_courses[0..1] %>
+          <% remaining_courses = trending_courses[2..-1] %>
+          
+          <% if first_row.present? %> 
+            <div class="row-2-cols">
+              <% first_row.each do |course| %>
+                <%= render "coursecard", course: course %>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <% if remaining_courses.present? %>
+            <div class="row-<%= [remaining_courses.size, 3].min %>-cols">
+              <% remaining_courses.each do |course| %>
+                <%= render "coursecard", course: course %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+        <% else %>
+          <p>No trending courses availiable</p>
+        <% end %>
+      </div>
+      <div class="right-side">
+        <button class="black-button" onclick="window.location.href='<%= new_course_path %>'">
+          <p class="button-text">Upload Note</p>
+          <div class="inner-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </div>
+        </button>
+        <div class="continue-container">
+          <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
+          <%#= render "coursecard"%>
+        </div>
+      </div>
+    </div>
+    <div class="mostread-container">
+        <% 
+            # Fetch courses with most views using a subquery to count views
+          most_read_courses = Course.joins(:course_views)
+                            .group(:id)
+                            .order(Arel.sql('COUNT(course_views.id) DESC'))
+                            .limit(8)
+          
+          if most_read_courses.any?
+        %>
+        <p class="text-xl">Most Read</p>
+        <div class="row-4-cols">
+          <% most_read_courses.each do |course| %>
+            <%= render "coursecard", course: course%>
+          <% end %>
+        </div>
+        <% end %>
+  </div>
+</div>

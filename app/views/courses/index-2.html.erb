@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OMCS</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    :root {
+  /* Farbvariablen */
+  --primary-color: #00ff99;
+  --dark-color: #000000;
+  --white-color: #ffffff;
+  --light-gray: #e6e4e4;
+  --medium-gray: #c9c9c9;
+  --dark-gray: #444343;
+  --footer-bg: rgb(32, 31, 36);
+  --footer-copyright-bg: rgb(19, 19, 19);
+  
+  /* Abstands-System */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-3xl: 64px;
+  
+  /* Größen-System */
+  --button-height: 48px;
+  --card-border: 4px;
+  --image-border: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  padding: 0 15%;
+}
+
+/* Button-Stile */
+.best-rated-button-container {
+  width: 100%;
+  height: var(--button-height);
+}
+
+.best-rated-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+  text-decoration: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* Best Rated Section */
+.best-rated-content-row1 {
+  display: block;
+}
+
+.row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: var(--space-xxl);
+}
+
+.best-rated-card {
+  padding-top: var(--space-lg);
+  width: 100%;
+  border-bottom: var(--card-border) solid var(--dark-color);
+}
+
+.best-rated-image-container {
+  width: 100%;
+  height: 150px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.best-rated-image-1 {
+  width: 100%;
+  height: 100%;
+  transition: .25s;
+  object-fit: cover;
+  object-position: center;
+  border-bottom: var(--image-border) solid var(--primary-color);
+}
+
+img:hover {
+  transform: scale(1.2);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--footer-bg);
+}
+
+.footer-content {
+  padding-left: 5%;
+  padding-right: 5%;
+  margin-top: var(--space-3xl);
+}
+
+.footer-top {
+  padding-top: var(--space-3xl);
+}
+
+.newsletter {
+  color: var(--white-color);
+  font-size: 24px;
+  padding-bottom: var(--space-lg);
+}
+
+.input-newsletter-container {
+  width: 400px;
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--white-color);
+  display: inline-block;
+  margin-right: var(--space-xl);
+}
+
+input[type="email"] {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: gray;
+}
+
+.newsletter-button {
+  border: none;
+  color: var(--dark-color);
+  font-size: 16px;
+  background-color: var(--primary-color);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  width: 180px;
+  transition: 0.25s;
+}
+
+.newsletter-button:hover {
+  background-color: var(--white-color);
+}
+
+.newsletter-button:active {
+  background-color: rgb(129, 129, 129);
+}
+
+.footer-bottom {
+  display: flex;
+  padding-top: var(--space-3xl);
+}
+
+.footer-link {
+  color: var(--white-color);
+  text-decoration: none;
+  font-size: 20px;
+  padding-right: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.copyright-privacy {
+  font-size: 16px;
+  color: var(--white-color);
+  display: block;
+  background-color: var(--footer-copyright-bg);
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: var(--space-xl);
+}
+
+.copy-pri {
+  padding-top: var(--space-xl);
+}
+
+/* Bottom Content */
+.bottom-content {
+  margin-top: var(--space-xxl);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  column-gap: var(--space-xxl);
+  margin-bottom: var(--space-3xl);
+}
+
+.latest-card {
+  width: 100%;
+  border-bottom: 3px solid var(--dark-color);
+}
+
+.latest-button-container {
+  display: flex;
+  width: 25%;
+  align-items: center;
+  height: var(--button-height);
+  cursor: pointer;
+}
+
+.latest-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+  text-decoration: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  transition: .3s;
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  fill: var(--white-color);
+}
+
+.arrow-container {
+  background-color: var(--dark-color);
+  width: 30px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
+
+}
+
+.latest-image-container {
+  width: 100%;
+  height: 300px;
+  cursor: pointer;
+  overflow: hidden;
+  margin-top: var(--space-xl);
+}
+
+.quandale-image-1 {
+  width: 100%;
+  height: 100%;
+  transition: .25s;
+  object-fit: cover;
+  object-position: center;
+  border-bottom: var(--image-border) solid var(--primary-color);
+}
+
+/* Button Hover Effekte */
+.latest-button-container:hover .latest-button {
+  background-color: var(--dark-color);
+  color: var(--white-color);
+}
+
+.latest-button-container:hover .arrow {
+  fill: var(--dark-color);
+  stroke: var(--dark-color);
+}
+
+.latest-button-container:hover .arrow-container {
+  background-color: var(--primary-color);
+}
+
+.latest-button-container:active {
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
+}
+
+.latest-image:hover {
+  background-size: 110%;
+}
+
+/* Artikel Stile */
+.article-author {
+  font-size: 12px;
+  color: var(--dark-gray);
+  padding-bottom: var(--space-lg);
+}
+
+.article-link {
+  display: inline-block;
+  font-size: 24px;
+  margin-top: var(--space-sm);
+  padding-bottom: 1px;
+  position: relative;
+  cursor: pointer;
+  color: var(--dark-color);
+  text-decoration: none;
+  margin-bottom: var(--space-md);
+}
+
+.article-title {   
+  background-image: linear-gradient(transparent calc(90% - 6px), var(--primary-color) 6px);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size .25s;
+}
+
+.article-link:hover .article-title {
+  background-size: 100% 100%;
+}
+
+.latest-content-bottom-container {
+  border-top: 1px solid var(--dark-color);
+}
+
+.latest-content-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-top: var(--space-xs);
+  gap: var(--space-lg);
+}
+
+/* Most Read Section */
+.article-author-2 {
+  font-size: 12px;
+  margin-top: var(--space-sm);
+  color: var(--dark-gray);
+}
+
+.article-link-2 {
+  display: inline-block;
+  font-size: 20px;
+  position: relative;
+  cursor: pointer;
+  color: var(--dark-color);
+  text-decoration: none;
+}
+
+.article-title-2 {   
+  background-image: linear-gradient(transparent calc(90% - 6px), var(--primary-color) 6px);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size .25s;
+}
+
+.article-link-2:hover .article-title-2 {
+  background-size: 100% 100%;
+}
+
+.most-read-content {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.most-read-row {
+  padding-bottom: 20px;
+}
+
+.most-read-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--button-height);
+  background-color: var(--primary-color);
+  margin: 0;
+}
+
+.most-read-card {
+  background-color: var(--light-gray);
+}
+
+.most-read-number {
+  font-size: 70px;
+  margin-left: 10%;
+  margin-right: var(--space-sm);
+  padding-bottom: 46px;
+}
+
+.most-read-info {    
+  margin-right: 10%;
+}
+
+.most-read-content {
+  display: flex;
+  align-items: center;
+}
+
+/* Topics Section */
+.topics-container {
+  width: 50%;
+  margin-top: var(--space-lg);
+  border-top: 3px solid var(--dark-color);
+  border-bottom: 3px solid var(--dark-color);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+.topics {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  row-gap: var(--space-md);
+}
+
+.topic, .topic-1, .topic-2, .topic-3, .topic-4, .topic-5 {
+  position: relative;
+  font-size: 16px;
+  font-family: gotham;
+  cursor: pointer;
+  color: var(--dark-color);
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.topic::after, .topic-1::after, .topic-2::after, .topic-3::after,
+.topic-4::after, .topic-5::after {
+  content: "";
+  position: absolute;
+  background-color: var(--primary-color);
+  height: 4px;
+  width: 0%;
+  left: 0;
+  z-index: -1;
+  bottom: 2px;
+  transition: .25s;
+}
+
+.topic:hover::after, .topic-1:hover::after, .topic-2:hover::after,
+.topic-3:hover::after, .topic-4:hover::after, .topic-5:hover::after {
+  width: 100%;
+}
+
+/* Search Bar */
+.search-container {
+  display: flex;
+  width: 50%;
+}
+
+.search-bar {
+  flex-grow: 1;
+  height: 40px;
+  padding: 0 var(--space-md);
+  font-size: 16px;
+  border: none;
+  outline: none;
+}
+
+.search-bar:focus {
+  border-color: var(--primary-color);
+}
+
+.search-button {
+  width: 64px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  background-color: var(--primary-color);
+}
+
+/* Media Queries */
+@media all and (max-width: 800px) {
+  .row-grid {
+    padding-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--space-xxl);
+  }
+  
+  .newsletter-button {
+    border: none;
+    color: var(--dark-color);
+    font-size: 16px;
+    margin-top: var(--space-md);
+    background-color: var(--primary-color);
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+    width: 400px;
+    transition: 0.25s;
+  }
+  
+  .bottom-content {
+    display: block; 
+  }
+  
+  .bottom-content-right {
+    margin-top: var(--space-3xl);
+  }
+}
+    </style>
+</head>
+<body>
+    <%= render "home/navbar" %>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 96px 0; width: 100%; background-color: rgb(230, 228, 228); border-bottom: 1px solid rgb(201, 201, 201);">
+    <div style="font-size: 70px; width: 100%; text-align: center; margin-bottom: 16px;">
+        <p>Learn Something New</p>
+    </div>
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Search...">
+        <button class="search-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.3-4.3"/>
+            </svg>
+        </button>
+    </div>
+    <div class="topics-container">
+        <div class="topics">
+            <a href="https://www.example.com" class="topic">MACHINELEARNING</a>
+            <a href="https://www.example.com" class="topic">PROGRAMMING</a>
+            <a href="https://www.example.com" class="topic">MATH</a>
+            <a href="https://www.example.com" class="topic">DATA-MANAGEMENT</a>
+            <a href="https://www.example.com" class="topic">ELECTRICAL ENGENEERING</a>
+            <a href="https://www.example.com" class="topic">PHYSICS</a>
+            <a href="https://www.example.com" class="topic">SELFIMPROVEMENT</a>
+            <a href="https://www.example.com" class="topic">HARDWARE</a>
+        </div>
+    </div>
+</div>
+
+        
+    <div class="main">
+  <div class="latest-button-container" style="margin-top: 24px;" onclick="window.location.href='<%= new_course_path %>'">
+    <p class="latest-button">UPLOAD NOTE</p>
+    <div class="arrow-container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+      </svg>                
+    </div>
+  </div>
+            
+  <div class="bottom-content">
+    <div class="bottom-content-left">
+      <div class="latest-content">
+        <div class="best-rated-button-container">
+          <p class="best-rated-button">TRENDING</p>
+        </div>
+        <% 
+          # Fetch courses with most likes in the last month
+          trending_courses = Course.joins(:ratings)
+                            .where(ratings: { rating_type: 'like', created_at: 1.month.ago..Time.now })
+                            .group(:id)
+                            .order(Arel.sql('COUNT(ratings.id) DESC'))
+                            .limit(3)
+          
+          if trending_courses.any?
+            featured_course = trending_courses.first 
+        %>
+        <div class="latest-card">
+          <div class="latest-image-container">
+            <%= image_tag featured_course.image, class: "quandale-image-1" if featured_course.image.attached? %>
+          </div>
+          <a href="<%= course_path(featured_course) %>" class="article-link">
+            <span class="article-title"><%= featured_course.title %></span>
+          </a>
+          <p class="article-author"><span><span class="by">BY </span><%= featured_course.user.email.upcase %></span></p>
+        </div>
+      </div>
+                
+      <div class="latest-content-bottom-container">
+        <div class="latest-content-bottom">
+          <% trending_courses[1..2].each do |course| %>
+            <div class="latest-card">
+              <div class="latest-image-container">
+                <%= image_tag course.image, class: "quandale-image-1" if course.image.attached? %>
+              </div>
+              <a href="<%= course_path(course) %>" class="article-link">
+                <span class="article-title"><%= course.title %></span>
+              </a>
+              <p class="article-author"><span><span class="by">BY </span><%= course.user.email.upcase %></span></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <% else %>
+        <div class="latest-card">
+          <div class="latest-image-container">
+            <img src="/assets/placeholder.jpg" class="quandale-image-1">
+          </div>
+          <span class="article-title">No trending courses available</span>
+          <p class="article-author"><span><span class="by">BY </span>SYSTEM</span></p>
+        </div>
+      </div>
+      
+      <div class="latest-content-bottom-container">
+        <div class="latest-content-bottom">
+          <div class="latest-card">
+            <div class="latest-image-container">
+              <img src="/assets/placeholder.jpg" class="quandale-image-1">
+            </div>
+            <span class="article-title">No trending courses available</span>
+            <p class="article-author"><span><span class="by">BY </span>SYSTEM</span></p>
+          </div>
+          
+          <div class="latest-card">
+            <div class="latest-image-container">
+              <img src="/assets/placeholder.jpg" class="quandale-image-1">
+            </div>
+            <span class="article-title">No trending courses available</span>
+            <p class="article-author"><span><span class="by">BY </span>SYSTEM</span></p>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div>
+
+    <div class="bottom-content-right">
+      <div class="most-read-card">
+        <p class="most-read-heading">MOST READ</p>
+                    
+        <div class="most-read-content-container">
+          <% 
+            # Fetch courses with most views using a subquery to count views
+            most_read_courses = Course.joins(:course_views)
+                              .group(:id)
+                              .order(Arel.sql('COUNT(course_views.id) DESC'))
+                              .limit(5)
+            
+            if most_read_courses.any?
+              most_read_courses.each_with_index do |course, index|
+          %>
+          <div class="most-read-content">
+            <div class="most-read-number">
+              <p><%= index + 1 %></p>
+            </div>
+                            
+            <div class="most-read-row">
+              <div class="most-read-info">
+                <a href="<%= course_path(course) %>" class="article-link-2">
+                  <span class="article-title-2"><%= course.title %></span>
+                </a>
+              </div>
+              <p class="article-author-2"><span><span class="by">BY </span><%= course.user.email.upcase %></span></p>
+            </div>
+          </div>
+          <% end %>
+          <% else %>
+            <div class="most-read-content">
+              <div class="most-read-number">
+                <p><%= 1 %></p>
+              </div>
+              <div class="most-read-row">
+                <div class="most-read-info">
+                  <span class="article-title-2">No courses available</span>
+                </div>
+                <p class="article-author-2"><span><span class="by">BY </span>SYSTEM</span></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <% 
+    best_rated_courses = Course.joins(:ratings)
+                               .group(:id)
+                               .having(Arel.sql('COUNT(ratings.id) > 50'))
+                               .select('courses.*, 
+                                        COUNT(CASE WHEN ratings.rating_type = \'like\' THEN 1 ELSE NULL END) as likes, 
+                                        COUNT(CASE WHEN ratings.rating_type = \'dislike\' THEN 1 ELSE NULL END) as dislikes')
+                               .order(Arel.sql('(likes + 0.0) / NULLIF(dislikes, 0) DESC'))
+                               .limit(6)
+  %>
+  <% if best_rated_courses.any? %>
+  <div class="best-rated-content-container">
+    <div class="best-rated-button-container">
+      <p class="best-rated-button">BEST RATED</p>
+    </div>
+
+    <div class="best-rated-content">
+      <div class="best-rated-content-row1">
+        <div class="row-grid">
+          <% 
+              best_rated_courses.each do |course|
+          %>
+          <div class="best-rated-card">
+            <div class="best-rated-image-container">
+              <%= image_tag course.image, class: "best-rated-image-1" if course.image.attached? %>
+            </div>
+            <a href="<%= course_path(course) %>" class="article-link">
+              <span class="article-title"><%= course.title %></span>
+            </a>
+            <p class="article-author"><span><span class="by">BY </span><%= course.user.email.upcase %></span></p>
+          </div>
+          <% end %>            
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+  </div>
+</div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <p class="newsletter">Get our newsletter</p>
+                
+                <div class="input-newsletter-container">
+                    <input type="email" class="input-newsletter" placeholder="Enter Email Adress...">
+                </div>
+                <button class="newsletter-button">Enter</button>
+            </div>
+
+            <div class="footer-bottom">
+                <a href="1MinCS.COM" class="footer-link">About</a>
+                <a href="1MinCS.COM" class="footer-link">Contanct</a>
+                <a href="1MinCS.COM" class="footer-link">News</a>
+                <a href="1MinCS.COM" class="footer-link">Tools</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright-privacy">
+        <p class="copy-pri">© 2023 1MinuteComputerSciene</p>
+        <p class="copy-pri">Privacy and Cookies</p>
+        <p class="copy-pri">Personal Information</p>
+    </div>
+</body>
+</html>
