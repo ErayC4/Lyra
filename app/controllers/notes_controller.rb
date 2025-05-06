@@ -9,6 +9,7 @@ class NotesController < ApplicationController
 
   # GET /notes/1 or /notes/1.json
   def show
+    @hide_navbar = true
     @ais = current_user.ais
     respond_to do |format|
       format.html # normal HTML response

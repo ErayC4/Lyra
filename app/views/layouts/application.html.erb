@@ -34,9 +34,11 @@
 
   <body>
     <div class="app-layout">
-      <div class="navbar-container">
-        <%= render 'home/navbar' %>
-      </div>
+      <% unless @hide_navbar %>
+        <div class="navbar-container">
+          <%= render 'home/navbar' %>
+        </div>
+      <% end %>
       <%= yield %>
     </div>
   </body>
