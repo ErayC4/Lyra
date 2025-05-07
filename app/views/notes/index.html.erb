@@ -1,12 +1,16 @@
 <style>
-      p{
-        padding: 0;
-        margin: 0;
-        font-size: 16px;
-         
-    }
+  p{
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+  }
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
   .note-item{
     height: 41px;
+    
     padding: 0 16px;
     display: grid;
     align-items: center;
@@ -15,7 +19,6 @@
     transition: 0.3s ease;
     background-color: #EEEEEE;
     border-radius: 8px;
-    border:1px solid  #CBCBCB;
   }
   .note-item:hover{
     background-color: #CBCBCB;
@@ -33,7 +36,7 @@
     margin-top: 32px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
   }
   .new-btn {
       background-color: black;
@@ -41,7 +44,7 @@
       text-decoration: none;
       border-radius: 8px;
       transition: 0.3s ease;
-      padding: 11px 22px;
+      padding: 8.5px 17px;
   }
   .searchbar-container{
     background-color: transparent;
@@ -56,13 +59,16 @@
 
   .search-button{
     background-color: #D9D9D9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-right: 1px solid #B5B5B5;
     border-left: 1px solid #B5B5B5;
     cursor: pointer;
     margin: 0;
-    width: 80px;
-    height: 40px;
+    width: 76px;
+    height: 100%;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     border-top-left-radius: 8px;
@@ -88,7 +94,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: 1px solid #B5B5B5;
     cursor: pointer;
     border-radius: 8px;
@@ -132,14 +138,16 @@
       </div>
       <div class="searchbar-container">
         <button class="search-button">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        </button>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        
+        </button>
         <input placeholder="Search..." class="searchbar">
       </div>
     </div>
   </div>
   <div class="note-item-container">
     <% @notes.each do |note| %>
-      <div class="note-item bookmarkable-item" onclick="handleNoteClick(event, '<%= note_path(note) %>')">
+    <a href="<%= note_path(note) %>">
+      <div class="note-item bookmarkable-item">
         <p><%= note.title %></p>
         <div style="display: flex; gap: 8px; align-items: center;">
           <p><%= format_date(note.updated_at) %></p>
@@ -151,6 +159,7 @@
           <svg onclick="event.stopPropagation();" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
       </div>
+    </a>
     <% end %>
   </div>
 </div>
