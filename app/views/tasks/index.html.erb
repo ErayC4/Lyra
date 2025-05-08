@@ -148,6 +148,20 @@
 <% # Startdatum (Anfang der Woche) festlegen %>
 <% current_date = Date.today %>
 <% current_weekday = (current_date.wday  - 1) % 7 %>
+
+<% # Ermittlung der Baseline (früheste Startzeit) %>
+<% start_hour = 6 # Default-Wert wenn keine Tasks vorhanden sind %>
+<% unless @tasks.empty? %>
+  <% earliest_time = nil %>
+  <% @tasks.each do |task| %>
+    <% task_time = task.starting_time.split(':')[0].to_i %>
+    <% earliest_time = task_time if earliest_time.nil? || task_time < earliest_time %>
+  <% end %>
+  <% start_hour = earliest_time unless earliest_time.nil? %>
+<% end %>
+
+<% # Wir stellen alle 24 Stunden dar, beginnend mit start_hour %>
+
 <div class="main">
   <div class="buttons-container">
     <%= link_to 'Create New Note', new_task_path, class: 'new-btn' %>
@@ -157,19 +171,21 @@
     <div class="timeline">
       <div class="timeline-hours-container">
         <div class="timeline-hours">
-      <% (0..23).each do |hour| %>
-        <div class="timeline-item">
-          <%= hour %>:00
+        <% (0..23).each do |i| %>
+          <% hour = (start_hour + i) % 24 %>
+          <div class="timeline-item">
+            <%= hour %>:00
+          </div>
+        <% end %>
         </div>
-      <% end %>
-      </div>
       </div>
       
-
       <div class="lines-container">
-        <% (0..47).each do |halfhour|%>
-          <div class="small-line" style="width:<%= halfhour % 2 == 0 ? 100: 50 %>%; margin-left:<%= halfhour % 2 == 0 ? 0: 8 %>px"></div>
-        <% end%>
+        <% (0..23).each do |i| %>
+          <% [0, 30].each do |minute| %>
+            <div class="small-line" style="width:<%= minute == 0 ? 100 : 50 %>%; margin-left:<%= minute == 0 ? 0 : 8 %>px"></div>
+          <% end %>
+        <% end %>
       </div>
     </div>
     <div style="flex-grow: 1">
@@ -195,35 +211,47 @@
     <div class="grid-container">
       <%# Grid Items für das Hintergrundgitter %>
       <% (0..6).each do |day| %>
-        <% (0..23).each do |hour| %>
+        <% (0..23).each do |i| %>
+          <% hour = (start_hour + i) % 24 %>
           <div class="grid-item"></div>
         <% end %>
       <% end %>
 
     <% @tasks.each do |task| %>
       <% 
-        repeat_on_day = task.repeat_on_day # Sicherstellen, dass es ein Array ist
-        starting_time =  task.starting_time # Sicherstellen, dass es ein Array ist
-        ending_time = task.ending_time    # Sicherstellen, dass es ein Array ist
+        repeat_on_day = task.repeat_on_day
+        starting_time = task.starting_time
+        ending_time = task.ending_time
         day_offset = task.repeat_on_day
         column_width = (100.0 / 7)
       
         starting_time_parts = starting_time.split(':')
-        starting_time_in_minutes = starting_time_parts[0].to_i * 60 + starting_time_parts[1].to_i
+        starting_hour = starting_time_parts[0].to_i
+        starting_minute = starting_time_parts[1].to_i
+        
+        # Berechnung der Position basierend auf start_hour als Baseline
+        hour_offset = (starting_hour - start_hour + 24) % 24
+        position_in_minutes = hour_offset * 60 + starting_minute
 
         ending_time_parts = ending_time.split(':')
-        ending_time_in_minutes = ending_time_parts[0].to_i * 60 + ending_time_parts[1].to_i
-
-        height = (ending_time_in_minutes - starting_time_in_minutes)
+        ending_hour = ending_time_parts[0].to_i
+        ending_minute = ending_time_parts[1].to_i
+        
+        task_duration_minutes = (ending_hour * 60 + ending_minute) - (starting_hour * 60 + starting_minute)
+        # Wenn die Endzeit am nächsten Tag liegt (Negative Dauer bedeutet Übergang über Mitternacht)
+        if task_duration_minutes < 0
+          task_duration_minutes += 24 * 60
+        end
+        
         left = day_offset.to_i * column_width
       %>
           <a href="/tasks/<%= task.id %>" style="text-decoration: none; color: inherit;">
-            <div class="task-container" style="width: <%= column_width %>%; left: <%= left %>%; top: <%= starting_time_in_minutes %>px; position: absolute; display: flex; justify-content: center;">
+            <div class="task-container" style="width: <%= column_width %>%; left: <%= left %>%; top: <%= position_in_minutes %>px; position: absolute; display: flex; justify-content: center;">
               <div 
                 class="task"
                 style="
                       width: 90%; 
-                      height: <%= height %>px;
+                      height: <%= task_duration_minutes %>px;
                       ">
                       
                 <p class="task-title"><%= task.title %></p>
