@@ -13,19 +13,6 @@
     padding-bottom: 256px;
     margin-left: 64px;
   }
-  .front-page{
-    background-image: url("/landscape4.jpg");
-    background-size: 125%;
-    background-position: 18% 0%;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 33vh;
-    border-radius: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
   .text-2xl{
     font-size: 4rem;
   }
@@ -42,58 +29,78 @@
   .text-sm{
     font-size: 1.05rem;
   }
-  .front-page-container{
-    margin: 0 16px;
+  .navigator-container{
+    display: flex;
+    justify-content: center;
   }
   .searchbar-container{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
     width: 100%;
+  }
+  .searchbar{
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    border-left: none;
+    border-radius: 16px;
+    width: 50%;
+  }
+
+  .search-button{
+    background: rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 16px;
-  }
-  .searchbar{
-    height: 40px;
-    padding: 0;
-    width: 33%;
-    background: rgba(255, 255, 255, 0.1);
     border: none;
+    cursor: pointer;
+    margin: 0;
+    height: 100%;
+    padding: 0 16px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
     border-top-left-radius: 16px;
     border-bottom-left-radius: 16px;
   }
-  .search-button{
-    height: 40px;
-    width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
+  .searchbar-input-field{
+    border: none;
+    border-radius: 16px;
+    width: 100%;
+    background-color: transparent;
   }
+  .searchbar-input-field:focus{
+    border: none;
+    outline: none;
+  }
+
   .navigator{
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 16px;
     display: flex;
     align-items: center;
-    margin-top: 64px;
   }
   .navigator-item-container, .navigator-item-container-active{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 64px;
-    width: 128px;
+    padding: 10px 20px;
     border-radius: 16px;
     cursor: pointer;
   }
   .navigator-item-container-active{
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .navigator-item-container:hover{
+    background: rgba(0, 0, 0, 0.05);
   }
   .navigator-item{
     cursor: pointer;
     font-size: 1.15rem;
-    color: white;
+    color: black;
   }
   .content-container{
     margin-left: 64px;
@@ -165,27 +172,22 @@
     align-items: center;
     background-color:rgb(46, 46, 46);
   }
-  .continue-container{
-    margin-top: 32px;
-  }
+
 
   .mostread-container{
     margin-top: 32px;
   }
 </style>
 <div class="main">
-  <div class="front-page-container">
-    <div class="front-page">
-      <p class="text-2xl" style="color: white">Discover Something New</p>
-      <div class="searchbar-container">
-        <input class="searchbar" />
-        <div class="search-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
-            <path d="m21 21-4.34-4.34" />
-            <circle cx="11" cy="11" r="8" />
-          </svg>
-        </div>
+    <div class="searchbar-container">
+      <div class="searchbar">
+        <button class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        
+        </button>
+        <input placeholder="Search..." class="searchbar-input-field">
       </div>
+    </div>
+    <div class="navigator-container">
       <div class="navigator">
         <div class="navigator-item-container-active">
           <p class="navigator-item">Home</p>
@@ -202,10 +204,8 @@
         <div class="navigator-item-container">
           <p class="navigator-item">Search</p>
         </div>
-
       </div>
     </div>
-  </div>
   <div class="content-container">
     <div class="top-container">
       <div class="trending-container">
@@ -218,43 +218,22 @@
                             .limit(5)
           if trending_courses.any?
         %>
-        <p class="text-xl">Trending</p>
+        <p class="text-md">Trending</p>
         <% if trending_courses.present? %>
-          <% first_row = trending_courses[0..1] %>
-          <% remaining_courses = trending_courses[2..-1] %>
-          
-          <% if first_row.present? %> 
-            <div class="row-2-cols">
-              <% first_row.each do |course| %>
-                <%= render "coursecard", course: course %>
-              <% end %>
-            </div>
-          <% end %>
-          
-          <% if remaining_courses.present? %>
-            <div class="row-<%= [remaining_courses.size, 3].min %>-cols">
-              <% remaining_courses.each do |course| %>
-                <%= render "coursecard", course: course %>
-              <% end %>
-            </div>
-          <% end %>
+          <div class="row-3-cols">
+            <% trending_courses.each do |course|%>
+              <%= render "coursecard", course: course %>
+            <% end %>
+          </div>
         <% end %>
         <% else %>
           <p>No trending courses availiable</p>
         <% end %>
       </div>
       <div class="right-side">
-        <button class="upload-button" onclick="window.location.href='<%= new_course_path %>'">
-          <div class="inner-button">
-            <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 2px;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
-            </svg>
-          </div>
-          <p class="button-text">Upload Note</p>
-        </button>
+        
         <div class="continue-container">
-          <p class="text-xl" style="margin-bottom: 8px;">Continue Reading</p>
+          <p class="text-md" style="margin-bottom: 8px;">Continue Reading</p>
           <%#= render "coursecard"%>
         </div>
       </div>
@@ -269,7 +248,7 @@
           
           if most_read_courses.any?
         %>
-        <p class="text-xl">Most Read</p>
+        <p class="text-md">Most Read</p>
         <div class="row-4-cols">
           <% most_read_courses.each do |course| %>
             <%= render "coursecard", course: course%>
