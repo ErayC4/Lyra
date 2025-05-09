@@ -13,6 +13,20 @@
     padding-bottom: 256px;
     margin-left: 64px;
   }
+  .new-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    gap: 10.5px;
+    transition: 0.3s ease;
+    padding: 10.5px 22px;
+  }
+  .new-btn-container{
+    
+  }
   .text-2xl{
     font-size: 4rem;
   }
@@ -37,17 +51,17 @@
     display: flex;
     justify-content: center;
     margin-bottom: 16px;
-    width: 100%;
+    width: 33%;
   }
   .searchbar{
     background: rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 38px;
+    height: 40px;
     border-left: none;
-    border-radius: 16px;
-    width: 50%;
+    border-radius: 8px;
+    width: 100%;
   }
 
   .search-button{
@@ -60,14 +74,14 @@
     margin: 0;
     height: 100%;
     padding: 0 16px;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
   }
   .searchbar-input-field{
     border: none;
-    border-radius: 16px;
+    border-radius: 8px;
     width: 100%;
     background-color: transparent;
   }
@@ -78,16 +92,17 @@
 
   .navigator{
     background: rgba(0, 0, 0, 0.05);
-    border-radius: 16px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
+    height: 40px;
   }
   .navigator-item-container, .navigator-item-container-active{
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    border-radius: 16px;
+    border-radius: 8px;
     cursor: pointer;
   }
   .navigator-item-container-active{
@@ -106,14 +121,9 @@
     margin-left: 64px;
     margin-right: 64px;
   }
-  .top-container{
-    
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    gap: 64px;
-  }
+
   .trending-container{
-    margin-top: 32px;
+    margin-top: 64px;
   }
   .row-1-cols{
     margin-top: 16px;
@@ -177,37 +187,35 @@
   .mostread-container{
     margin-top: 32px;
   }
+  .placeholer-container{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 64px;
+  }
 </style>
+
+
 <div class="main">
-    <div class="searchbar-container">
-      <div class="searchbar">
-        <button class="search-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        
-        </button>
-        <input placeholder="Search..." class="searchbar-input-field">
-      </div>
-    </div>
-    <div class="navigator-container">
-      <div class="navigator">
-        <div class="navigator-item-container-active">
-          <p class="navigator-item">Home</p>
-        </div>
-        <div class="navigator-item-container">
-          <p class="navigator-item">Following</p>
-        </div>
-        <div class="navigator-item-container">
-          <p class="navigator-item">Saved</p>
-        </div>
-        <div class="navigator-item-container">
-          <p class="navigator-item">History</p>
-        </div>
-        <div class="navigator-item-container">
-          <p class="navigator-item">Search</p>
+    <div class="placeholer-container">
+      <div class="new-btn-container"><%= link_to new_course_path, class: 'new-btn' do %>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5v14"></path>
+    <path d="M5 12h14"></path>
+  </svg>
+  <span>Upload Course</span>
+<% end %></div>
+      <div class="searchbar-container">
+        <div class="searchbar">
+          <button class="search-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        
+          </button>
+          <input placeholder="Search..." class="searchbar-input-field">
         </div>
       </div>
     </div>
+
   <div class="content-container">
-    <div class="top-container">
+    
       <div class="trending-container">
         <% 
           # Fetch courses with most likes in the last month
@@ -215,12 +223,12 @@
                             .where(ratings: { rating_type: 'like', created_at: 1.month.ago..Time.now })
                             .group(:id)
                             .order(Arel.sql('COUNT(ratings.id) DESC'))
-                            .limit(5)
+                            .limit(8)
           if trending_courses.any?
         %>
         <p class="text-md">Trending</p>
         <% if trending_courses.present? %>
-          <div class="row-3-cols">
+          <div class="row-4-cols">
             <% trending_courses.each do |course|%>
               <%= render "coursecard", course: course %>
             <% end %>
@@ -230,15 +238,7 @@
           <p>No trending courses availiable</p>
         <% end %>
       </div>
-      <div class="right-side">
-        
-        <div class="continue-container">
-          <p class="text-md" style="margin-bottom: 8px;">Continue Reading</p>
-          <%#= render "coursecard"%>
-        </div>
-      </div>
-    </div>
-    <div class="mostread-container">
+  <div class="mostread-container">
         <% 
             # Fetch courses with most views using a subquery to count views
           most_read_courses = Course.joins(:course_views)

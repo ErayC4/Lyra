@@ -39,12 +39,15 @@
     gap: 8px;
   }
   .new-btn {
-      background-color: black;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: 0.3s ease;
-      padding: 8.5px 17px;
+    display: inline-flex;
+    align-items: center;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    gap: 10.5px;
+    transition: 0.3s ease;
+    padding: 10.5px 22px;
   }
   .searchbar-container{
     background-color: transparent;
@@ -130,7 +133,13 @@
 <div class="main">
 <div id="notes" class="notes-container">
   <div class="notes-buttons">
-    <%= link_to 'Create New Note', new_note_path, class: 'new-btn' %>
+    <%= link_to new_note_path, class: 'new-btn' do %>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14"></path>
+        <path d="M5 12h14"></path>
+      </svg>
+      <span>Create Note</span>
+    <% end %>
     <div style="display: flex; gap: 8px;">
       <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
         
