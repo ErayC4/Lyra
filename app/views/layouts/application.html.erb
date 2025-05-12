@@ -16,7 +16,9 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
+  	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -26,6 +28,7 @@
       body {
         margin: 0;
         padding: 0;
+        font-family: "Geist", sans-serif;
       }
       
       .navbar-container{
@@ -38,7 +41,7 @@
     <div class="app-layout">
       <% unless @hide_navbar %>
         <div class="navbar-container">
-          <%= render 'home/navbar' %>
+          <%= render 'home/sidebar' %>
         </div>
       <% end %>
       <%= yield %>
