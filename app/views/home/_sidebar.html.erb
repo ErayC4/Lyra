@@ -196,10 +196,17 @@ document.addEventListener('DOMContentLoaded', function() {
   sidebarCloseButton.addEventListener('click', function() {
     // Toggle minimized state
     sidebar.classList.toggle('minimized');
+    
     if (sidebar && sidebar.classList.contains('minimized')) {
     // Wenn die Sidebar minimiert ist
         document.querySelectorAll(".button-text").forEach(element => {
             element.style.display = 'none';
+        });
+        document.querySelectorAll('.expanded-sidebar-items.open').forEach(item => {
+            item.classList.remove('open');
+        });
+        document.querySelectorAll('.sidebar-expand-button svg').forEach(svg => {
+            svg.style.transform = 'rotate(0deg)';
         });
         document.querySelectorAll(".sidebar-expand-button").forEach(element => {
             element.style.display = 'none';
