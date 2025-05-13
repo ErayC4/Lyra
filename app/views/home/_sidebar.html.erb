@@ -133,6 +133,7 @@
 
     .profile-container{
         display: flex;
+        align-items: center;
         padding: 8px; 
         gap: 8px;
         border-radius: 8px;
@@ -157,7 +158,8 @@
         overflow: hidden;
         transition: width 0.3s ease-out, opacity 0.3s ease-out;
     }
-    .sidebar-top{
+    .profile-container{
+        transition: margin 0.2s ease-out, opacity 0.3s ease-out;
     }
 </style>
 <script>
@@ -203,7 +205,10 @@ document.addEventListener('DOMContentLoaded', function() {
             element.style.display = 'none';
         });
         document.querySelector(".logo-container").style.display = 'none';
-        document.querySelector(".profile-container").style.marginLeft = '0';
+        document.querySelector(".profile-container").style.margin = '0';
+        document.querySelector(".profile-container").style.marginBottom = '9px';
+        document.querySelector(".profile-container").style.marginTop = '8px';
+        document.querySelector(".profile-container").style.padding = '8px;';
         document.querySelector(".profile-information").style.display = 'none';
     } else {
         // Wenn die Sidebar nicht minimiert ist
@@ -215,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         document.querySelector(".logo-container").style.display = '';
         document.querySelector(".profile-information").style.display = '';
-        document.querySelector(".profile-container").style.marginLeft = '8px';
+        document.querySelector(".profile-container").style.margin = '8px';
     }
     
 
@@ -330,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <img src="https://ui.shadcn.com/avatars/shadcn.jpg" class="profile-picture">
             <div class="profile-information">
                 <p style="font-size: 14px; font-weight: bold;">Shitting Mypants</p>
-                <p style="font-size: 14px; ">shittmypants@socks.com</p>
+                <p style="font-size: 12px; ">shittmypants@socks.com</p>
             </div>
         </div>
     </div>
