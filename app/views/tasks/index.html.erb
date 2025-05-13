@@ -7,7 +7,6 @@
   .main{
     margin-left: 64px;
     padding: 32px 64px;
-    background-color: #E4E4E6;
   }
   .buttons-container{
     margin-bottom: 32px;
@@ -19,20 +18,20 @@
     color: white;
     text-decoration: none;
     border-radius: 8px;
+    gap: 7px;
     transition: 0.3s ease;
-    padding: 10.5px 22px;
-    gap: 10.5px;
+    padding: 7px 14px;
+    user-select: none;
   }
-  .new-btn:hover {
-      transform: translateY(-1px);
-  }
+
   .calender-container{
     display: flex;
   }
    .timeline {
       display: flex;
       gap: 4px;
-      margin-top: 94px;
+      margin-top: 93px;
+      font-size: 14px;
     }
 
     .timeline-hours-container {
@@ -200,7 +199,7 @@
       <% (0..6).each do |day| %>
         <div class="weekday-item">
           <% target_date = current_date + (day - current_weekday) %>
-          <p style="font-weight: <%= current_weekday == day ? "bold" : "normal" %>"><%= (target_date).strftime("%a") %><p>
+          <p style="font-weight: <%= current_weekday == day ? "bold" : "normal" %>; font-size: 14px;"><%= (target_date).strftime("%a") %><p>
           <% if current_weekday == day %>
           <div class="day-active">
             <%= target_date.day %>
