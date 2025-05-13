@@ -18,6 +18,7 @@ function initializeBookmarkIcons() {
   
   // Modified toggleBookmark function to update the filter on bookmark change
   function toggleBookmark(event, itemId, tableName) {
+    event.preventDefault();
     event.stopPropagation();
     const bookmarkIcon = event.currentTarget;
     
