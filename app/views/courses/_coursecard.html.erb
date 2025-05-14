@@ -3,85 +3,154 @@
     color: inherit;
     text-decoration: none;
   }
-.course-card{
-    display: flex;
-    background-color: #EEEEEE;
-    border-radius: 8px;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-  }
-  .course-card:hover {
-  transform: translateY(-4px);
-  }
-  .course-title {   
-    width: 100%;
-    background-image: linear-gradient(transparent calc(90% - 6px),rgb(255, 255, 81) 6px);
-    background-repeat: no-repeat;
-    background-size: 0% 100%;
-    transition: background-size .25s;
-    font-weight: bold;
-  }
+    .card {
+      width: 100%;
+      border-radius: 0.5rem;
+      border: 1px solid #e2e8f0;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      
+    }
+    .card-information{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px 16px;
+      padding-bottom: 16px;
+    }
+    .dark .card {
+      background-color: #020617;
+      border-color: #1e293b;
+    }
+    
+    /* Thumbnail */
+    .thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: #f1f5f9;
+      overflow: hidden;
+    }
+    
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Titel-Bereich */
+    .title-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .dark .title h2 {
+      color: #f8fafc;
+    }
+    
+    /* Autor-Bereich */
+    .author-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .avatar {
+      height: 2rem;
+      width: 2rem;
+      border-radius: 9999px;
+      overflow: hidden;
+      background-color: #f1f5f9;
+    }
+    
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .author-name {
+      font-size: 0.875rem;
+      color:rgb(51, 51, 51);
+    }
+    
+    .dark .author-name {
+      color: #f8fafc;
+    }
+    
+    .views {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
 
-  .course-card:hover .course-title {
-    background-size: 100% 100%;
-  }
-  .course-image{
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    object-position: center;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-  .course-information{
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .course-actions{
-    display: flex;
-    gap: 8px;
-  }
-.course-card .course-actions {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.course-card:hover .course-actions {
-  opacity: 1;
-}
-
-.course-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.course-actions svg {
-  cursor: pointer;
-}
-
-.course-actions svg:hover {
-  color: #0F9864;
-}
+    /* Stats-Bereich */
+    .stats {
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .dark .stats {
+      border-color: #1e293b;
+    }
+    
+    .stats-left {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .stats-actions{
+    }
+    
+    .stats-text {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
 
 </style>
 <a href="<%= course_path(course) %>">
-  <div class="course-card">
-      <%= image_tag course.image, class: "course-image" if course.image.attached? %>
-      <div class="course-information">
-        <div>
-            <span class="course-title"><%= course.title %></span>
-            <p style="margin-top: 4px; font-size: 0.875rem"><%= course.user.email %></p>
-            <p style="margin-top: 2px; font-size: 0.875rem"><%= course.course_views.count %> Views</p>
+  <article class="card">
+    <!-- Thumbnail -->
+    <div class="thumbnail">
+      <%= image_tag course.image if course.image.attached? %>
+    </div>
+    <div class="card-information">
+    <!-- Titel -->
+    <div class="title-container">
+      <p style="font-size: 20px; font-weight: 500"><%= course.title%></p>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+    </div>
+    
+    <!-- Autor und Views -->
+    <div class="author-section">
+      <div class="author">
+        <div class="avatar">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI-SaYWlXmVicHWYEEpRgrmFir507tWQk3pA&s" alt="Profilbild">
         </div>
-        <div class="course-actions">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-              <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-          </svg>
+        <div class="author-name" style=" display:flex; flex-direction: column;">
+          <p><%= course.user.email %></p>
+          <p>Sr.Developer</p>
         </div>
       </div>
-  </div>
+    </div>
+    <div class="views">
+      <p><%= course.course_views.count %>8.978 Views • <%= format_date(course.created_at) %></p>
+      <div class="stats-left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up-icon lucide-thumbs-up"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+        <span class="stats-text">98% fanden das hilfreich</span>
+      </div>
+    </div>
+    </div>
+  </article>
 </a>
