@@ -1,244 +1,119 @@
 <style>
-  :root {
-    /* Farbvariablen */
-    --primary-color: #00ff99;
-    --dark-color: #000000;
-    --white-color: #ffffff;
-    --light-gray: #e6e4e4;
-    --medium-gray: #c9c9c9;
-    --dark-gray: #444343;
-    --footer-bg: rgb(32, 31, 36);
-    --footer-copyright-bg: rgb(19, 19, 19);
-    
-    /* Abstands-System */
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-    --space-xxl: 48px;
-    --space-3xl: 64px;
-    
-    /* Größen-System */
-    --button-height: 48px;
-    --card-border: 4px;
-    --image-border: 12px;
-
-    /* Font Größen*/
-    --font-sm: 1rem;
-    --font-md: 1.5rem;
-    --font-xl: 2rem;
+  .main{
+    padding: 24px 48px;
+    padding-left: 96px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
   }
-
-  * {
-    box-sizing: border-box;
+  p{
     margin: 0;
     padding: 0;
   }
-
-  .main {
-    padding: 0 10%;
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    gap: 64px;
-    margin-top: 64px;
+  .regular{
+    font-size: 14px;
   }
-  .cover {
+  .card{
     width: 100%;
-    height: 600px;
-    transition: .25s;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid rgb(228, 228, 231);
+  }
+  .thumbnail{
+    width: 100%;
+    height: 384px;
     object-fit: cover;
-    object-position: center;
+    border-radius: 16px;
   }
   .title{
-    font-size: var(--font-xl);
-    margin-bottom: 8px;
-   
-  }
-  .information{
-    font-size: var(--font-sm);
-    font-weight: bold;
-  }
-  .course-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 3px solid black;
+    font-size: 20px;
     margin-top: 8px;
-    padding-bottom: 16px;
   }
-  .social-actions{
+  .views{
+    
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .course-actions{
     display: flex;
-    gap: 32px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
   }
-  
-  .profile-picture{
-    width: 40px;
-    height: 40px;
+  .share-bookmark-container{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .regular-button{
+    display: inline-flex;
+    align-items: center;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    gap: 7px;
+    padding: 6px 14px;
+    border: 1px solid rgb(228, 228, 231);
+    white-space: nowrap; 
+    user-select: none;
+  }
+  .regular-button:hover{
+    background-color:rgb(244, 244, 245);
+  }
+  .course-author-container{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .author-picture{
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
     object-fit: cover;
-    object-position: center;
-    border-radius: 999px;
   }
-  .heading{
-    font-size: var(--font-md)
+  .author-information{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-
-  .latest-button-container {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  height: var(--button-height);
-  cursor: pointer;
-}
-
-.latest-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--primary-color);
-  color: var(--dark-color);
-  text-decoration: none;
-  border: none;
-  width: 100%;
-  height: 100%;
-  transition: .3s;
-}
-
-.arrow {
-  width: 20px;
-  height: 20px;
-  fill: var(--white-color);
-}
-
-.arrow-container {
-  background-color: var(--dark-color);
-  width: 30px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.3s ease;
-
-}
-
-.latest-button-container:hover .latest-button {
-  background-color: var(--dark-color);
-  color: var(--white-color);
-}
-
-.latest-button-container:hover .arrow {
-  fill: var(--dark-color);
-  stroke: var(--dark-color);
-}
-
-.latest-button-container:hover .arrow-container {
-  background-color: var(--primary-color);
-}
-
-.latest-button-container:active {
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
-}
-.table-of-contents-container{
-}
-.table-of-contents-item{
-  padding: 8px;
-  border-top: 1px solid #c9c9c9;
-}
 </style>
-
-<div id="<%= dom_id course %>">
-  <div class="main">
-    <div>
-    <%= image_tag @course.image, class: "cover" if @course.image.attached? %>
-    <div class="course-header">
-      <div>
-        <p class="title"><%= course.title %></p>
-        <div style="display: flex; gap: 8px;">
-          <p class="information"><%= course.created_at.strftime("%d.%m.%Y") %></p>
-          <p class="information"><%= @course.course_views.count %> Views</p>
-
+<div class="main">
+  <div class="course-main-informations">
+    <div class="card">
+      <%= image_tag course.image, class: "thumbnail" if course.image.attached? %>
+      
+      <div class="views">
+        <p class="title"><%= course.title%></p><p class="regular"><%= course.course_views.count %>8.978 Views - <%= format_date(course.created_at) %></p>
+      </div>
+      <div class="course-actions">
+        <div class="course-author-container">
+          <img src="https://ui.shadcn.com/avatars/shadcn.jpg" class="author-picture">
+          <div class="author-informaion">
+            <p class="regular"><%= course.user.email %></p>
+            <p class="regular">Sr.Developer</p>
+          </div>
         </div>
-      </div>
-      <div class="social-actions">
-
-        <%= render partial: "courses/ratings", locals: { course: @course } %>
-        <div style="display: flex; gap: 8px; align-items: center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-          <p>Share</p>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top: 32px;">
-      <p class="heading" style="margin-bottom: 4px;">Description </p>
-      <div><%= course.description %></div>
-    </div>
-    <div style="margin-top: 32px;">
-      <p class="heading" style="margin-bottom: 4px;">Comments </p>
-      <div>
-        <img class="profile-picture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png">
-        <p>UserName</p>
-      </div>
-    </div>
-    </div>
-
-    <div>
-      <div class="latest-button-container" onclick="window.location.href='http://127.0.0.1:3000/courses/<%= @course.id %>/read'">
-    <div class="latest-button">START READING</div>
-    <div class="arrow-container">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" stroke="white" class="arrow" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-        </svg>                
-    </div>
-</div>
-      <div>
-        <div style="margin-top: 32px; margin-bottom: 32px;">
-          <div>
-            <p class="heading" style="margin-bottom: 8px">Author</p>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <img class="profile-picture" src="https://www.seokratie.de/wp-content/uploads/2018/03/astronautenkatze-im-weltall-751x497.jpg">
-              <div style="display: flex; flex-direction: column;">
-                <p class="information">Jimbo Oleg</p>
-                <p>Oh leck mir die Eier</p>
-              </div>
-            </div >
-            <p style=" padding-bottom: 16px;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum</p>
+        <div class="share-bookmark-container">
+          <%= render partial: "courses/ratings", locals: { course: @course } %>          
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            <p class="regular">Set Bookmark</p>
+          </div>
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            <p class="regular">Share</p>
           </div>
         </div>
       </div>
-
-<% 
-  headers = []
-  if @course.note.content.present?
-    # Parse den JSON-String direkt
-    content_json = JSON.parse(@course.note.content.to_json.html_safe)
-    content_json["blocks"].each do |block|
-  if block["type"] == "header"
-    # HTML-Tags entfernen
-    header_text = block["data"]["text"]
-    header_text = header_text.gsub(/<\/?[^>]+(>|$)/, "")
-    
-    # HTML-Entities dekodieren
-    header_text = CGI.unescapeHTML(header_text)
-    
-    # Für den Fall, dass spezielle Entities wie &nbsp; nicht richtig dekodiert wurden
-    header_text = header_text.gsub(/&nbsp;/, ' ')
-    
-    headers << header_text
-  end
-end
-  end
-%>
-
-<% if headers.any? %>
-  <div style="margin-top: 32px; margin-bottom: 32px;">
-    <p class="heading" style="margin-bottom: 8px">Table of Contents</p>
-    <div class="table-of-contents-container">
-      <% headers.each_with_index do |header, index| %>
-        <p class="table-of-contents-item"><%= index + 1 %>. <%= header %></p>
-      <% end %>
+      
     </div>
   </div>
-<% end %>
+  <div class="course-side-informations">
+    <div class="card">
+      <p class="regular">Preview</p>
+
     </div>
   </div>
 </div>
