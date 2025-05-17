@@ -63,7 +63,7 @@ p{
 .regular-button:hover{
   background-color:rgb(244, 244, 245);
 }
-.course-author-container{
+.author-container{
   display: flex;
   align-items: center;
   gap: 8px;
@@ -80,6 +80,7 @@ p{
   flex-direction: column;
   justify-content: space-between;
 }
+
 </style>
 <div class="main">
   <div class="course-main-informations">
@@ -89,22 +90,30 @@ p{
       <div class="views">
         <div><p class="title"><%= course.title%></p><p class="regular"><%= course.course_views.count %>8.978 Views - <%= format_date(course.created_at) %></p></div>
         <div class="share-bookmark-container">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
           <%= render partial: "courses/ratings", locals: { course: @course } %>          
 
         </div>
       </div>
       <div class="course-actions">
-        <div class="course-author-container">
+        <div class="author-container">
           <img src="https://ui.shadcn.com/avatars/shadcn.jpg" class="author-picture">
           <div class="author-informaion">
             <p class="regular"><%= course.user.email %></p>
             <p class="regular">Sr.Developer</p>
           </div>
         </div>
-        
+        <div class="share-bookmark-container">
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            <p>Share</p>
+          </div>
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            <p>Set Bookmark</p>
+          </div>
+        </div>
       </div>
+      
       
     </div>
   </div>
