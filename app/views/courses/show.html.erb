@@ -1,11 +1,115 @@
-<%= render @course %>
 <style>
  p{
     margin: 0;
     padding: 0;
  }
+  .main{
+  padding: 24px 25%;
+  
+}
+p{
+  margin: 0;
+  padding: 0;
+}
+
+.regular{
+  font-size: 14px;
+}
+.card{
+  width: 100%;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid rgb(228, 228, 231);
+  box-sizing: border-box; /* Diese Zeile löst das Problem */
+}
+.thumbnail{
+  width: 100%;
+  height: 384px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.title{
+  font-size: 20px;
+}
+.views{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.course-actions{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.share-bookmark-container{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.regular-button{
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  color: black;
+  text-decoration: none;
+  border-radius: 8px;
+  gap: 7px;
+  padding: 6px 14px;
+  border: 1px solid rgb(228, 228, 231);
+  white-space: nowrap; 
+  user-select: none;
+}
+.regular-button:hover{
+  background-color:rgb(244, 244, 245);
+}
+.author-container{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.author-picture{
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.author-information{ /* Korrektur des Klassennamens */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 </style>
 <div class="main">
-    <p><%= course.title%></p>
-    
+    <p><%= @course.title%></p>
+    <div>
+        <div class="author-container">
+          <img src="https://ui.shadcn.com/avatars/shadcn.jpg" class="author-picture">
+          <div class="author-informaion">
+            <p class="regular"><%= @course.user.email %></p>
+            <p class="regular">Sr.Developer</p>
+          </div>
+        </div>
+        <button>
+            Follow
+        </button>
+        <div>
+            <p class="regular"><%= @course.course_views.count %>8.978 Views - <%= format_date(@course.created_at) %></p>
+        </div>
+        <div class="share-bookmark-container">
+          <%= render partial: "courses/ratings", locals: { course: @course } %>  
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            <p>Share</p>
+          </div>
+          <div class="regular-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            <p>Set Bookmark</p>
+          </div>
+        </div>
+    </div>
+    <%= render @course %>
+
 </div>
