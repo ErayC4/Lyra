@@ -161,6 +161,25 @@
     .profile-container{
         transition: margin 0.2s ease-out, opacity 0.3s ease-out;
     }
+    
+    /* Anfänglicher Zustand für minimierte Sidebar */
+    .minimized .button-text {
+        display: none;
+    }
+    .minimized .sidebar-expand-button {
+        display: none;
+    }
+    .minimized .logo-container {
+        display: none;
+    }
+    .minimized .profile-information {
+        display: none;
+    }
+    .minimized .profile-container {
+        margin: 0;
+        margin-bottom: 9px;
+        margin-top: 8px;
+    }
 </style>
 <script>
     // Wait for the DOM to be fully loaded
@@ -193,12 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const sidebarCloseButton = document.querySelector('.sidebar-close-button');
   const sidebar = document.querySelector('.sidebar');
   
-  sidebarCloseButton.addEventListener('click', function() {
-    // Toggle minimized state
-    sidebar.classList.toggle('minimized');
-    
+  // Funktion zum Aktualisieren des Sidebar-Status
+  function updateSidebarStatus() {
     if (sidebar && sidebar.classList.contains('minimized')) {
-    // Wenn die Sidebar minimiert ist
+        // Wenn die Sidebar minimiert ist
         document.querySelectorAll(".button-text").forEach(element => {
             element.style.display = 'none';
         });
@@ -229,7 +246,24 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector(".profile-information").style.display = '';
         document.querySelector(".profile-container").style.margin = '8px';
     }
+  }
+  
+  // Setze Sidebar beim Laden auf minimiert (nicht mehr nötig, da bereits in HTML minimiert)
+  // sidebar.classList.add('minimized');
+  
+  // Das Icon ist bereits im HTML richtig gesetzt
+  // Ändere das Icon entsprechend (zeige "öffnen" Icon)
+  // const buttonIcon = sidebarCloseButton.querySelector('svg');
+  // buttonIcon.outerHTML = '...';
+  
+  // Die anfängliche Anzeige wird jetzt über CSS gesteuert
+  // updateSidebarStatus();
+  
+  sidebarCloseButton.addEventListener('click', function() {
+    // Toggle minimized state
+    sidebar.classList.toggle('minimized');
     
+    updateSidebarStatus();
 
     // Change close button icon to open when minimized
     const buttonIcon = this.querySelector('svg');
@@ -244,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<div class="sidebar">
+<div class="sidebar minimized">
     <div class="sidebar-top">
         <div class="sidebar-header">
             <div class="logo-container">
@@ -255,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <button class="sidebar-close-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open-icon lucide-panel-right-open"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/><path d="m10 15-3-3 3-3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-close-icon"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/><path d="m8 9 3 3-3 3"/></svg>
             </button>
         </div>
         <div class="sidebar-item-container">
