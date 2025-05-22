@@ -15,8 +15,8 @@
         }
         .drittel{
             background-color: #F9F9FA;
-            padding:32px;
-            height: calc(100vh - 64px);
+            padding:24px;
+            height: calc(100vh - 50px);
             border-left: 1px solid rgb(228, 228, 231);
         }
         .note-heading{
@@ -70,13 +70,13 @@
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: rgb(197, 197, 199);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div style="max-height: calc(100vh - 32px - 40px - 17px - 32px); overflow-y: auto; border-radius: 8px; margin-top: 32px;">
+        <div style="max-height: calc(100vh - 32px - 40px - 17px - 32px); border-radius: 8px; margin-top: 24px;">
             <%= render @note %>
         </div>
         <div class="drittel">

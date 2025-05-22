@@ -12,7 +12,14 @@
   .editorjs{
     position: relative;
     background-color: white;
-    padding: 32px 64px;
+    
+    max-height: calc(100vh - 24px - 10px - 24px - 24px);
+  }
+  .editorjs-container{
+     overflow-y: auto;
+  }
+  .the-container{
+    padding: 16px 8px;
     border-radius: 8px;
     border: 1px solid rgb(228, 228, 231);
   }
@@ -594,6 +601,7 @@ class MultipleChoice {
 <%= javascript_include_tag "autosave" %>
 
 <div id="<%= dom_id note %>">
+  <div class="the-container">
   <div class="editorjs-container">
     <div id="editorjs" class="editorjs"
           spellcheck="false" 
@@ -602,5 +610,6 @@ class MultipleChoice {
         data-autosave-interval="3000"
         data-saved-content="<%= @note.content.to_json %>">
     </div>   
+  </div>
   </div>
 </div>  
