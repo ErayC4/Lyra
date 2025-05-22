@@ -1,87 +1,87 @@
-<p style="color: green"><%= notice %></p>
-<style>
-
-  .container{
-    display: grid;
-    gap: 64px;
-    grid-template-columns: 2fr 1.25fr;
-    padding-left: 64px;
-    background-color: #E4E4E6;
-    height: 100vh;
-  }
-  .drittel{
-    background-color: #DDDDDD;
-    padding:32px;
-    height: calc(100vh - 64px);
-  }
-  .note-heading{
-    display:flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    margin-top: 1px;
-  }
-  .note-heading-partial{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .go-back-button{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-
-  }
-  .navigation-menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: none;
-      background-color: #f4f4f4;
-  }
-  .navigation-menu-item:hover{
-      background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  
-</style>
-
-
-
-<div class="container">
-  <div style="margin-top: 32px; ">
-    <div class="note-heading">
-      <div class="go-back-button" onclick="window.location.href='<%= notes_path %>'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-        </svg>
-        <p style="font-size: 1.5rem;"><%= @note.title%></p>
-      </div>
-      <div class="note-heading-partial">
-        <button class="navigation-menu-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-icon lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        </button>
-        <button class="navigation-menu-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
-          </svg>
-        </button>
-        
-      </div>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% content_for :title, @note.title %>
+    <style>
+        .container{
+            display: grid;
+            gap: 32px;
+            grid-template-columns: 2fr 1.25fr;
+            padding-left: 96px;
+            background-color: white;
+            height: 100vh;
+        }
+        .drittel{
+            background-color: #F9F9FA;
+            padding:32px;
+            height: calc(100vh - 64px);
+            border-left: 1px solid rgb(228, 228, 231);
+        }
+        .note-heading{
+            display:flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .note-actions{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 8px;
+        }
+        .note-heading-partial{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .go-back-button{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .navigation-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            background-color: white;
+            border: 1px solid rgb(228, 228, 231);
+        }
+        .navigation-menu-item:hover{
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            padding-left: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: white;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E4E4E7;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="max-height: calc(100vh - 32px - 40px - 17px - 32px); overflow-y: auto; border-radius: 8px; margin-top: 32px;">
+            <%= render @note %>
+        </div>
+        <div class="drittel">
+            <%= render template: "sidebar/sidebar", locals: { ais: @ais } %>
+        </div>
     </div>
-    <div style="max-height: calc(100vh - 32px - 40px - 17px - 32px); overflow-y: auto; border-radius: 8px;">
-    <%= render @note %>
-    </div>
-</div>
-  <div class="drittel">
-    <%= render template: "sidebar/sidebar", locals: { ais: @ais } %>
-
-  </div>
-</div>
-
+</body>
+</html>

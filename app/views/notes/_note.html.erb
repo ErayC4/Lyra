@@ -12,9 +12,9 @@
   .editorjs{
     position: relative;
     background-color: white;
-    padding: 32px 42px;
+    padding: 32px 64px;
     border-radius: 8px;
-    background-color: #f4f4f4;
+    border: 1px solid rgb(228, 228, 231);
   }
   .ce-paragraph { /*paragraph block line height*/
     line-height: 1.5;
@@ -25,7 +25,7 @@
   padding: 16px;
   background-color: #CDFAD2;
   border-radius: 8px;
-  border: 1px solid #DBDBDB;
+  border: 1px solid rgb(228, 228, 231);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -46,7 +46,7 @@
   font-size: 14px;
   background: white;
   color: #333;
-  border: 1px solid #DBDBDB;
+  border: 1px solid rgb(228, 228, 231);
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
@@ -78,7 +78,7 @@
 }
 
 .input-field {
-  border: 1px solid #DBDBDB;
+  border: 1px solid rgb(228, 228, 231);
   border-radius: 8px;
   outline: none;
   background-color: #E5FDE5;
@@ -95,7 +95,7 @@
 .textarea {
   width: calc(100% - 32px);
   background-color: #E5FDE5;
-  border: 1px solid #DBDBDB;
+  border: 1px solid rgb(228, 228, 231);
   border-radius: 8px;
   margin-bottom: 16px;
   resize: vertical;
@@ -594,15 +594,13 @@ class MultipleChoice {
 <%= javascript_include_tag "autosave" %>
 
 <div id="<%= dom_id note %>">
-      
-
-
-  <div id="editorjs" class="editorjs"
-        spellcheck="false" 
-       data-instance-of-table-id="<%= @note.id %>" 
-       data-table-name="note"
-       data-autosave-interval="3000"
-       data-saved-content="<%= @note.content.to_json %>">
-  </div>   
- 
+  <div class="editorjs-container">
+    <div id="editorjs" class="editorjs"
+          spellcheck="false" 
+        data-instance-of-table-id="<%= @note.id %>" 
+        data-table-name="note"
+        data-autosave-interval="3000"
+        data-saved-content="<%= @note.content.to_json %>">
+    </div>   
+  </div>
 </div>  
