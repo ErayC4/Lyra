@@ -106,34 +106,58 @@
     align-items: center;
     margin: 0 16px;
     padding: 16px 0;
-    border-bottom: 1px solid #DBDBDB
+    border-bottom: 1px solid #DBDBDB;
   }
   
-  .searchbar-container{
-    background-color: white;
+  .search-container {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      display: flex;
+      border-radius: 6px;
+      height: 30px;
+  }
+  
+  .search-input {
+      padding: 7px 7px;
+      border-radius: 6px;
+      border: none;
+      background-color: #ffffff;
+      font-size: 14px;
+      color: #333;
+      outline: none;
+      width: 100%;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .search-container:focus-within {
+    border-color: #d0d0d0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+  
+  .search-input::placeholder {
+      color: #999;
+  }
+  
+  .search-icon {
+      width: 16px;
+      height: 16px;
+      color: #888;
+      
+  }
+  .search-button {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px;
-    border: 1px solid #DBDBDB;
-    border-radius: 8px;
-    flex-grow: 1;
-  }
-
-  .search-button{
-    background-color: transparent;
-    border: none;
-    padding: 4px;
+    justify-content: center;
     cursor: pointer;
-    margin: 0;
-    flex: 1;
-  }
-  .searchbar{
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
     border: none;
-    border-radius: 4px;
-    padding: 8px;
-    width: 100%;
-    background-color:rgb(235, 235, 235);
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+  .search-button:hover{
+    background-color:rgba(0, 0, 0, 0.1);
   }
 
     .dropdown-content-body {
@@ -191,7 +215,23 @@
   .table-of-contents-window{
     display: none;
   }
-
+  .long-white-button{
+    display: inline-flex;
+    align-items: center;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    gap: 7px;
+    padding: 6px 14px;
+    border: 1px solid rgb(228, 228, 231);
+    white-space: nowrap; 
+    user-select: none;
+    max-height: 30px;
+  }
+  .long-white-button:hover{
+    background-color:rgb(244, 244, 245);
+  }
   </style>
   <div class="ai-field" style="position: relative; font-size: 1.1rem; height: calc(100% - 135px); overflow-y: auto;"></div>
   
@@ -199,16 +239,17 @@
     <div class="dropdown-content">
       <div class="dropdown-header">
         <div class="long-white-button bookmark-toggle" id="bookmarksToggle" onclick="onOffButton('bookmark-toggle', 'white', 'black')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark">
-            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
-          </svg>
-          <p>Bookmarks</p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+          <p style="font-size: 14px;">Show Only Bookmarks</p>
         </div>
-        <div class="searchbar-container">
+        <div class="search-container">
           <button class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
           </button>
-          <input placeholder="search" class="searchbar">
+          <input type="text" class="search-input" placeholder="Search files..." />
         </div>
       </div>
       <div class="dropdown-content-body">
