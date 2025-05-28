@@ -6,25 +6,32 @@
   }
 .chat-list-item {
     border: none;
+    font-size: 14px;
     background-color: transparent;
     width: 100%;
-    transition: 0.3s ease;
-    padding: 4px 16px; 
+    padding: 0 16px;
     transition: 0.2s ease;
 }
   .chat-list-item-active{
-    background-color: #F5E1FC;
-    padding: 6px 16px;
+    background-color: #FAFAFA;
   }
-  .chat-list-item:hover{
-    background-color: #F5D5FF;
-    padding: 6px 16px;
+  .chat-list-item-container:hover{
+    background-color: #FAFAFA;
+    
   }
   .chat-list-container{
     display: flex;
     flex-direction: column;
   }
 
+  .chat-list-item-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    gap: 4px;
+  }
   .chat-title{
     text-align: left;
     font-size: 1rem;
@@ -106,7 +113,7 @@
     align-items: center;
     margin: 0 16px;
     padding: 16px 0;
-    border-bottom: 1px solid #DBDBDB;
+    padding-bottom: 0;
   }
   
   .search-container {
@@ -166,7 +173,7 @@
   }
 
   .section{
-    margin-top: 32px;
+    margin-top: 24px;
   }
   .section-header{
     margin-bottom: 8px;
@@ -183,17 +190,14 @@
     margin-bottom: 4px;
     margin-left: 24px;
     margin-right: 8px;
+    font-size: 16px;
   }
   .ai-message{
     padding: 8px;
     margin-bottom: 16px;
+    font-size: 16px;
   }
-  .chat-list-item-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-  }
   
   .size-6{
     height: 20px;
@@ -273,8 +277,8 @@
                 <p class="chat-title"><%= user_message["content"].split.first(5).join(" ") %></p>
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
+                  width="20" 
+                  height="20" 
                   data-table-name="ai"
                   data-item-id="<%= ai.id %>"
                   viewBox="0 0 24 24" 
