@@ -16,7 +16,7 @@
         }
 
         .file-container {
-            height: calc(100vh - 35px - 64px);
+            height: calc(100vh - 35px - 64px - 8px);
             overflow-y: auto;
         }
 
@@ -288,9 +288,8 @@
         }
         
         .file-header{
-            border-top: 1px solid #DBDBDB;
-            padding: 16px 0;
-            font-size: 32px;
+            margin-bottom: 16px;
+            font-size: 24px;
         }
         .file-list {
             margin-top: 20px;
@@ -530,7 +529,7 @@
                         <%= form.submit "Add To Files", class: "btn btn-primary", id: "submitButton" %>
                     </div>
                 <% end %>
-                    <p class="file-header">Files</p>
+                    <p class="file-header">Your Files</p>
 
                 <div class="uploaded-file-grid">
                     <% if note.files.attached? %>
