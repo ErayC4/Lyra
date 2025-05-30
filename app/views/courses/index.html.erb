@@ -19,11 +19,12 @@
     background-color: black;
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 6px;
     gap: 7px;
     transition: 0.3s ease;
     padding: 7px 14px;
     user-select: none;
+    font-size: 14px;
   }
   .text-big{
     font-size: 24px;
@@ -76,8 +77,76 @@
   .placeholer-container{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 0 64px;
-    height: 40px;
+  }
+
+  .long-white-button{
+    display: inline-flex;
+    align-items: center;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    gap: 7px;
+    padding: 6px 14px;
+    border: 1px solid rgb(228, 228, 231);
+    white-space: nowrap; 
+    user-select: none;
+  }
+  .long-white-button:hover{
+    background-color:rgb(244, 244, 245);
+  }
+  .search-container {
+      width: 100%;
+      max-width: 230px;
+      border: 1px solid #e0e0e0;
+      display: flex;
+      border-radius: 6px;
+      user-select: none;
+  }
+  
+  .search-input {
+      padding: 7px 7px;
+      border-radius: 6px;
+      border: none;
+      background-color: #ffffff;
+      font-size: 14px;
+      color: #333;
+      outline: none;
+      width: 100%;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .search-container:focus-within {
+    border-color: #d0d0d0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+  
+  .search-input::placeholder {
+      color: #999;
+  }
+  
+  .search-icon {
+      width: 16px;
+      height: 16px;
+      color: #888;
+      
+  }
+  .search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+  .search-button:hover{
+    background-color:rgba(0, 0, 0, 0.1);
   }
 </style>
 
@@ -85,20 +154,27 @@
 <div class="main">
     <div class="placeholer-container">
       <%= link_to new_course_path, class: 'new-btn' do %>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14"></path>
           <path d="M5 12h14"></path>
         </svg>
         <span>Upload Course</span>
       <% end %>
-      <div class="searchbar-container">
-        <div class="searchbar">
-          <button class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>        
-          </button>
-          <input placeholder="Search..." class="searchbar-input-field">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="long-white-button bookmark-toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-filter-icon lucide-list-filter"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+          <p class="text-md">Filter</p>
         </div>
-      </div>
+        <div class="search-container">
+          <button class="search-button">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <input type="text" class="search-input" placeholder="Search for courses..." />
+        </div>
+    </div>
     </div>
 
   <div class="content-container">
