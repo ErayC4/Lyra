@@ -42,10 +42,12 @@
     /* Titel-Bereich */
     .title-container {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      gap: 16px;
     }
-    
+    .title-container svg {
+      flex-shrink: 0;
+    }
     .dark .title h2 {
       color: #f8fafc;
     }
@@ -129,7 +131,7 @@
     <!-- Titel -->
     <div class="title-container">
       <p style="font-size: 20px; font-weight: 500"><%= course.title%></p>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      <svg style="padding-top: 4px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
     </div>
     
     <!-- Autor und Views -->
