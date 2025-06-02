@@ -37,7 +37,7 @@
         font-size: 14px;
     }
     .sidebar{
-        height: calc(100vh - 16px);
+        height: calc(100vh);
         width: 240px;
         padding: 8px;
         background-color: #FAFAFA;
@@ -46,6 +46,7 @@
         flex-direction: column;
         justify-content: space-between;
         transition: width 0.3s ease-out, opacity 0.3s ease-out;
+        box-sizing: border-box;
         
     }
     .sidebar-item-container{
@@ -367,14 +368,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="button-text">Accout Settings</p> 
             </button>
 
-            <%= link_to destroy_user_session_path, method: :delete, class: "sidebar-button-big", data: { confirm: "Wirklich ausloggen?" } do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" x2="9" y1="12" y2="12"/>
-                </svg>
-                <p class="button-text">Logout</p>
-            <% end %>
+            <%= button_to destroy_user_session_path, method: :delete, class: "sidebar-button-big", data: { confirm: "Wirklich ausloggen?" } do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" x2="9" y1="12" y2="12"/>
+    </svg>
+    <p class="button-text">Logout</p>
+<% end %>
         </div>
         <div class="profile-container">
             <img src="https://ui.shadcn.com/avatars/shadcn.jpg" class="profile-picture">
